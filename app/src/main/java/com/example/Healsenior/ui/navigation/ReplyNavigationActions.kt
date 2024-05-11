@@ -17,20 +17,25 @@
 package com.example.Healsenior.ui.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Article
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.DirectionsRun
 import androidx.compose.material.icons.filled.Inbox
 import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.QuestionAnswer
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
+import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.example.Healsenior.R
 
 object ReplyRoute {
-    const val INBOX = "Inbox"
-    const val ARTICLES = "Articles"
-    const val DM = "DirectMessages"
-    const val GROUPS = "Groups"
+    const val Workout = "Workout"
+    const val Record = "Record"
+    const val Community = "Community"
+    const val Mypage = "Mypage"
 }
 
 data class ReplyTopLevelDestination(
@@ -61,27 +66,27 @@ class ReplyNavigationActions(private val navController: NavHostController) {
 
 val TOP_LEVEL_DESTINATIONS = listOf(
     ReplyTopLevelDestination(
-        route = ReplyRoute.INBOX,
-        selectedIcon = Icons.Default.Inbox,
-        unselectedIcon = Icons.Default.Inbox,
+        route = ReplyRoute.Workout,
+        selectedIcon = Icons.Default.DirectionsRun,
+        unselectedIcon = Icons.Default.DirectionsRun,
         iconTextId = R.string.tab_inbox
     ),
     ReplyTopLevelDestination(
-        route = ReplyRoute.ARTICLES,
-        selectedIcon = Icons.Default.Article,
-        unselectedIcon = Icons.Default.Article,
+        route = ReplyRoute.Record,
+        selectedIcon = Icons.Default.CalendarMonth,
+        unselectedIcon = Icons.Default.CalendarMonth,
         iconTextId = R.string.tab_article
     ),
     ReplyTopLevelDestination(
-        route = ReplyRoute.DM,
-        selectedIcon = Icons.Outlined.ChatBubbleOutline,
-        unselectedIcon = Icons.Outlined.ChatBubbleOutline,
+        route = ReplyRoute.Community,
+        selectedIcon = Icons.Default.QuestionAnswer,
+        unselectedIcon = Icons.Default.QuestionAnswer,
         iconTextId = R.string.tab_inbox
     ),
     ReplyTopLevelDestination(
-        route = ReplyRoute.GROUPS,
-        selectedIcon = Icons.Default.People,
-        unselectedIcon = Icons.Default.People,
+        route = ReplyRoute.Mypage,
+        selectedIcon = Icons.Default.AccountCircle,
+        unselectedIcon = Icons.Default.AccountCircle,
         iconTextId = R.string.tab_article
     )
 

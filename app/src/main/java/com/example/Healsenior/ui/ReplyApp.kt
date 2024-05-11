@@ -165,7 +165,7 @@ private fun ReplyNavigationWrapper(
     }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val selectedDestination =
-        navBackStackEntry?.destination?.route ?: ReplyRoute.INBOX
+        navBackStackEntry?.destination?.route ?: ReplyRoute.Workout
 
     if (navigationType == ReplyNavigationType.PERMANENT_NAVIGATION_DRAWER) {
         // TODO check on custom width of PermanentNavigationDrawer: b/232495216
@@ -293,9 +293,9 @@ private fun ReplyNavHost(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = ReplyRoute.INBOX,
+        startDestination = ReplyRoute.Workout,
     ) {
-        composable(ReplyRoute.INBOX) {
+        composable(ReplyRoute.Workout) {
             ReplyInboxScreen(
                 contentType = contentType,
                 replyHomeUIState = replyHomeUIState,
@@ -306,13 +306,13 @@ private fun ReplyNavHost(
                 toggleSelectedEmail = toggleSelectedEmail
             )
         }
-        composable(ReplyRoute.DM) {
+        composable(ReplyRoute.Record) {
             EmptyComingSoon()
         }
-        composable(ReplyRoute.ARTICLES) {
+        composable(ReplyRoute.Community) {
             EmptyComingSoon()
         }
-        composable(ReplyRoute.GROUPS) {
+        composable(ReplyRoute.Mypage) {
             EmptyComingSoon()
         }
     }

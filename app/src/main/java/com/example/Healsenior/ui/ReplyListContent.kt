@@ -70,7 +70,7 @@ fun ReplyInboxScreen(
     modifier: Modifier = Modifier
 ) {
     /**
-     * When moving from LIST_AND_DETAIL page to LIST page clear the selection and user should see LIST screen.
+     * When moving from LIST_AND_DETAIL com.example.Healsenior.page to LIST com.example.Healsenior.page clear the selection and user should see LIST screen.
      */
     LaunchedEffect(key1 = contentType) {
         if (contentType == ReplyContentType.SINGLE_PANE && !replyHomeUIState.isDetailOnlyOpen) {

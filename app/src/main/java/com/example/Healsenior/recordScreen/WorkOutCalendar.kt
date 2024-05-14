@@ -1,141 +1,24 @@
-package com.example.Healsenior.ui
+package com.example.Healsenior.recordScreen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.Healsenior.R
-
 
 @Composable
-internal fun RecordScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color(0xFFEAEAEA))
-            .statusBarsPadding(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        RecordScreenHeader()
-        RecordScreenContent()
-    }
-}
-
-@Composable
-private fun RecordScreenHeader() {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .height(60.dp)
-        .background(color = Color(0xFF95BDFA))
-    )
-    {
-        Row(
-            modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Text(
-               text = "기록",
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp,
-                modifier = Modifier
-                    .padding(start = 20.dp, top = 15.dp)
-            )
-        }
-        Row(
-            modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.End
-        ) {
-            val image = painterResource(R.drawable.img1)
-
-            Image(
-                painter = image,
-                contentDescription = null,
-                modifier = Modifier
-                    .width(50.dp)
-                    .height(50.dp)
-                    .padding(top = 15.dp, end = 15.dp)
-            )
-        }
-    }
-}
-
-@Composable
-private fun RecordScreenContent(){
-    Column(
-        modifier = Modifier.padding(start = 20.dp, top = 30.dp, end = 20.dp, bottom = 30.dp
-        )
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .weight(2.6f)
-                .border(
-                    width = 2.dp,
-                    color = Color(0xFF95BDFA),
-                    shape = RoundedCornerShape(15.dp),
-                )
-                .background(
-                    color = Color.White,
-                    shape = RoundedCornerShape(15.dp)
-                ),
-        ) {
-            WorkOutCalendar()
-        }
-        Text(
-            text = "23.11.14의 운동기록",
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = Color(0xFF95BDFA),
-            modifier = Modifier.padding(start = 10.dp, top = 20.dp)
-        )
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .weight(1f)
-                .padding(top = 5.dp)
-                .border(
-                    width = 2.dp,
-                    color = Color(0xFF5897FC),
-                    shape = RoundedCornerShape(15.dp),
-                )
-                .background(
-                    color = Color.White,
-                    shape = RoundedCornerShape(15.dp)
-                ),
-        ) {
-            WorkOutRecord()
-        }
-    }
-}
-
-@Composable
-private fun WorkOutCalendar() {
+fun WorkOutCalendar() {
     Column(
         modifier = Modifier.padding(30.dp),
         verticalArrangement = Arrangement.Top
@@ -225,65 +108,7 @@ private fun WorkOutCalendar() {
 }
 
 @Composable
-private fun WorkOutRecord() {
-    Column(
-        modifier = Modifier.padding(10.dp),
-        verticalArrangement = Arrangement.Top
-    ) {
-        Row {
-            Text(
-                text = "근육량 증가 추천 루틴 - 초급",
-                fontSize = 20.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(2.5f),
-                textAlign = TextAlign.Left,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = ">",
-                fontSize = 25.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(end = 10.dp),
-                textAlign = TextAlign.Right,
-                fontWeight = FontWeight.Bold,
-                color = Color.Gray
-            )
-        }
-        Text(
-            text = "1. 시티드 케이블 로우",
-            fontSize = 16.sp,
-            modifier = Modifier
-                .fillMaxWidth(),
-            textAlign = TextAlign.Left,
-            fontWeight = FontWeight.Bold,
-            color = Color.DarkGray
-        )
-        Text(
-            text = "45kg x 12회 x 2세트",
-            fontSize = 13.sp,
-            modifier = Modifier
-                .fillMaxWidth(),
-            textAlign = TextAlign.Left,
-            fontWeight = FontWeight.Bold,
-            color = Color.Gray
-        )
-        Text(
-            text = "55kg x 8회 x 2세트",
-            fontSize = 13.sp,
-            modifier = Modifier
-                .fillMaxWidth(),
-            textAlign = TextAlign.Left,
-            fontWeight = FontWeight.Bold,
-            color = Color.Gray
-        )
-    }
-}
-
-@Composable
-private fun Box1() {
+fun Box1() {
     Row {
         val str = arrayOf("일", "월", "화", "수", "목", "금", "토")
 
@@ -307,7 +132,7 @@ private fun Box1() {
 }
 
 @Composable
-private fun Box2() {
+fun Box2() {
     Column {
         Row(modifier = Modifier.padding(top = 10.dp)) {
             for (i in 0..6) {

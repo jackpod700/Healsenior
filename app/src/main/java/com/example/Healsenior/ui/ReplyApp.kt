@@ -307,7 +307,7 @@ private fun ReplyNavHost(
             )
         }
         composable(ReplyRoute.Record) {
-            EmptyComingSoon()
+            RecordScreen()
         }
         composable(ReplyRoute.Community) {
             EmptyComingSoon()

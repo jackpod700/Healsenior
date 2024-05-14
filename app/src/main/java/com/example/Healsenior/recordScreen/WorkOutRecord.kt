@@ -1,5 +1,6 @@
 package com.example.Healsenior.recordScreen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,15 +15,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+val str = arrayOf("근육량 증가 추천 루틴 - 초급", "1. 시티드 케이블 로우", "45kg x 12회 x 2세트", "55kg x 8회 x 2세트")
+
 @Composable
 fun WorkOutRecord() {
     Column(
-        modifier = Modifier.padding(10.dp),
+        modifier = Modifier
+            .padding(10.dp)
+            .clickable {
+                //기록 상세 화면
+            },
         verticalArrangement = Arrangement.Top
     ) {
         Row {
             Text(
-                text = "근육량 증가 추천 루틴 - 초급",
+                text = str[0],
                 fontSize = 20.sp,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -43,7 +50,7 @@ fun WorkOutRecord() {
             )
         }
         Text(
-            text = "1. 시티드 케이블 로우",
+            text = str[1],
             fontSize = 16.sp,
             modifier = Modifier
                 .fillMaxWidth(),
@@ -52,7 +59,7 @@ fun WorkOutRecord() {
             color = Color.DarkGray
         )
         Text(
-            text = "45kg x 12회 x 2세트",
+            text = str[2],
             fontSize = 13.sp,
             modifier = Modifier
                 .fillMaxWidth(),
@@ -61,7 +68,7 @@ fun WorkOutRecord() {
             color = Color.Gray
         )
         Text(
-            text = "55kg x 8회 x 2세트",
+            text = str[3],
             fontSize = 13.sp,
             modifier = Modifier
                 .fillMaxWidth(),

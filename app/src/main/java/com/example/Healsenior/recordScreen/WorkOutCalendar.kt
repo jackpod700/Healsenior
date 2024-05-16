@@ -5,134 +5,229 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+val str = arrayOf("일", "월", "화", "수", "목", "금", "토")
+
+@Preview
 @Composable
 fun WorkOutCalendar() {
     Column(
-        modifier = Modifier.padding(30.dp),
+        modifier = Modifier
+            .padding(start = 35.dp, end = 35.dp, top = 20.dp, bottom = 30.dp)
+            .background(color = Color.White),
         verticalArrangement = Arrangement.Top
     ) {
+        CalendarHeader()
+        CalendarContent()
+        CalendarFooter()
+    }
+}
+
+@Composable
+fun CalendarHeader() {
+    Text(
+        text = "날짜를 선택해주세요.",
+        fontWeight = FontWeight.Bold,
+        fontSize = 23.sp
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        ShowMonth()
+        ChangeMonth()
+    }
+}
+@Composable
+fun CalendarContent() {
+    ShowCalendar()
+}
+@Composable
+fun CalendarFooter() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        ShowCurrentLocation()
+        ShowRefreshButton()
+    }
+}
+
+@Composable
+fun ShowMonth() {
+    Row {
         Text(
-            text = "날짜를 선택해주세요.",
+            text = "2023년 11월",
             fontWeight = FontWeight.Bold,
-            fontSize = 23.sp
+            fontSize = 14.sp,
+            color = Color.DarkGray,
+            modifier = Modifier.padding(top = 10.dp)
         )
-        Row {
-            Row(
+    }
+}
+@Composable
+fun ChangeMonth() {
+    Row {
+        IconButton(
+            onClick = {
+
+            },
+            modifier = Modifier.offset(x = 10.dp)
+        ) {
+            Icon(
+                Icons.Default.ChevronLeft,
+                contentDescription = "",
+                tint = Color(0xFF5897FC),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Text(
-                    text = "2023년 11월",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp,
-                    color = Color.DarkGray,
-                    modifier = Modifier.padding(top = 7.dp)
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                horizontalArrangement = Arrangement.End
+                    .fillMaxSize()
             )
-            {
-                Text(
-                    text = "<",
-                    fontSize = 30.sp,
-                    color = Color(0xFF5897FC)
-                )
-                Text(
-                    text = ">",
-                    color = Color(0xFF5897FC),
-                    fontSize = 30.sp,
-                    modifier = Modifier.padding(start = 15.dp)
-                )
-            }
         }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(220.dp)
+        IconButton(
+            onClick = {
+
+            },
+            modifier = Modifier.offset(x = 10.dp)
         ) {
-            Box1()
-            Box2()
-        }
-        Row(
-            modifier = Modifier
-                .padding(top = 20.dp, end = 10.dp)
-        ) {
-            Row(
+            Icon(
+                Icons.Default.ChevronRight,
+                contentDescription = "",
+                tint = Color(0xFF5897FC),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Text(
-                    text = "대한민국/서울 (UDT)",
-                    fontSize = 12.sp
-                )
-                Text(
-                    text = "▽",
-                    fontSize = 12.sp,
-                    modifier = Modifier.padding(start = 10.dp)
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                horizontalArrangement = Arrangement.End
-            ) {
-                Text(
-                    text = "1",
-                    color = Color.Gray,
-                    fontSize = 20.sp
-                )
-            }
+                    .fillMaxSize()
+            )
         }
     }
 }
 
 @Composable
-fun Box1() {
-    Row {
-        val str = arrayOf("일", "월", "화", "수", "목", "금", "토")
+fun ShowCalendar() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(250.dp)
+    ) {
+        ShowWeekBand()
+        ShowCalendarBody()
+    }
+}
 
+@Composable
+fun ShowCurrentLocation() {
+    var expanded by remember { mutableStateOf(false) }
+
+    IconButton(
+        onClick = { expanded = true },
+        modifier = Modifier
+            .width(150.dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "대한민국/서울 (UDT)",
+                fontSize = 11.sp
+            )
+            Icon(
+                Icons.Default.ArrowDropDown,
+                contentDescription = "",
+                modifier = Modifier
+                    .width(20.dp)
+                    .height(20.dp)
+            )
+        }
+    }
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { expanded = false }
+    ) {
+        DropdownMenuItem(
+            text = { Text("대한민국/서울 (UDT)") },
+            onClick = { /* Handle edit! */ }
+        )
+        DropdownMenuItem(
+            text = { Text("대한민국/서울 (UDT)") },
+            onClick = { /* Handle settings! */ }
+        )
+        DropdownMenuItem(
+            text = { Text("대한민국/서울 (UDT)") },
+            onClick = { /* Handle send feedback! */ }
+        )
+    }
+}
+@Composable
+fun ShowRefreshButton() {
+    IconButton(
+        onClick = {
+
+        },
+        modifier = Modifier.offset(x = 10.dp)
+    ) {
+            Icon(
+                Icons.Default.Refresh,
+                contentDescription = "",
+                tint = Color.Gray,
+                modifier = Modifier
+                    .scale(scaleX = -1f, scaleY = 1f)
+            )
+    }
+}
+
+@Composable
+fun ShowWeekBand() {
+    Row {
         for (i in 0..6) {
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
+                    .padding(1.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier
-                        .padding(1.dp)
-                ) {
-                    Text(
-                        text = str[i]
-                    )
-                }
+                Text(
+                    text = str[i],
+                    fontWeight = FontWeight.Bold,
+                )
             }
         }
     }
 }
-
 @Composable
-fun Box2() {
+fun ShowCalendarBody() {
     Column {
         Row(modifier = Modifier.padding(top = 10.dp)) {
             for (i in 0..6) {

@@ -3,7 +3,6 @@ package com.example.Healsenior.recordScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -88,6 +88,10 @@ fun RecordScreenHeader() {
 
 @Composable
 fun RecordScreenContent(){
+    val yearM = remember { mutableIntStateOf(2023) }
+    val monthM = remember { mutableIntStateOf(11) }
+    val dateM = remember { mutableIntStateOf(1) }
+
     Column(
         modifier = Modifier.padding(start = 20.dp, top = 30.dp, end = 20.dp, bottom = 10.dp
         )
@@ -95,7 +99,7 @@ fun RecordScreenContent(){
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(400.dp)
+                .height(450.dp)
                 .border(
                     width = 2.dp,
                     color = Color(0xFF95BDFA),
@@ -106,10 +110,10 @@ fun RecordScreenContent(){
                     shape = RoundedCornerShape(15.dp)
                 ),
         ) {
-            WorkOutCalendar()
+            WorkOutCalendar(yearM, monthM, dateM)
         }
         Text(
-            text = "선택 날짜: 23.11.14.",
+            text = "선택 날짜: " + DateToString(yearM.intValue, monthM.intValue, dateM.intValue, "."),
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
             color = Color.Gray,
@@ -129,10 +133,7 @@ fun RecordScreenContent(){
                     color = Color(0xFF5B9DFF),
                     shape = RoundedCornerShape(10.dp)
                 )
-                .clickable(
-                    //interactionSource = remember { MutableInteractionSource() },
-                    //indication = null
-                ) {
+                .clickable {
                     //ShowWorkOutRecordDetail()
                 },
             horizontalAlignment = Alignment.CenterHorizontally,

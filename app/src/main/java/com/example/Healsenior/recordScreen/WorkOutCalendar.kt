@@ -1,6 +1,7 @@
 package com.example.Healsenior.recordScreen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,25 +38,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-val str = arrayOf("일", "월", "화", "수", "목", "금", "토")
+val workoutDay: Array<Boolean> = Array(32) { false }
 
 @Preview
 @Composable
-fun WorkOutCalendar() {
+fun WorkOutCalendar(yearM: MutableIntState, monthM: MutableIntState, dateM: MutableIntState) {
     Column(
         modifier = Modifier
             .padding(start = 35.dp, end = 35.dp, top = 20.dp, bottom = 30.dp)
             .background(color = Color.White),
         verticalArrangement = Arrangement.Top
     ) {
-        CalendarHeader()
-        CalendarContent()
+        CalendarHeader(yearM, monthM)
+        CalendarContent(yearM, monthM, dateM)
         CalendarFooter()
     }
 }
 
 @Composable
-fun CalendarHeader() {
+fun CalendarHeader(yearM: MutableIntState, monthM: MutableIntState) {
     Text(
         text = "날짜를 선택해주세요.",
         fontWeight = FontWeight.Bold,
@@ -65,13 +67,13 @@ fun CalendarHeader() {
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        ShowMonth()
-        ChangeMonth()
+        ShowMonth(yearM, monthM)
+        ChangeMonth(yearM, monthM)
     }
 }
 @Composable
-fun CalendarContent() {
-    ShowCalendar()
+fun CalendarContent(yearM: MutableIntState, monthM: MutableIntState, dateM: MutableIntState) {
+    ShowCalendar(yearM, monthM, dateM)
 }
 @Composable
 fun CalendarFooter() {
@@ -86,10 +88,10 @@ fun CalendarFooter() {
 }
 
 @Composable
-fun ShowMonth() {
+fun ShowMonth(yearM: MutableIntState, monthM: MutableIntState) {
     Row {
         Text(
-            text = "2023년 11월",
+            text = yearM.intValue.toString() + "월 " + monthM.intValue.toString() + "일",
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
             color = Color.DarkGray,
@@ -98,11 +100,17 @@ fun ShowMonth() {
     }
 }
 @Composable
-fun ChangeMonth() {
+fun ChangeMonth(yearM: MutableIntState, monthM: MutableIntState) {
     Row {
         IconButton(
             onClick = {
+                monthM.intValue--
 
+                if (monthM.intValue == 0)
+                {
+                    monthM.intValue = 12
+                    yearM.intValue--
+                }
             },
             modifier = Modifier.offset(x = 10.dp)
         ) {
@@ -116,7 +124,13 @@ fun ChangeMonth() {
         }
         IconButton(
             onClick = {
+                monthM.intValue++
 
+                if (monthM.intValue == 13)
+                {
+                    monthM.intValue = 1
+                    yearM.intValue++
+                }
             },
             modifier = Modifier.offset(x = 10.dp)
         ) {
@@ -132,14 +146,14 @@ fun ChangeMonth() {
 }
 
 @Composable
-fun ShowCalendar() {
+fun ShowCalendar(yearM: MutableIntState, monthM: MutableIntState, dateM: MutableIntState) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(250.dp)
+            .height(300.dp)
     ) {
         ShowWeekBand()
-        ShowCalendarBody()
+        ShowCalendarBody(yearM, monthM, dateM)
     }
 }
 
@@ -219,7 +233,7 @@ fun ShowWeekBand() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = str[i],
+                    text = weekband[i],
                     fontWeight = FontWeight.Bold,
                 )
             }
@@ -227,76 +241,103 @@ fun ShowWeekBand() {
     }
 }
 @Composable
-fun ShowCalendarBody() {
-    Column {
-        Row(modifier = Modifier.padding(top = 10.dp)) {
-            for (i in 0..6) {
-                if (i <= 3) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                    ) {
-                    }
+fun ShowCalendarBody(yearM: MutableIntState, monthM: MutableIntState, dateM: MutableIntState) {
+    val dayOfWeek = DayOfWeek(yearM.intValue, monthM.intValue, 1)
+    var day = 1
+    val dayCntOfMonth = monthToDate[GetMonthIdx(yearM.intValue, monthM.intValue)]
 
-                    continue
-                }
+    workoutDay[1] = true
+    workoutDay[10] = true
+    workoutDay[15] = true
+    workoutDay[30] = true
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(1.dp)
-                            .background(
-                                color = Color(0xFF98E5EB),
-                                shape = CircleShape
-                            )
-                    ) {
-                        Text(
-                            text = (i - 3).toString(),
-                        )
-                    }
-                }
-            }
-        }
-
-        for (i in 1..4) {
-            Row(modifier = Modifier.padding(top = 10.dp)) {
-                for (j in 4 + (i - 1) * 7..10 + (i - 1) * 7) {
-                    if (j > 30) {
+    Column{
+        for (i in 1..6) {
+            Row{
+                for (j in 1..7) {
+                    if (day > dayCntOfMonth || (i == 1 && j < dayOfWeek)) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .height(40.dp)
                                 .weight(1f)
                         ) {
+                            ShowEmptyCricleBox()
                         }
-
-                        break
                     }
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                    ) {
-                        Row(
+                    else {
+                        Box(
                             modifier = Modifier
-                                .padding(1.dp)
-                                .background(
-                                    color = Color(0xFF98E5EB),
-                                    shape = CircleShape
-                                )
+                                .fillMaxWidth()
+                                .height(40.dp)
+                                .weight(1f)
                         ) {
-                            Text(
-                                text = j.toString(),
-                            )
+                            ShowCricleBox(day++, dateM)
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ShowEmptyCricleBox() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+    }
+}
+@Composable
+fun ShowCricleBox(day:Int, selectedDay: MutableIntState) {
+    val isSelect = (day == selectedDay.intValue)
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(2.dp)
+                .isWorkOutDataExist(workoutDay[day] && isSelect) {
+                    Modifier
+                        .background(
+                            color = Color(0xFF5B9DFF),
+                            shape = CircleShape,
+                        )
+                }
+                .isWorkOutDataExist(workoutDay[day] && !isSelect) {
+                    Modifier
+                        .background(
+                            color = Color(0xFFE3F5F5),
+                            shape = CircleShape
+                        )
+                        .clickable {
+                            selectedDay.intValue = day
+                        }
+                }
+                .isWorkOutDataExist(!workoutDay[day]) {
+                    Modifier.background(
+                        color = Color.White,
+                        shape = CircleShape
+                    )
+                },
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = day.toString(),
+            )
+        }
+    }
+}
+
+fun Modifier.isWorkOutDataExist(condition : Boolean, modifier : Modifier.() -> Modifier): Modifier {
+    return if (condition) {
+        then(modifier(Modifier))
+    } else {
+        this
     }
 }

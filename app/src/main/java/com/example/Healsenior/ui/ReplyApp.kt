@@ -41,6 +41,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
+import com.example.Healsenior.recordScreen.RecordScreen
 import com.example.Healsenior.ui.navigation.ModalNavigationDrawerContent
 import com.example.Healsenior.ui.navigation.PermanentNavigationDrawerContent
 import com.example.Healsenior.ui.navigation.ReplyBottomNavigationBar
@@ -307,7 +308,7 @@ private fun ReplyNavHost(
             )
         }
         composable(ReplyRoute.Record) {
-            EmptyComingSoon()
+            RecordScreen()
         }
         composable(ReplyRoute.Community) {
             EmptyComingSoon()

@@ -94,6 +94,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.navigation.compose)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)

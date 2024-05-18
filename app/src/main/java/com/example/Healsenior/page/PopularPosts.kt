@@ -1,5 +1,6 @@
 package com.example.Healsenior.page
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 
 // 임시 데이터를 이용한 예제
@@ -34,20 +37,24 @@ val posts2 = listOf(
 )
 
 @Composable
-fun PopularPosts(posts: List<Post>) {
+fun PopularPosts(navController: NavHostController, posts: List<Post>) {
     Column(modifier = Modifier.padding(16.dp)) {
         posts.sortedByDescending { it.likes + it.comments + it.views }
             .forEach { post ->
-                PopularPostCard(post)
+                PopularPostCard(post) {
+                    navController.navigate("postDetail/${post.title}")
+                }
                 Spacer(modifier = Modifier.height(8.dp))
             }
     }
 }
 
 @Composable
-fun PopularPostCard(post: Post) {
+fun PopularPostCard(post: Post, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
@@ -73,5 +80,6 @@ fun PopularPostCard(post: Post) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewPopularPosts() {
-    PopularPosts(posts2)
+    val navController = rememberNavController()
+    PopularPosts(navController, posts2)
 }

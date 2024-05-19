@@ -55,6 +55,8 @@ import com.example.Healsenior.ui.utils.ReplyNavigationContentPosition
 import com.example.Healsenior.ui.utils.ReplyNavigationType
 import com.example.Healsenior.ui.utils.isBookPosture
 import com.example.Healsenior.ui.utils.isSeparating
+import com.example.Healsenior.workoutScreen.RoutineDescriptionScreen
+import com.example.Healsenior.workoutScreen.WorkOutScreen
 import kotlinx.coroutines.launch
 
 @Composable
@@ -297,15 +299,9 @@ private fun ReplyNavHost(
         startDestination = ReplyRoute.Workout,
     ) {
         composable(ReplyRoute.Workout) {
-            ReplyInboxScreen(
-                contentType = contentType,
-                replyHomeUIState = replyHomeUIState,
-                navigationType = navigationType,
-                displayFeatures = displayFeatures,
-                closeDetailScreen = closeDetailScreen,
-                navigateToDetail = navigateToDetail,
-                toggleSelectedEmail = toggleSelectedEmail
-            )
+            //WorkOutScreen()
+            //RecommendWorkOutScreen()
+            RoutineDescriptionScreen()
         }
         composable(ReplyRoute.Record) {
             RecordScreen()

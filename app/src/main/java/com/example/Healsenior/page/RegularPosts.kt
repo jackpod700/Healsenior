@@ -1,5 +1,6 @@
 package com.example.Healsenior.page
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -15,6 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 // 데이터 클래스를 사용하여 게시글 정보를 담습니다.
 data class Post(
@@ -35,21 +38,25 @@ val posts = listOf(
 )
 
 @Composable
-fun RegularPosts() {
+fun RegularPosts(navController: NavHostController) {
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
         posts.forEach { post ->
-            PostCard(post)
+            PostCard(post) {
+                navController.navigate("postDetail/${post.title}")
+            }
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
 
 @Composable
-fun PostCard(post: Post) {
+fun PostCard(post: Post, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
@@ -61,7 +68,7 @@ fun PostCard(post: Post) {
             Text(post.title, style = MaterialTheme.typography.titleLarge)
             Text("${post.author} - ${post.date}", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(post.content, style = MaterialTheme.typography.bodyMedium)  // 본문 내용 추가
+            Text(post.content, style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -82,5 +89,6 @@ fun PostCard(post: Post) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewRegularPosts() {
-    RegularPosts()
+    val navController = rememberNavController()
+    RegularPosts(navController)
 }

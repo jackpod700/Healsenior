@@ -3,6 +3,7 @@ package com.example.Healsenior.page
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Comment
 import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Visibility
@@ -68,7 +69,7 @@ fun PostCard(post: Post) {
                 Icon(Icons.Filled.Favorite, contentDescription = "Likes", tint = Color.Red)
                 Text("${post.likes} 좋아요", modifier = Modifier.padding(start = 4.dp))
                 Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.Filled.Comment, contentDescription = "Comments", tint = Color.Gray)
+                Icon(Icons.AutoMirrored.Filled.Comment, contentDescription = "Comments", tint = Color.Gray)
                 Text("${post.comments} 댓글", modifier = Modifier.padding(start = 4.dp))
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(Icons.Filled.Visibility, contentDescription = "Views", tint = Color.Gray)

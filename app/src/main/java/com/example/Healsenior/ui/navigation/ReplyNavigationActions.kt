@@ -17,6 +17,7 @@
 package com.example.Healsenior.ui.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Article
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -67,8 +68,8 @@ class ReplyNavigationActions(private val navController: NavHostController) {
 val TOP_LEVEL_DESTINATIONS = listOf(
     ReplyTopLevelDestination(
         route = ReplyRoute.Workout,
-        selectedIcon = Icons.Default.DirectionsRun,
-        unselectedIcon = Icons.Default.DirectionsRun,
+        selectedIcon = Icons.AutoMirrored.Filled.DirectionsRun,
+        unselectedIcon = Icons.AutoMirrored.Filled.DirectionsRun,
         iconTextId = R.string.tab_inbox
     ),
     ReplyTopLevelDestination(

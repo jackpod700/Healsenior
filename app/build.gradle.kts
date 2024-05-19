@@ -15,8 +15,10 @@
  */
 
 plugins {
-    alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.android.application")
+    id ("kotlin-android")
+    id ("com.google.gms.google-services")
 }
 
 android {
@@ -25,7 +27,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.Healsenior"
-        minSdk = libs.versions.minSdk.get().toInt()
+        minSdk = libs.versions.targetSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
@@ -94,6 +96,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.credentials)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -106,7 +109,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     implementation(libs.androidx.compose.material3)
-    implementation("com.google.accompanist:accompanist-adaptive:0.26.2-beta")
 
     implementation(libs.androidx.compose.materialWindow)
     implementation(libs.androidx.compose.material.iconsExtended)
@@ -119,6 +121,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.window)
 
+
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.runner)
@@ -130,4 +133,10 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    implementation("com.google.accompanist:accompanist-adaptive:0.26.2-beta")
+    implementation (platform("com.google.firebase:firebase-bom:32.2.0"))
+    implementation ("com.google.firebase:firebase-auth")
+    implementation ("com.google.android.gms:play-services-auth:20.4.1")
+
 }

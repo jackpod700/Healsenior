@@ -19,14 +19,8 @@ package com.example.Healsenior.ui.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Article
 import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.DirectionsRun
-import androidx.compose.material.icons.filled.Inbox
-import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.QuestionAnswer
-import androidx.compose.material.icons.outlined.ChatBubbleOutline
-import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController

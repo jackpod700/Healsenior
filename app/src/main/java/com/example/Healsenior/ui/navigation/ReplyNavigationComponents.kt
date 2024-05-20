@@ -33,7 +33,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuOpen
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MenuOpen
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton

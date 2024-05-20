@@ -76,7 +76,7 @@ fun PostCard(post: Post, onClick: () -> Unit) {
                 Icon(Icons.Filled.Favorite, contentDescription = "Likes", tint = Color.Red)
                 Text("${post.likes} 좋아요", modifier = Modifier.padding(start = 4.dp))
                 Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.Filled.Comment, contentDescription = "Comments", tint = Color.Gray)
+                Icon(Icons.AutoMirrored.Filled.Comment, contentDescription = "Comments", tint = Color.Gray)
                 Text("${post.comments} 댓글", modifier = Modifier.padding(start = 4.dp))
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(Icons.Filled.Visibility, contentDescription = "Views", tint = Color.Gray)

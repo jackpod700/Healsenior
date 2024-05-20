@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "775173992020",
+    "project_id": "healsenior",
+    "storage_bucket": "healsenior.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:775173992020:android:9c806cbeea9f477e7fc7c1",
+        "android_client_info": {
+          "package_name": "com.example.Healsenior"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "775173992020-o9astgafanjr26ad07bpq8qhn9cih2t8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpgH4ixiA-qTMYisnJu5aQA8T1eiXY7hA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "775173992020-o9astgafanjr26ad07bpq8qhn9cih2t8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

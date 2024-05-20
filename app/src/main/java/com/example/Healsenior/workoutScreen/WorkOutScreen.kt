@@ -239,93 +239,18 @@ fun ShowRoutineDetail(
         modifier = Modifier.padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 10.dp)
     ) {
         Row {
-            Column(
-                modifier = Modifier.padding(start = 25.dp, end = 20.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "${workoutCnt.intValue}",
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-                Text(
-                    text = "운동 종류",
-                    fontSize = 15.sp,
-                    modifier = Modifier.padding(top = 5.dp)
-                )
-            }
-            Column(
-                modifier = Modifier.padding(start = 25.dp, end = 20.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "${setCnt.intValue}",
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-                Text(
-                    text = "세트수",
-                    fontSize = 15.sp,
-                    modifier = Modifier.padding(top = 5.dp)
-                )
-            }
-            Column(
-                modifier = Modifier.padding(start = 25.dp, end = 20.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "${totalCalorieInRoutine.intValue}",
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-                Text(
-                    text = "소모칼로리",
-                    fontSize = 15.sp,
-                    modifier = Modifier.padding(top = 5.dp)
-                )
-            }
+            TextBox("${workoutCnt.intValue}", "운동 종류")
+            TextBox("${setCnt.intValue}", "세트수")
+            TextBox("${totalCalorieInRoutine.intValue}", "소모칼로리")
         }
         Row(
             modifier = Modifier.padding(top = 5.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(start = 25.dp, end = 20.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                val hour = timeNeededInRoutine.intValue / 60
-                val minute = timeNeededInRoutine.intValue % 60
+            val hour = timeNeededInRoutine.intValue / 60
+            val minute = timeNeededInRoutine.intValue % 60
 
-                Text(
-                    text = "$hour:$minute",
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-                Text(
-                    text = "소요시간",
-                    fontSize = 15.sp,
-                    modifier = Modifier.padding(top = 5.dp)
-                )
-            }
-            Column(
-                modifier = Modifier.padding(start = 25.dp, end = 20.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = difficulty.value,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-                Text(
-                    text = "난이도",
-                    fontSize = 15.sp,
-                    modifier = Modifier.padding(top = 5.dp)
-                )
-            }
+            TextBox("$hour:$minute", "소요시간")
+            TextBox(difficulty.value, "난이도")
         }
     }
     Column {
@@ -357,6 +282,26 @@ fun ShowRoutineDetail(
                 textAlign = TextAlign.Center
             )
         }
+    }
+}
+
+@Composable
+fun TextBox(topText : String, bottomText : String) {
+    Column(
+        modifier = Modifier.padding(start = 25.dp, end = 20.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = topText,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+        )
+        Text(
+            text = bottomText,
+            fontSize = 15.sp,
+            modifier = Modifier.padding(top = 5.dp)
+        )
     }
 }
 

@@ -17,7 +17,6 @@
 package com.example.Healsenior.data.local
 
 import com.example.Healsenior.R
-import com.example.Healsenior.data.Account
 
 /**
  * An static data store of [Account]s. This includes both [Account]s owned by the current user and

@@ -12,6 +12,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import android.content.Context
+import android.content.SharedPreferences
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -57,5 +59,23 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     Log.w("Login", "signInWithCredential:failure", task.exception)
                 }
             }
+    }
+
+    private fun saveLoginState(context: Context, isLoggedIn: Boolean) {
+        val sharedPref = context.getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putBoolean("isLoggedIn", isLoggedIn)
+            apply()
+        }
+    }
+
+    private fun checkLoginState(context: Context): Boolean {
+        val sharedPref = context.getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE)
+        return sharedPref.getBoolean("isLoggedIn", false)
+    }
+
+    fun logout(context: Context) {
+        FirebaseAuth.getInstance().signOut()
+        saveLoginState(context, false)
     }
 }

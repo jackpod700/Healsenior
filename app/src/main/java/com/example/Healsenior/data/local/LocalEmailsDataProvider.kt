@@ -17,9 +17,6 @@
 package com.example.Healsenior.data.local
 
 import com.example.Healsenior.R
-import com.example.Healsenior.data.Email
-import com.example.Healsenior.data.EmailAttachment
-import com.example.Healsenior.data.MailboxType
 
 /**
  * A static data store of [Email]s.

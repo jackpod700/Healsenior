@@ -36,7 +36,6 @@ import com.google.accompanist.adaptive.calculateDisplayFeatures
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: ReplyHomeViewModel by viewModels()
     private val loginViewModel: LoginViewModel by viewModels()
     private val googleSignInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         loginViewModel.handleSignInResult(result)
@@ -55,15 +54,6 @@ class MainActivity : ComponentActivity() {
                 ReplyApp(
                     windowSize = windowSize,
                     displayFeatures = displayFeatures,
-                    closeDetailScreen = {
-                        viewModel.closeDetailScreen()
-                    },
-                    navigateToDetail = { emailId, pane ->
-                        viewModel.setOpenedEmail(emailId, pane)
-                    },
-                    toggleSelectedEmail = { emailId ->
-                        viewModel.toggleSelectedEmail(emailId)
-                    }
                 )
                 LoginScreen(
                     onGoogleSignInClick = {

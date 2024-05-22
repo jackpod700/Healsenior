@@ -36,5 +36,3 @@ fun RegularPosts(navController: NavHostController, posts: List<Post>) {
         }
     }
 }
-
-

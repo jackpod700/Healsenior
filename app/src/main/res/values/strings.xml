@@ -9,7 +9,7 @@
   the License.
   -->
 <resources>
-    <string name="app_name">Reply</string>
+    <string name="app_name">Healsenior</string>
     <string name="navigation_drawer">Navigation Drawer</string>
     <string name="tab_inbox">Inbox</string>
     <string name="tab_article">Articles</string>
@@ -35,4 +35,5 @@
     <string name="search_emails">Search emails</string>
     <string name="no_item_found">No item found</string>
     <string name="no_search_history">No search history</string>
+    <string name="default_web_client_id">775173992020-o9astgafanjr26ad07bpq8qhn9cih2t8.apps.googleusercontent.com</string>
 </resources>

@@ -57,6 +57,8 @@ import com.example.Healsenior.ui.utils.isBookPosture
 import com.example.Healsenior.ui.utils.isSeparating
 import com.example.Healsenior.workoutScreen.RecommendWorkOutScreen
 import com.example.Healsenior.workoutScreen.RoutineDescriptionScreen
+import com.example.Healsenior.workoutScreen.TodayWorkOutScreen
+import com.example.Healsenior.workoutScreen.WorkOutProgressScreen
 import com.example.Healsenior.workoutScreen.WorkOutScreen
 import kotlinx.coroutines.launch
 
@@ -301,8 +303,10 @@ private fun ReplyNavHost(
     ) {
         composable(ReplyRoute.Workout) {
             //WorkOutScreen()
-            RecommendWorkOutScreen()
+            //RecommendWorkOutScreen()
             //RoutineDescriptionScreen()
+            //TodayWorkOutScreen()
+            WorkOutProgressScreen()
         }
         composable(ReplyRoute.Record) {
             RecordScreen()

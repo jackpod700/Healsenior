@@ -47,10 +47,11 @@ fun RecordScreen() {
 
 @Composable
 fun RecordScreenHeader() {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .height(60.dp)
-        .background(color = Color(0xFF95BDFA)),
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(60.dp)
+            .background(color = Color(0xFF95BDFA)),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     )

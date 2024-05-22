@@ -55,6 +55,9 @@ import com.example.Healsenior.ui.utils.ReplyNavigationContentPosition
 import com.example.Healsenior.ui.utils.ReplyNavigationType
 import com.example.Healsenior.ui.utils.isBookPosture
 import com.example.Healsenior.ui.utils.isSeparating
+import com.example.Healsenior.workoutScreen.RecommendWorkOutScreen
+import com.example.Healsenior.workoutScreen.RoutineDescriptionScreen
+import com.example.Healsenior.workoutScreen.WorkOutScreen
 import kotlinx.coroutines.launch
 
 @Composable

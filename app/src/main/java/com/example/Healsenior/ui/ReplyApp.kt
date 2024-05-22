@@ -66,7 +66,6 @@ import kotlinx.coroutines.launch
 fun ReplyApp(
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
-    replyHomeUIState: ReplyHomeUIState,
     closeDetailScreen: () -> Unit = {},
     navigateToDetail: (Long, ReplyContentType) -> Unit = { _, _ -> },
     toggleSelectedEmail: (Long) -> Unit = { }
@@ -144,7 +143,6 @@ fun ReplyApp(
         contentType = contentType,
         displayFeatures = displayFeatures,
         navigationContentPosition = navigationContentPosition,
-        replyHomeUIState = replyHomeUIState,
         closeDetailScreen = closeDetailScreen,
         navigateToDetail = navigateToDetail,
         toggleSelectedEmail = toggleSelectedEmail
@@ -157,7 +155,6 @@ private fun ReplyNavigationWrapper(
     contentType: ReplyContentType,
     displayFeatures: List<DisplayFeature>,
     navigationContentPosition: ReplyNavigationContentPosition,
-    replyHomeUIState: ReplyHomeUIState,
     closeDetailScreen: () -> Unit,
     navigateToDetail: (Long, ReplyContentType) -> Unit,
     toggleSelectedEmail: (Long) -> Unit
@@ -187,7 +184,6 @@ private fun ReplyNavigationWrapper(
                 contentType = contentType,
                 displayFeatures = displayFeatures,
                 navigationContentPosition = navigationContentPosition,
-                replyHomeUIState = replyHomeUIState,
                 navController = navController,
                 selectedDestination = selectedDestination,
                 navigateToTopLevelDestination = navigationActions::navigateTo,
@@ -217,7 +213,6 @@ private fun ReplyNavigationWrapper(
                 contentType = contentType,
                 displayFeatures = displayFeatures,
                 navigationContentPosition = navigationContentPosition,
-                replyHomeUIState = replyHomeUIState,
                 navController = navController,
                 selectedDestination = selectedDestination,
                 navigateToTopLevelDestination = navigationActions::navigateTo,
@@ -240,7 +235,6 @@ fun ReplyAppContent(
     contentType: ReplyContentType,
     displayFeatures: List<DisplayFeature>,
     navigationContentPosition: ReplyNavigationContentPosition,
-    replyHomeUIState: ReplyHomeUIState,
     navController: NavHostController,
     selectedDestination: String,
     navigateToTopLevelDestination: (ReplyTopLevelDestination) -> Unit,
@@ -267,7 +261,6 @@ fun ReplyAppContent(
                 navController = navController,
                 contentType = contentType,
                 displayFeatures = displayFeatures,
-                replyHomeUIState = replyHomeUIState,
                 navigationType = navigationType,
                 closeDetailScreen = closeDetailScreen,
                 navigateToDetail = navigateToDetail,
@@ -289,7 +282,6 @@ private fun ReplyNavHost(
     navController: NavHostController,
     contentType: ReplyContentType,
     displayFeatures: List<DisplayFeature>,
-    replyHomeUIState: ReplyHomeUIState,
     navigationType: ReplyNavigationType,
     closeDetailScreen: () -> Unit,
     navigateToDetail: (Long, ReplyContentType) -> Unit,
@@ -302,11 +294,7 @@ private fun ReplyNavHost(
         startDestination = ReplyRoute.Workout,
     ) {
         composable(ReplyRoute.Workout) {
-            //WorkOutScreen()
-            //RecommendWorkOutScreen()
-            //RoutineDescriptionScreen()
-            //TodayWorkOutScreen()
-            WorkOutProgressScreen()
+            EmptyComingSoon()
         }
         composable(ReplyRoute.Record) {
             RecordScreen()

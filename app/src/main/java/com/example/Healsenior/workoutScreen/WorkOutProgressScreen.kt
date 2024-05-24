@@ -33,24 +33,29 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.Healsenior.recordScreen.WorkOutCalendar
 
 @Preview
 @Composable
-fun WorkOutProgressScreen() {
+fun WorkOutProgressScreen(
+    navController: NavHostController
+) {
     Column(
         modifier = Modifier
             .statusBarsPadding()
             .fillMaxSize()
             .background(color = Color(0xFFEAEAEA))
     ) {
-        WorkOutProgressScreenHeader()
+        WorkOutProgressScreenHeader(navController)
         WorkOutProgressScreenContent()
     }
 }
 
 @Composable
-fun WorkOutProgressScreenHeader() {
+fun WorkOutProgressScreenHeader(
+    navController: NavHostController
+) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(40.dp)
@@ -60,7 +65,7 @@ fun WorkOutProgressScreenHeader() {
         Row {
             IconButton(
                 onClick = {
-
+                    navController.navigateUp()
                 },
                 modifier = Modifier
                     .width(40.dp)

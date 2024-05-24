@@ -34,10 +34,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.Healsenior.workoutScreen.Data.GetRoutineData
+import com.example.Healsenior.workoutScreen.Data.GetWorkOutData
+
+@Composable
+fun WorkOutScreen() {
+    val workOutData = GetWorkOutData()
+    val routineData = GetRoutineData()
+    WorkOutScreenNav(workOutData, routineData)
+}
 
 @Preview
 @Composable
-fun WorkOutScreen() {
+fun WorkOutMainScreen(
+    navController: NavHostController
+) {
     val routineName = remember { mutableStateOf("근육량 증가 추천 플랜(입문)") }
     val routineDay = remember { mutableIntStateOf(1) }
     val workoutCnt = remember { mutableIntStateOf(9) }
@@ -55,7 +67,7 @@ fun WorkOutScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         WorkOutScreenHeader()
-        WorkOutScreenContent(routineName, routineDay, workoutCnt,
+        WorkOutScreenContent(navController, routineName, routineDay, workoutCnt,
             setCnt, totalCalorieInRoutine, timeNeededInRoutine,
             difficulty, workoutBodyPart)
     }
@@ -105,6 +117,7 @@ fun WorkOutScreenHeader() {
 
 @Composable
 fun WorkOutScreenContent(
+    navController: NavHostController,
     routineName: MutableState<String>,
     routineDay: MutableIntState,
     workoutCnt: MutableIntState,
@@ -143,7 +156,7 @@ fun WorkOutScreenContent(
                     shape = RoundedCornerShape(15.dp)
                 ),
         ) {
-            ShowRoutineDetail(routineName, routineDay, workoutCnt,
+            ShowRoutineDetail(navController, routineName, routineDay, workoutCnt,
                 setCnt, totalCalorieInRoutine, timeNeededInRoutine,
                 difficulty, workoutBodyPart)
         }
@@ -167,7 +180,7 @@ fun WorkOutScreenContent(
                     shape = RoundedCornerShape(10.dp)
                 )
                 .clickable {
-                    //ShowWorkOutList()
+                    navController.navigate("RecommendWorkOutScreen")
                 },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -185,6 +198,7 @@ fun WorkOutScreenContent(
 
 @Composable
 fun ShowRoutineDetail(
+    navController: NavHostController,
     routineName: MutableState<String>,
     routineDay: MutableIntState,
     workoutCnt: MutableIntState,
@@ -269,7 +283,7 @@ fun ShowRoutineDetail(
                     shape = RoundedCornerShape(10.dp)
                 )
                 .clickable {
-                    //ShowWorkOutList()
+                    navController.navigate("TodayWorkOutScreen")
                 },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center

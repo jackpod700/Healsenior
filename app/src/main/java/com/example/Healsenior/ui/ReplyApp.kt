@@ -61,6 +61,7 @@ import com.example.Healsenior.workoutScreen.RoutineDescriptionScreen
 import com.example.Healsenior.workoutScreen.TodayWorkOutScreen
 import com.example.Healsenior.workoutScreen.WorkOutProgressScreen
 import com.example.Healsenior.workoutScreen.WorkOutScreen
+import com.example.Healsenior.workoutScreen.WorkOutScreenNav
 import kotlinx.coroutines.launch
 
 @Composable
@@ -295,7 +296,7 @@ private fun ReplyNavHost(
         startDestination = ReplyRoute.Workout,
     ) {
         composable(ReplyRoute.Workout) {
-            EmptyComingSoon()
+            WorkOutScreen()
         }
         composable(ReplyRoute.Record) {
             RecordScreen()

@@ -35,23 +35,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 @Preview
 @Composable
-fun RecommendWorkOutScreen() {
+fun RecommendWorkOutScreen(
+    navController: NavHostController
+) {
     Column(
         modifier = Modifier
             .statusBarsPadding()
             .fillMaxSize()
             .background(color = Color(0xFFEAEAEA))
     ) {
-        RecommendWorkOutScreenHeader()
-        RecommendWorkOutScreenContent()
+        RecommendWorkOutScreenHeader(navController)
+        RecommendWorkOutScreenContent(navController)
     }
 }
 
 @Composable
-fun RecommendWorkOutScreenHeader() {
+fun RecommendWorkOutScreenHeader(navController: NavHostController) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(40.dp)
@@ -61,7 +64,7 @@ fun RecommendWorkOutScreenHeader() {
         Row {
             IconButton(
                 onClick = {
-
+                    navController.navigateUp()
                 },
                 modifier = Modifier
                     .width(40.dp)
@@ -92,7 +95,7 @@ fun RecommendWorkOutScreenHeader() {
 }
 
 @Composable
-fun RecommendWorkOutScreenContent() {
+fun RecommendWorkOutScreenContent(navController: NavHostController) {
     var selectedItem = remember{ mutableIntStateOf(0) }
 
     Column {
@@ -297,7 +300,7 @@ fun RecommendWorkOutScreenContent() {
                                     Row(
                                         modifier = Modifier
                                             .clickable() {
-
+                                                navController.navigate("RoutineDescriptionScreen")
                                             },
                                         horizontalArrangement = Arrangement.End
                                     ) {
@@ -312,7 +315,7 @@ fun RecommendWorkOutScreenContent() {
                                         )
                                         IconButton(
                                             onClick = {
-
+                                                navController.navigate("RoutineDescriptionScreen")
                                             },
                                             modifier = Modifier
                                                 .width(20.dp)

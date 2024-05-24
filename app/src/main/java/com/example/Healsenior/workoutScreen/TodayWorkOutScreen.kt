@@ -36,23 +36,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 @Preview
 @Composable
-fun TodayWorkOutScreen() {
+fun TodayWorkOutScreen(
+    navController: NavHostController
+) {
     Column(
         modifier = Modifier
             .statusBarsPadding()
             .fillMaxSize()
             .background(color = Color(0xFFEAEAEA))
     ) {
-        TodayWorkOutScreenHeader()
-        TodayWorkOutScreenContent()
+        TodayWorkOutScreenHeader(navController)
+        TodayWorkOutScreenContent(navController)
     }
 }
 
 @Composable
-fun TodayWorkOutScreenHeader() {
+fun TodayWorkOutScreenHeader(
+    navController: NavHostController
+) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(40.dp)
@@ -62,7 +67,7 @@ fun TodayWorkOutScreenHeader() {
         Row {
             IconButton(
                 onClick = {
-
+                    navController.navigateUp()
                 },
                 modifier = Modifier
                     .width(40.dp)
@@ -93,7 +98,9 @@ fun TodayWorkOutScreenHeader() {
 }
 
 @Composable
-fun TodayWorkOutScreenContent() {
+fun TodayWorkOutScreenContent(
+    navController: NavHostController
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -221,7 +228,7 @@ fun TodayWorkOutScreenContent() {
                 shape = RoundedCornerShape(10.dp)
             )
             .clickable() {
-
+                navController.navigate("WorkOutProgressScreen")
             },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center

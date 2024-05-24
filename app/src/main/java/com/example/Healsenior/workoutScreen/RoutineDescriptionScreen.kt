@@ -33,23 +33,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 @Preview
 @Composable
-fun RoutineDescriptionScreen() {
+fun RoutineDescriptionScreen(
+    navController: NavHostController
+) {
     Column(
         modifier = Modifier
             .statusBarsPadding()
             .fillMaxSize()
             .background(color = Color(0xFFEAEAEA))
     ) {
-        RoutineDescriptionScreenHeader()
-        RoutineDescriptionScreenContent()
+        RoutineDescriptionScreenHeader(navController)
+        RoutineDescriptionScreenContent(navController)
     }
 }
 
 @Composable
-fun RoutineDescriptionScreenHeader() {
+fun RoutineDescriptionScreenHeader(
+    navController: NavHostController
+) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(40.dp)
@@ -59,7 +64,7 @@ fun RoutineDescriptionScreenHeader() {
         Row {
             IconButton(
                 onClick = {
-
+                    navController.navigateUp()
                 },
                 modifier = Modifier
                     .width(40.dp)
@@ -90,7 +95,9 @@ fun RoutineDescriptionScreenHeader() {
 }
 
 @Composable
-fun RoutineDescriptionScreenContent() {
+fun RoutineDescriptionScreenContent(
+    navController: NavHostController
+) {
     Column {
         Column(
             modifier = Modifier
@@ -154,7 +161,7 @@ fun RoutineDescriptionScreenContent() {
                     shape = RoundedCornerShape(10.dp)
                 )
                 .clickable() {
-
+                    navController.navigate("WorkOutScreen")
                 },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center

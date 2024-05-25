@@ -65,14 +65,12 @@ class MainActivity : ComponentActivity() {
                         viewModel.toggleSelectedEmail(emailId)
                     }
                 )
-                /*
                 LoginScreen(
                     onGoogleSignInClick = {
                         val signInIntent = loginViewModel.getGoogleSignInIntent()
                         googleSignInLauncher.launch(signInIntent)
                     }
                 )
-                 */
             }
 
         }

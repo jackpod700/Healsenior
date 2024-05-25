@@ -42,7 +42,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
 import com.example.Healsenior.recordScreen.RecordScreen
-import com.example.Healsenior.recordScreen.RecordScreenDetailScreen
 import com.example.Healsenior.ui.navigation.ModalNavigationDrawerContent
 import com.example.Healsenior.ui.navigation.PermanentNavigationDrawerContent
 import com.example.Healsenior.ui.navigation.ReplyBottomNavigationBar
@@ -56,12 +55,7 @@ import com.example.Healsenior.ui.utils.ReplyNavigationContentPosition
 import com.example.Healsenior.ui.utils.ReplyNavigationType
 import com.example.Healsenior.ui.utils.isBookPosture
 import com.example.Healsenior.ui.utils.isSeparating
-import com.example.Healsenior.workoutScreen.RecommendWorkOutScreen
-import com.example.Healsenior.workoutScreen.RoutineDescriptionScreen
-import com.example.Healsenior.workoutScreen.TodayWorkOutScreen
-import com.example.Healsenior.workoutScreen.WorkOutProgressScreen
 import com.example.Healsenior.workoutScreen.WorkOutScreen
-import com.example.Healsenior.workoutScreen.WorkOutScreenNav
 import kotlinx.coroutines.launch
 
 @Composable

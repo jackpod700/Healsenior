@@ -1,12 +1,8 @@
 package com.example.Healsenior.data
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Date
 
-//val database = FirebaseDatabase.getInstance()
 val database = FirebaseFirestore.getInstance()
-    //private val usersRef = database.getReference("User")
-    //private val routinesRef = database.getReference("Routine")
     fun writeNewUser(
         UID: String
     ) {
@@ -26,7 +22,6 @@ val database = FirebaseFirestore.getInstance()
     }
 
     fun GetUser(UID: String) {
-        //usersRef.child(UID).get().addOnSuccessListener {
         database.collection("User").document(UID).get().addOnSuccessListener {
             val user = it.toObject(User::class.java)
             if (user != null) {

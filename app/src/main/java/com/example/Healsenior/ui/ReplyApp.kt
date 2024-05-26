@@ -16,7 +16,6 @@
 
 package com.example.Healsenior.ui
 
-import android.app.Activity
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.AnimatedVisibility
@@ -49,9 +48,7 @@ import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
 import com.example.Healsenior.login.LoginScreen
 import com.example.Healsenior.login.LoginViewModel
-import com.example.Healsenior.login.LogoutScreen
 import com.example.Healsenior.login.checkLoginState
-import com.example.Healsenior.login.logout
 import com.example.Healsenior.page.MainCommunityScreen
 import com.example.Healsenior.page.MyPageScreen
 import com.example.Healsenior.recordScreen.RecordScreen
@@ -266,7 +263,6 @@ private fun ReplyNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -285,10 +281,4 @@ private fun ReplyNavHost(
             MyPageScreen()
         }
     }
-}
-
-fun restartMainActivity(activity: Activity) {
-    val intent = Intent(activity, MainActivity::class.java)
-    activity.finish()
-    activity.startActivity(intent)
 }

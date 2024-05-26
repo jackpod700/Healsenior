@@ -48,11 +48,10 @@ data class Post(
     val uid: String = "",
     val author: String = "",
     val title: String = "",
-    val author: String = "",
     val content: String = "",
     val like: Int = 0,
     val comments: Int = 0,
-    val views: Int = 0,
+    val view: Int = 0,
     val date: Date = Date(),
 )
 

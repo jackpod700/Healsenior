@@ -15,6 +15,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import android.content.Context
 import com.example.Healsenior.ui.MainActivity
+import com.example.Healsenior.data.writeNewUser
+import java.lang.Math.random
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -57,6 +59,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     Log.d("Login", "signInWithCredential:success")
                     // 로그인 성공 후 필요한 작업 수행
                     saveLoginState(getApplication(), true)
+                    //if(task.result?.additionalUserInfo?.isNewUser == true) {
+                    writeNewUser(auth.currentUser!!.uid)
                     restartMainActivity(activity)
                 } else {
                     Log.w("Login", "signInWithCredential:failure", task.exception)

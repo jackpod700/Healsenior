@@ -61,6 +61,7 @@ identityCredential = "20231002"
 googleid = "1.1.0"
 credentials = "1.2.2"
 navigationCompose = "2.8.0-beta01"
+firebaseFirestoreKtx = "25.0.0"
 
 [libraries]
 accompanist-adaptive = { module = "com.google.accompanist:accompanist-adaptive", version.ref = "accompanist" }
@@ -150,6 +151,7 @@ identity-credential = { group = "com.android.identity", name = "identity-credent
 googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

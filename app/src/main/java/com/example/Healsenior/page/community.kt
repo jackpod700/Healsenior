@@ -11,15 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -36,14 +30,73 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.Healsenior.data.Post
+import java.text.SimpleDateFormat
+import java.util.Date
 
+
+@SuppressLint("SimpleDateFormat")
+fun parseDate(dateStr: String): Date {
+    val format = SimpleDateFormat("yyyy.MM.dd")
+    return format.parse(dateStr)
+}
 
 val posts = listOf(
-    Post("게시글 제목", "작성자", "2023.11.05", "여기는 게시글의 본문 내용입니다. 많은 정보와 함께 다양한 사람들의 이야기를 담고 있습니다...", 12, 2, 37),
-    Post("다른 게시글 제목", "다른 작성자", "2023.11.04", "이 게시글은 다른 내용을 포함하고 있으며, 여러 주제에 대한 흥미로운 정보를 제공합니다...", 26, 14, 127),
-    Post("인기있는 낚시채널", "바다[프로필 공개]", "2023.10.26", "얼마 전 바다 낚시하고 왔는데 대박 조과를...", 764, 167, 983),
-    Post("투자가", "루카스", "2023.11.02", "20kg 감자 성공! 167cm 80kg 바이오엔지니어 40대 여성입니다...", 526, 96, 751),
-    Post("필수", "테크", "2023.09.02", "부디 이 글을 읽고 난 후, 적절하게 필요한 정보를...", 300, 50, 400)
+    Post(
+        pid = 1,
+        uid = "1",
+        author = "작성자",
+        title = "게시글 제목",
+        content = "여기는 게시글의 본문 내용입니다. 많은 정보와 함께 다양한 사람들의 이야기를 담고 있습니다...",
+        like = 12,
+        comments = 2,
+        view = 37,
+        date = parseDate("2023.11.05")
+    ),
+    Post(
+        pid = 2,
+        uid = "2",
+        author = "다른 작성자",
+        title = "다른 게시글 제목",
+        content = "이 게시글은 다른 내용을 포함하고 있으며, 여러 주제에 대한 흥미로운 정보를 제공합니다...",
+        like = 26,
+        comments = 14,
+        view = 127,
+        date = parseDate("2023.11.04")
+    ),
+    Post(
+        pid = 3,
+        uid = "3",
+        author = "바다[프로필 공개]",
+        title = "인기있는 낚시채널",
+        content = "얼마 전 바다 낚시하고 왔는데 대박 조과를...",
+        like = 764,
+        comments = 167,
+        view = 983,
+        date = parseDate("2023.10.26")
+    ),
+    Post(
+        pid = 4,
+        uid = "4",
+        author = "루카스",
+        title = "투자가",
+        content = "20kg 감자 성공! 167cm 80kg 바이오엔지니어 40대 여성입니다...",
+        like = 526,
+        comments = 96,
+        view = 751,
+        date = parseDate("2023.11.02")
+    ),
+    Post(
+        pid = 5,
+        uid = "5",
+        author = "테크",
+        title = "필수",
+        content = "부디 이 글을 읽고 난 후, 적절하게 필요한 정보를...",
+        like = 300,
+        comments = 50,
+        view = 400,
+        date = parseDate("2023.09.02")
+    )
 )
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

@@ -29,13 +29,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.Healsenior.data.Post
 
 
 // 임시 데이터를 이용한 예제
 @Composable
 fun PopularPosts(navController: NavHostController, posts: List<Post>) {
     LazyColumn(modifier = Modifier.padding(16.dp)) {
-        items(posts.sortedByDescending { it.likes + it.comments + it.views }) { post ->
+        items(posts.sortedByDescending { it.like + it.comments + it.view }) { post ->
             PostCard(post) {
                 navController.navigate("postDetail/${post.title}")
             }

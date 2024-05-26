@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.Healsenior.data.Post
 
 data class Comment(
     val author: String,
@@ -116,7 +117,7 @@ fun PostDetail(post: Post) {
         ) {
             Icon(Icons.Filled.Favorite, contentDescription = "Likes", tint = Color.Red)
             Spacer(modifier = Modifier.width(4.dp))
-            Text("${post.likes} 좋아요", style = MaterialTheme.typography.bodySmall)
+            Text("${post.like} 좋아요", style = MaterialTheme.typography.bodySmall)
             Spacer(modifier = Modifier.width(16.dp))
             Icon(Icons.AutoMirrored.Filled.Comment, contentDescription = "Comments", tint = Color.Gray)
             Spacer(modifier = Modifier.width(4.dp))
@@ -124,7 +125,7 @@ fun PostDetail(post: Post) {
             Spacer(modifier = Modifier.width(16.dp))
             Icon(Icons.Filled.Visibility, contentDescription = "Views", tint = Color.Gray)
             Spacer(modifier = Modifier.width(4.dp))
-            Text("${post.views} 조회", style = MaterialTheme.typography.bodySmall)
+            Text("${post.view} 조회", style = MaterialTheme.typography.bodySmall)
         }
         Spacer(modifier = Modifier.height(16.dp))
         HorizontalDivider(thickness = 1.dp, color = Color.Gray)
@@ -164,11 +165,11 @@ fun PreviewPostDetailScreen() {
     val post = Post(
         title = "게시글 제목",
         author = "작성자",
-        date = "2023.11.05",
+        date = parseDate("2023.11.05"),
         content = "여기는 게시글의 본문 내용입니다. 많은 정보와 함께 다양한 사람들의 이야기를 담고 있습니다...",
-        likes = 12,
+        like = 12,
         comments = 2,
-        views = 37
+        view = 37
     )
     PostDetailScreen(post)
 }

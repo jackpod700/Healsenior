@@ -17,6 +17,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.Healsenior.data.Post
+
 @Composable
 fun PostCard(post: Post, onClick: () -> Unit) {
     Card(
@@ -40,13 +42,13 @@ fun PostCard(post: Post, onClick: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(Icons.Filled.Favorite, contentDescription = "Likes", tint = Color.Red)
-                Text("${post.likes} 좋아요", modifier = Modifier.padding(start = 4.dp))
+                Text("${post.like} 좋아요", modifier = Modifier.padding(start = 4.dp))
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(Icons.AutoMirrored.Filled.Comment, contentDescription = "Comments", tint = Color.Gray)
                 Text("${post.comments} 댓글", modifier = Modifier.padding(start = 4.dp))
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(Icons.Filled.Visibility, contentDescription = "Views", tint = Color.Gray)
-                Text("${post.views} 조회", modifier = Modifier.padding(start = 4.dp))
+                Text("${post.view} 조회", modifier = Modifier.padding(start = 4.dp))
             }
         }
     }

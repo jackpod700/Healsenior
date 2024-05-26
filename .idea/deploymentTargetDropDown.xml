@@ -5,6 +5,9 @@
       <entry key="DefaultPreview">
         <State />
       </entry>
+      <entry key="MainActivity">
+        <State />
+      </entry>
       <entry key="PreviewMainScreen">
         <State />
       </entry>
@@ -12,9 +15,6 @@
         <State />
       </entry>
       <entry key="PreviewRankingSection">
-        <State />
-      </entry>
-      <entry key="PreviewRegularPosts">
         <State />
       </entry>
       <entry key="app">

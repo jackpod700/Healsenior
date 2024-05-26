@@ -52,6 +52,8 @@ import com.example.Healsenior.login.LoginViewModel
 import com.example.Healsenior.login.LogoutScreen
 import com.example.Healsenior.login.checkLoginState
 import com.example.Healsenior.login.logout
+import com.example.Healsenior.page.MainCommunityScreen
+import com.example.Healsenior.page.MyPageScreen
 import com.example.Healsenior.recordScreen.RecordScreen
 import com.example.Healsenior.ui.navigation.ModalNavigationDrawerContent
 import com.example.Healsenior.ui.navigation.PermanentNavigationDrawerContent
@@ -277,12 +279,10 @@ private fun ReplyNavHost(
             RecordScreen()
         }
         composable(ReplyRoute.Community) {
-            EmptyComingSoon()
+            MainCommunityScreen()
         }
         composable(ReplyRoute.Mypage) {
-            LogoutScreen {
-                logout(context = context)
-            }
+            MyPageScreen()
         }
     }
 }

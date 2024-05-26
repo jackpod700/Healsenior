@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.Healsenior.data.Post
 
 // 데이터 클래스를 사용하여 게시글 정보를 담습니다.
 

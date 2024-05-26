@@ -25,6 +25,19 @@ val database = FirebaseFirestore.getInstance()
         database.collection("User").document(user.uid).set(user)
     }
 
+    fun GetUser(UID: String) {
+        //usersRef.child(UID).get().addOnSuccessListener {
+        database.collection("User").document(UID).get().addOnSuccessListener {
+            val user = it.toObject(User::class.java)
+            if (user != null) {
+                println(user)
+            } else {
+                println("No such document")
+            }
+        }.addOnFailureListener {
+            println("Error getting documents: $it")
+        }
+    }
     fun writeNewRoutine(
         RID: Long,
         name: String,

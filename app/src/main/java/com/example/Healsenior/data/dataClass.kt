@@ -43,7 +43,7 @@ data class Post(
     val title: String = "",
     val content: String = "",
     val like: Int = 0,
-    val comments: List<Comment> = emptyList(),
+    val comments: Int = 0,
     val view: Int = 0,
     val date: Date = Date(),
 )

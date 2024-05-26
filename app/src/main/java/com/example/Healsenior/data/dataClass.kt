@@ -1,6 +1,5 @@
 package com.example.Healsenior.data
 
-import android.content.ClipDescription
 import java.util.Date
 
 data class User(
@@ -40,6 +39,7 @@ data class Workout(
 data class Post(
     val pid: Long = 0,
     val uid: String = "",
+    val author: String = "",
     val title: String = "",
     val content: String = "",
     val like: Int = 0,

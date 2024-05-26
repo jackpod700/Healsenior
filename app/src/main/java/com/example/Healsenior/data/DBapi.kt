@@ -6,11 +6,11 @@ val database = FirebaseFirestore.getInstance()
     fun writeNewUser(
         UID: String
     ) {
-        val recordmap = emptyMap<Date, List<Long>>()
+        val recordmap = emptyMap<Date, String>()
         val user =
             User(UID,
                 "User"+ Math.random().toInt().toString(),
-                0,
+                "",
                 0,
                 0, 0,
                 0,
@@ -21,29 +21,24 @@ val database = FirebaseFirestore.getInstance()
         database.collection("User").document(user.uid).set(user)
     }
 
-    fun GetUser(UID: String) {
+    fun GetUser(UID: String, callback: (User?) -> Unit) {
         database.collection("User").document(UID).get().addOnSuccessListener {
             val user = it.toObject(User::class.java)
             if (user != null) {
-                println(user)
+                callback(user)
             } else {
-                println("No such document")
+                callback(null)
             }
         }.addOnFailureListener {
             println("Error getting documents: $it")
         }
     }
-    fun writeNewRoutine(
-        RID: Long,
-        name: String,
-        workoutList: Map<Int, List<Long>>,
-        place: String,
-        goal: String,
-        description: String,
-        time: Long,
-        difficulty: Int
-    ) {
-        val routine = Routine(RID, name, workoutList, place, goal, description, time, difficulty)
-        //routinesRef.child(routine.rid.toString()).setValue(routine)
-        database.collection("Routine").document(routine.rid.toString()).set(routine)
-    }
+    //GetUser 사용법 예시(변형하셔서 사용하시면 됩니다)
+    /*GetUser("some_uid") { user ->
+        if (user != null) {
+            // 여기에서 user 객체를 사용
+        } else {
+            println("User not found or error occurred")
+        }
+    }*/
+

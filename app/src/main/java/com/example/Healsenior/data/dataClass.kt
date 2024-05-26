@@ -6,56 +6,65 @@ import java.util.Date
 data class User(
     val uid: String = "",
     val name: String = "",
-    val rid: Long = 0,
+    val rid: String = "",
     val dayCount: Int = 0,
     val rank: Int = 0,
     val point: Int = 0,
     val workoutHour: Int = 0,
     val calorieSum: Int = 0,
     val setSum: Int = 0,
-    val recordMap: Map<Date, List<Long>> = emptyMap()
+    val recordMap: Map<Date, String> = emptyMap()
 )
 
 data class Routine(
-    val rid: Long = 0,
+    val rid: String = "",
     val name: String = "",
-    val workoutList: Map<Int,List<Long>> = emptyMap(),
     val place: String = "",
     val goal: String = "",
     val description: String = "",
+)
+
+data class RoutineDaily(
+    val rid: String = "",
+    val day: Int = 0,
+    val workoutList: List<String> = emptyList(),
+    val workoutPart: String= "",
     val time: Long = 0, //기준 초
     val difficulty: Int = 0,
 )
 
 data class Workout(
-    val wid: Long = 0,
+    val wid: String = "",
     val name: String = "",
     val set: Int = 0,
-    val breakTime: Long = 0, //기준 초
+    val reps: List<Int> = emptyList(),
     val calorie: Int = 0,
     val videoName: String = "",
     val description: String = "",
+    val summary: String = "",
 )
 
 data class Post(
-    val pid: Long = 0,
+    val pid: Int = 0,
     val uid: String = "",
     val title: String = "",
+    val author: String = "",
     val content: String = "",
     val like: Int = 0,
     val comments: Int = 0,
-    val view: Int = 0,
+    val views: Int = 0,
     val date: Date = Date(),
 )
 
 data class Comment(
-    val uid: String = "",
+    val pid: Int = 0,
+    val author: String = "",
     val content: String = "",
     val date: Date = Date(),
 )
 
 data class Goods(
-    val gid: Long = 0,
+    val gid: Int = 0,
     val name: String = "",
     val description : String = "",
     val price: Int = 0,

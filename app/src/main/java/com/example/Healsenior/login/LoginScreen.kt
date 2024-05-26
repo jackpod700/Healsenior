@@ -1,5 +1,6 @@
 package com.example.Healsenior.login
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,19 @@ fun LoginScreen(onGoogleSignInClick: () -> Unit) {
     ) {
         Button(onClick = onGoogleSignInClick) {
             Text(text = "Login with Google")
+        }
+    }
+}
+
+@Composable
+fun LogoutScreen(onGoogleSignOutClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Button(onClick = onGoogleSignOutClick) {
+            Text(text = "Logout")
         }
     }
 }

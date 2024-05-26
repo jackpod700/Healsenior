@@ -16,6 +16,9 @@
 
 package com.example.Healsenior.ui
 
+import android.app.Activity
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -31,9 +34,12 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -41,6 +47,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
+import com.example.Healsenior.login.LoginScreen
+import com.example.Healsenior.login.LoginViewModel
+import com.example.Healsenior.login.LogoutScreen
+import com.example.Healsenior.login.checkLoginState
+import com.example.Healsenior.login.logout
 import com.example.Healsenior.recordScreen.RecordScreen
 import com.example.Healsenior.recordScreen.RecordScreenDetailScreen
 import com.example.Healsenior.ui.navigation.ModalNavigationDrawerContent
@@ -51,7 +62,6 @@ import com.example.Healsenior.ui.navigation.ReplyNavigationRail
 import com.example.Healsenior.ui.navigation.ReplyRoute
 import com.example.Healsenior.ui.navigation.ReplyTopLevelDestination
 import com.example.Healsenior.ui.utils.DevicePosture
-import com.example.Healsenior.ui.utils.ReplyContentType
 import com.example.Healsenior.ui.utils.ReplyNavigationContentPosition
 import com.example.Healsenior.ui.utils.ReplyNavigationType
 import com.example.Healsenior.ui.utils.isBookPosture
@@ -63,20 +73,19 @@ import com.example.Healsenior.workoutScreen.WorkOutProgressScreen
 import com.example.Healsenior.workoutScreen.WorkOutScreen
 import kotlinx.coroutines.launch
 
+
 @Composable
 fun ReplyApp(
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
-    closeDetailScreen: () -> Unit = {},
-    navigateToDetail: (Long, ReplyContentType) -> Unit = { _, _ -> },
-    toggleSelectedEmail: (Long) -> Unit = { }
+    loginViewModel: LoginViewModel,
+    googleSignInLauncher : ActivityResultLauncher<Intent>,
 ) {
     /**
      * This will help us select type of navigation and content type depending on window size and
      * fold state of the device.
      */
     val navigationType: ReplyNavigationType
-    val contentType: ReplyContentType
 
     /**
      * We are using display's folding features to map the device postures a fold is in.
@@ -98,15 +107,9 @@ fun ReplyApp(
     when (windowSize.widthSizeClass) {
         WindowWidthSizeClass.Compact -> {
             navigationType = ReplyNavigationType.BOTTOM_NAVIGATION
-            contentType = ReplyContentType.SINGLE_PANE
         }
         WindowWidthSizeClass.Medium -> {
             navigationType = ReplyNavigationType.NAVIGATION_RAIL
-            contentType = if (foldingDevicePosture != DevicePosture.NormalPosture) {
-                ReplyContentType.DUAL_PANE
-            } else {
-                ReplyContentType.SINGLE_PANE
-            }
         }
         WindowWidthSizeClass.Expanded -> {
             navigationType = if (foldingDevicePosture is DevicePosture.BookPosture) {
@@ -114,11 +117,9 @@ fun ReplyApp(
             } else {
                 ReplyNavigationType.PERMANENT_NAVIGATION_DRAWER
             }
-            contentType = ReplyContentType.DUAL_PANE
         }
         else -> {
             navigationType = ReplyNavigationType.BOTTOM_NAVIGATION
-            contentType = ReplyContentType.SINGLE_PANE
         }
     }
 
@@ -139,26 +140,31 @@ fun ReplyApp(
         }
     }
 
-    ReplyNavigationWrapper(
-        navigationType = navigationType,
-        contentType = contentType,
-        displayFeatures = displayFeatures,
-        navigationContentPosition = navigationContentPosition,
-        closeDetailScreen = closeDetailScreen,
-        navigateToDetail = navigateToDetail,
-        toggleSelectedEmail = toggleSelectedEmail
-    )
+
+    //로그인 상태 확인
+    val context = LocalContext.current
+    var isLoggedIn by remember { mutableStateOf(checkLoginState(context)) }
+
+    if(isLoggedIn){
+        ReplyNavigationWrapper(
+            navigationType = navigationType,
+            navigationContentPosition = navigationContentPosition,
+        )
+    }
+    else{
+        LoginScreen(
+            onGoogleSignInClick = {
+                val signInIntent = loginViewModel.getGoogleSignInIntent()
+                googleSignInLauncher.launch(signInIntent)
+            }
+        )
+    }
 }
 
 @Composable
 private fun ReplyNavigationWrapper(
     navigationType: ReplyNavigationType,
-    contentType: ReplyContentType,
-    displayFeatures: List<DisplayFeature>,
     navigationContentPosition: ReplyNavigationContentPosition,
-    closeDetailScreen: () -> Unit,
-    navigateToDetail: (Long, ReplyContentType) -> Unit,
-    toggleSelectedEmail: (Long) -> Unit
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -182,15 +188,10 @@ private fun ReplyNavigationWrapper(
         }) {
             ReplyAppContent(
                 navigationType = navigationType,
-                contentType = contentType,
-                displayFeatures = displayFeatures,
                 navigationContentPosition = navigationContentPosition,
                 navController = navController,
                 selectedDestination = selectedDestination,
                 navigateToTopLevelDestination = navigationActions::navigateTo,
-                closeDetailScreen = closeDetailScreen,
-                navigateToDetail = navigateToDetail,
-                toggleSelectedEmail = toggleSelectedEmail
             )
         }
     } else {
@@ -211,15 +212,10 @@ private fun ReplyNavigationWrapper(
         ) {
             ReplyAppContent(
                 navigationType = navigationType,
-                contentType = contentType,
-                displayFeatures = displayFeatures,
                 navigationContentPosition = navigationContentPosition,
                 navController = navController,
                 selectedDestination = selectedDestination,
                 navigateToTopLevelDestination = navigationActions::navigateTo,
-                closeDetailScreen = closeDetailScreen,
-                navigateToDetail = navigateToDetail,
-                toggleSelectedEmail = toggleSelectedEmail
             ) {
                 scope.launch {
                     drawerState.open()
@@ -233,15 +229,10 @@ private fun ReplyNavigationWrapper(
 fun ReplyAppContent(
     modifier: Modifier = Modifier,
     navigationType: ReplyNavigationType,
-    contentType: ReplyContentType,
-    displayFeatures: List<DisplayFeature>,
     navigationContentPosition: ReplyNavigationContentPosition,
     navController: NavHostController,
     selectedDestination: String,
     navigateToTopLevelDestination: (ReplyTopLevelDestination) -> Unit,
-    closeDetailScreen: () -> Unit,
-    navigateToDetail: (Long, ReplyContentType) -> Unit,
-    toggleSelectedEmail: (Long) -> Unit,
     onDrawerClicked: () -> Unit = {}
 ) {
     Row(modifier = modifier.fillMaxSize()) {
@@ -260,12 +251,7 @@ fun ReplyAppContent(
         ) {
             ReplyNavHost(
                 navController = navController,
-                contentType = contentType,
-                displayFeatures = displayFeatures,
-                navigationType = navigationType,
-                closeDetailScreen = closeDetailScreen,
-                navigateToDetail = navigateToDetail,
-                toggleSelectedEmail = toggleSelectedEmail,
+
                 modifier = Modifier.weight(1f),
             )
             AnimatedVisibility(visible = navigationType == ReplyNavigationType.BOTTOM_NAVIGATION) {
@@ -281,14 +267,9 @@ fun ReplyAppContent(
 @Composable
 private fun ReplyNavHost(
     navController: NavHostController,
-    contentType: ReplyContentType,
-    displayFeatures: List<DisplayFeature>,
-    navigationType: ReplyNavigationType,
-    closeDetailScreen: () -> Unit,
-    navigateToDetail: (Long, ReplyContentType) -> Unit,
-    toggleSelectedEmail: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -304,7 +285,15 @@ private fun ReplyNavHost(
             EmptyComingSoon()
         }
         composable(ReplyRoute.Mypage) {
-            EmptyComingSoon()
+            LogoutScreen {
+                logout(context = context)
+            }
         }
     }
+}
+
+fun restartMainActivity(activity: Activity) {
+    val intent = Intent(activity, MainActivity::class.java)
+    activity.finish()
+    activity.startActivity(intent)
 }

@@ -1,5 +1,6 @@
 package com.example.Healsenior.login
 
+import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.util.Log
@@ -12,6 +13,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import android.content.Context
+import com.example.Healsenior.ui.MainActivity
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -31,13 +34,13 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         return googleSignInClient.signInIntent
     }
 
-    fun handleSignInResult(result: ActivityResult) {
+    fun handleSignInResult(result: ActivityResult, activity: Activity) {
         val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
         try {
             val account = task.getResult(ApiException::class.java)
             if (account != null) {
                 Log.d("Login", "Google Sign-In successful, ID Token: ${account.idToken}")
-                firebaseAuthWithGoogle(account.idToken!!)
+                firebaseAuthWithGoogle(account.idToken!!, activity)
             } else {
                 Log.e("Login", "Google Sign-In account is null")
             }
@@ -46,16 +49,42 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun firebaseAuthWithGoogle(idToken: String) {
+    private fun firebaseAuthWithGoogle(idToken: String, activity: Activity) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d("Login", "signInWithCredential:success")
                     // 로그인 성공 후 필요한 작업 수행
+                    saveLoginState(getApplication(), true)
+                    restartMainActivity(activity)
                 } else {
                     Log.w("Login", "signInWithCredential:failure", task.exception)
                 }
             }
     }
+}
+private fun saveLoginState(context: Context, isLoggedIn: Boolean) {
+    val sharedPref = context.getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE)
+    with(sharedPref.edit()) {
+        putBoolean("isLoggedIn", isLoggedIn)
+        apply()
+    }
+}
+
+fun checkLoginState(context: Context): Boolean {
+    val sharedPref = context.getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE)
+    return sharedPref.getBoolean("isLoggedIn", false)
+}
+
+fun logout(context: Context) {
+    FirebaseAuth.getInstance().signOut()
+    saveLoginState(context, false)
+    restartMainActivity(context as Activity)
+}
+
+fun restartMainActivity(activity: Activity) {
+    val intent = Intent(activity, MainActivity::class.java)
+    activity.finish()
+    activity.startActivity(intent)
 }

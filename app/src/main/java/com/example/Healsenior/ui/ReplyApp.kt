@@ -143,6 +143,7 @@ fun ReplyApp(
         ReplyNavigationWrapper(
             navigationType = navigationType,
             navigationContentPosition = navigationContentPosition,
+            loginViewModel = loginViewModel
         )
     }
     else{
@@ -159,6 +160,7 @@ fun ReplyApp(
 private fun ReplyNavigationWrapper(
     navigationType: ReplyNavigationType,
     navigationContentPosition: ReplyNavigationContentPosition,
+    loginViewModel: LoginViewModel
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -186,6 +188,7 @@ private fun ReplyNavigationWrapper(
                 navController = navController,
                 selectedDestination = selectedDestination,
                 navigateToTopLevelDestination = navigationActions::navigateTo,
+                loginViewModel = loginViewModel
             )
         }
     } else {
@@ -210,6 +213,7 @@ private fun ReplyNavigationWrapper(
                 navController = navController,
                 selectedDestination = selectedDestination,
                 navigateToTopLevelDestination = navigationActions::navigateTo,
+                loginViewModel = loginViewModel,
             ) {
                 scope.launch {
                     drawerState.open()
@@ -226,8 +230,9 @@ fun ReplyAppContent(
     navigationContentPosition: ReplyNavigationContentPosition,
     navController: NavHostController,
     selectedDestination: String,
+    loginViewModel: LoginViewModel,
     navigateToTopLevelDestination: (ReplyTopLevelDestination) -> Unit,
-    onDrawerClicked: () -> Unit = {}
+    onDrawerClicked: () -> Unit = {},
 ) {
     Row(modifier = modifier.fillMaxSize()) {
         AnimatedVisibility(visible = navigationType == ReplyNavigationType.NAVIGATION_RAIL) {
@@ -245,8 +250,8 @@ fun ReplyAppContent(
         ) {
             ReplyNavHost(
                 navController = navController,
-
                 modifier = Modifier.weight(1f),
+                loginViewModel = loginViewModel
             )
             AnimatedVisibility(visible = navigationType == ReplyNavigationType.BOTTOM_NAVIGATION) {
                 ReplyBottomNavigationBar(
@@ -262,6 +267,7 @@ fun ReplyAppContent(
 private fun ReplyNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    loginViewModel: LoginViewModel
 ) {
     NavHost(
         modifier = modifier,
@@ -278,7 +284,7 @@ private fun ReplyNavHost(
             MainCommunityScreen()
         }
         composable(ReplyRoute.Mypage) {
-            MyPageScreen()
+            MyPageScreen(loginViewModel=loginViewModel)
         }
     }
 }

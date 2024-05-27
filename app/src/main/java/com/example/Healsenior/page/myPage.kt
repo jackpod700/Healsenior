@@ -3,15 +3,14 @@ package com.example.Healsenior.page
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.automirrored.filled.TextSnippet
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.PointOfSale
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,9 +22,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.Healsenior.data.*
+import com.example.Healsenior.login.LoginViewModel
 
 @Composable
-fun MyPageScreen() {
+fun MyPageScreen(
+    loginViewModel: LoginViewModel
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -75,6 +78,18 @@ fun MyPageScreen() {
         MenuItem(iconRes = Icons.Default.PointOfSale, text = "포인트 내역")
         MenuItem(iconRes = Icons.AutoMirrored.Filled.TextSnippet, text = "작성글 보기")
         MenuItem(iconRes = Icons.AutoMirrored.Filled.Logout, text = "로그아웃")
+        val uid = loginViewModel.auth.currentUser!!.uid
+        var routinedailylist1:List<RoutineDaily>?=null
+        Button(onClick = { GetRoutineDailyAll("gym1"){ routinedailylist->
+            if (routinedailylist != null) {
+                routinedailylist1=routinedailylist
+                println(routinedailylist1)
+            } else {
+                println("No user found or error occurred")
+            }
+        } }) {
+            Text(text = "회원정보 변경")
+        }
     }
 }
 
@@ -100,6 +115,6 @@ fun MenuItem(iconRes: ImageVector, text: String) {
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
-    MyPageScreen()
+fun DefaultPreview(loginViewModel: LoginViewModel) {
+    MyPageScreen(loginViewModel)
 }

@@ -1,4 +1,4 @@
-package com.example.Healsenior.workoutScreen.workoutNavigation
+package com.example.Healsenior._navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
@@ -27,9 +27,9 @@ fun WorkOutScreenNav(
 
     NavHost(
         navController = navController,
-        startDestination = "WorkOutMainScreen"
+        startDestination = "WorkOutScreenMain"
     ) {
-        composable("WorkOutMainScreen") {
+        composable("WorkOutScreenMain") {
             WorkOutMainScreen(navController, dayCount.intValue, workOutData.value, routineData.value)
         }
         composable("RecommendWorkOutScreen") {

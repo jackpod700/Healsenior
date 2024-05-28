@@ -34,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.Healsenior.workoutScreen.workoutComponent.WorkOutScreenSmallTopBar
+import com.example.Healsenior._component.SmallTopBar
 import com.example.Healsenior.workoutScreen.workoutComponent.WorkOutScreenTimeBar
 
 @Preview
@@ -49,7 +49,7 @@ fun WorkOutProgressScreen(
             .fillMaxSize()
             .background(color = Color(0xFFEAEAEA))
     ) {
-        WorkOutScreenSmallTopBar(navController, "운동 진행")
+        SmallTopBar(navController, "운동 진행")
         WorkOutProgressScreenContent(workOutData)
     }
 }

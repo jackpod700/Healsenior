@@ -35,8 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.Healsenior.workoutScreen.workoutComponent.WorkOutScreenButton
-import com.example.Healsenior.workoutScreen.workoutComponent.WorkOutScreenSmallTopBar
+import com.example.Healsenior._component.Button
+import com.example.Healsenior._component.SmallTopBar
 
 @Preview
 @Composable
@@ -51,7 +51,7 @@ fun TodayWorkOutScreen(
             .fillMaxSize()
             .background(color = Color(0xFFEAEAEA))
     ) {
-        WorkOutScreenSmallTopBar(navController, "오늘의 운동")
+        SmallTopBar(navController, "오늘의 운동")
         TodayWorkOutScreenContent(navController, workOutData, routineData)
     }
 }
@@ -201,7 +201,7 @@ fun TodayWorkOutListContent(
         modifier = Modifier
             .padding(start = 20.dp, end = 20.dp)
     ) {
-        WorkOutScreenButton(
+        Button(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(70.dp),

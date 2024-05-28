@@ -78,12 +78,12 @@ fun ReplyAppPreview() {
             loginViewModel = loginViewModel,
             googleSignInLauncher = googleSignInLauncher,
         )
-//        LoginScreen (
-//            onGoogleSignInClick = {
-//                val signInIntent = loginViewModel.getGoogleSignInIntent()
-//                googleSignInLauncher.launch(signInIntent)
-//            }
-//        )
+        LoginScreen (
+            onGoogleSignInClick = {
+                val signInIntent = loginViewModel.getGoogleSignInIntent()
+               googleSignInLauncher.launch(signInIntent)
+            }
+        )
     }
 }
 }

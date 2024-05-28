@@ -2,37 +2,99 @@ package com.example.Healsenior.recordScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.Healsenior._component.BigTopBar
+import com.example.Healsenior._component.Button
+import com.example.Healsenior._navigation.RecordScreenNav
+import com.example.Healsenior.data.User
+import com.example.Healsenior.recordScreen.Calendar.WorkOutCalendar
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Preview
 @Composable
-fun RecordScreen() {
+fun RecordScreen(uid: String) {
+
+    var user1: User?= null
+/*
+    GetUser(uid){user->
+        if (user != null) {
+            user1=user
+        } else {
+            println("No user found or error occurred")
+        }
+    }
+    */
+
+    user1 = User(
+        "1",
+        "nick1",
+        "1",
+        1,
+        12,
+        300,
+        5,
+        200,
+        10,
+        mapOf("2024.05.01" to "1", "2024.05.19" to "2", "2024.05.25" to "3")
+    )
+
+    val now = LocalDate.now()
+    val yearStr = now.format(DateTimeFormatter.ofPattern("yyyy"))
+    val monthStr = now.format(DateTimeFormatter.ofPattern("MM"))
+    val year = remember{ mutableIntStateOf(yearStr.toInt()) }
+    val month = remember{ mutableIntStateOf(monthStr.toInt()) }
+
+
+    val key = user1.recordMap.keys
+    val workoutDayArr = mutableSetOf<Int>()
+
+    for (dateStr in key) {
+        val y = dateStr.substring(0, 4).toInt()
+        val m = dateStr.substring(5, 7).toInt()
+        val d = dateStr.substring(8, 10).toInt()
+
+        if (y == year.intValue && m == month.intValue)
+            workoutDayArr.add(d)
+    }
+
+    val selectedDay = remember{ mutableIntStateOf(
+        if (workoutDayArr.isNotEmpty())
+            workoutDayArr.last()
+        else
+            0
+    )}
+
+    if (user1 != null)
+        RecordScreenNav(user1, workoutDayArr, year, month, selectedDay)
+}
+
+@Preview
+@Composable
+fun RecordMainScreen(
+    navController: NavHostController,
+    user: User,
+    workoutDayArr: MutableSet<Int>,
+    year: MutableIntState,
+    month: MutableIntState,
+    selectedDay: MutableIntState
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -40,61 +102,22 @@ fun RecordScreen() {
             .statusBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        RecordScreenHeader()
-        RecordScreenContent()
+        BigTopBar("기록")
+        RecordScreenContent(navController, user, workoutDayArr, year, month, selectedDay)
     }
 }
 
 @Composable
-fun RecordScreenHeader() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(60.dp)
-            .background(color = Color(0xFF95BDFA)),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    )
-    {
-        Row {
-            Text(
-                text = "기록",
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp,
-                modifier = Modifier
-                    .padding(start = 20.dp)
-            )
-        }
-        Row {
-            IconButton(
-                onClick = {
-
-                },
-                modifier = Modifier
-                    .width(60.dp)
-                    .height(60.dp)
-                    .padding(end = 10.dp)
-            ) {
-                Icon(Icons.Outlined.Notifications,
-                    contentDescription = "",
-                    tint = Color.Black,
-                    modifier = Modifier
-                        .width(40.dp)
-                        .height(40.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun RecordScreenContent(){
-    val yearM = remember { mutableIntStateOf(2023) }
-    val monthM = remember { mutableIntStateOf(11) }
-    val dateM = remember { mutableIntStateOf(1) }
-
+fun RecordScreenContent(
+    navController: NavHostController,
+    user: User,
+    workoutDayArr: MutableSet<Int>,
+    year: MutableIntState,
+    month: MutableIntState,
+    selectedDay: MutableIntState
+) {
     Column(
-        modifier = Modifier.padding(start = 20.dp, top = 30.dp, end = 20.dp, bottom = 10.dp
+        modifier = Modifier.padding(start = 20.dp, top = 30.dp, end = 20.dp
         )
     ) {
         Column(
@@ -111,41 +134,18 @@ fun RecordScreenContent(){
                     shape = RoundedCornerShape(15.dp)
                 ),
         ) {
-            WorkOutCalendar(yearM, monthM, dateM)
+            WorkOutCalendar(user, workoutDayArr, year, month, selectedDay)
         }
-        Text(
-            text = "선택 날짜: " + DateToString(yearM.intValue, monthM.intValue, dateM.intValue, "."),
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp,
-            color = Color.Gray,
-            modifier = Modifier.padding(start = 20.dp, top = 35.dp)
-        )
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(55.dp)
-                .padding(start = 20.dp, end = 20.dp, top = 5.dp)
-                .border(
-                    width = 2.dp,
-                    color = Color.Black,
-                    shape = RoundedCornerShape(10.dp),
-                )
-                .background(
-                    color = Color(0xFF5B9DFF),
-                    shape = RoundedCornerShape(10.dp)
-                )
-                .clickable {
-                    //ShowWorkOutRecordDetail()
-                },
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(start = 20.dp, end = 20.dp, top = 60.dp)
         ) {
-            Text(
-                text = "운동 기록 보기",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                textAlign = TextAlign.Center
+            Button(modifier = Modifier
+                .fillMaxWidth()
+                .height(55.dp),
+                navController,
+                "RecordScreenDetail",
+                "운동 기록 보기"
             )
         }
     }

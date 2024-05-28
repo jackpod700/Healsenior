@@ -1,4 +1,4 @@
-package com.example.Healsenior.workoutScreen.workoutComponent
+package com.example.Healsenior._component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
 @Composable
-fun WorkOutScreenBigTopBar(
+fun BigTopBar(
     text : String
 ) {
     Row(modifier = Modifier
@@ -49,7 +49,7 @@ fun WorkOutScreenBigTopBar(
         Row {
             IconButton(
                 onClick = {
-                    //알림창
+                    //알림창 이동
                 },
                 modifier = Modifier
                     .width(60.dp)
@@ -70,7 +70,7 @@ fun WorkOutScreenBigTopBar(
 }
 
 @Composable
-fun WorkOutScreenSmallTopBar(
+fun SmallTopBar(
     navController: NavHostController,
     text: String
 ) {
@@ -92,7 +92,7 @@ fun WorkOutScreenSmallTopBar(
                 Icon(
                     Icons.Default.ChevronLeft,
                     contentDescription = "",
-                    tint = Color.Black,
+                    tint = Color.White,
                     modifier = Modifier
                         .width(30.dp)
                         .height(30.dp)
@@ -104,6 +104,7 @@ fun WorkOutScreenSmallTopBar(
                 text = text,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
+                color = Color.White,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()

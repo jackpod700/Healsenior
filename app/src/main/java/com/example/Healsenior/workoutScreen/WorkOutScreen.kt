@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -26,13 +25,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.Healsenior._component.BigTopBar
+import com.example.Healsenior._component.Button
 import com.example.Healsenior.workoutScreen.workoutComponent.WorkOutScreenBigTextBox
-import com.example.Healsenior.workoutScreen.workoutComponent.WorkOutScreenBigTopBar
-import com.example.Healsenior.workoutScreen.workoutComponent.WorkOutScreenButton
 import com.example.Healsenior.workoutScreen.workoutData.getCurrentRoutineData
 import com.example.Healsenior.workoutScreen.workoutData.getDayCount
 import com.example.Healsenior.workoutScreen.workoutData.getWorkOutData
-import com.example.Healsenior.workoutScreen.workoutNavigation.WorkOutScreenNav
+import com.example.Healsenior._navigation.WorkOutScreenNav
 import com.example.Healsenior.workoutScreen.workoutUtil.difficultyToString
 
 @Composable
@@ -58,7 +57,7 @@ fun WorkOutMainScreen(
             .statusBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        WorkOutScreenBigTopBar("운동")
+        BigTopBar("운동")
         WorkOutScreenContent(navController, dayCount, workOutData, routineData)
     }
 }
@@ -106,7 +105,7 @@ fun WorkOutScreenContent(
         modifier = Modifier
             .padding(start = 40.dp, end = 40.dp, top = 30.dp)
     ) {
-        WorkOutScreenButton(
+        Button(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
@@ -178,7 +177,7 @@ fun ShowWorkOutDetailContent(
         modifier = Modifier
             .padding(start = 20.dp, end = 20.dp, top = 20.dp)
     ) {
-        WorkOutScreenButton(
+        Button(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp),

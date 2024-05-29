@@ -23,7 +23,8 @@ fun Button(
     modifier: Modifier,
     navController: NavHostController,
     navDestStr: String,
-    text: String
+    text: String,
+    canClick: Boolean
 ) {
     Column(
         modifier = Modifier
@@ -36,7 +37,7 @@ fun Button(
             .background(
                 color = Color(0xFF5B9DFF)
             )
-            .clickable {
+            .clickable(canClick) {
                 navController.navigate(navDestStr)
             }
             .then(modifier),

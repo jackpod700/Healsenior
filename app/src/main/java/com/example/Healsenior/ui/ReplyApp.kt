@@ -278,7 +278,7 @@ private fun ReplyNavHost(
             WorkOutScreen()
         }
         composable(ReplyRoute.Record) {
-            RecordScreen("0")
+            RecordScreen(loginViewModel=loginViewModel)
         }
         composable(ReplyRoute.Community) {
             MainCommunityScreen()

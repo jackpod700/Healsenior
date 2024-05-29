@@ -207,7 +207,8 @@ fun TodayWorkOutListContent(
                 .height(70.dp),
             navController,
             "WorkOutProgressScreen",
-            "시작하기"
+            "시작하기",
+            true
         )
     }
 }

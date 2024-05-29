@@ -111,7 +111,8 @@ fun WorkOutScreenContent(
                 .height(50.dp),
             navController,
             "RecommendWorkOutScreen",
-            "운동 루틴 더보기"
+            "운동 루틴 더보기",
+            true
         )
     }
 }
@@ -183,7 +184,8 @@ fun ShowWorkOutDetailContent(
                 .height(60.dp),
             navController,
             "TodayWorkOutScreen",
-            "추천 루틴 시작하기"
+            "추천 루틴 시작하기",
+            true
         )
     }
 }

@@ -23,14 +23,15 @@ import com.example.Healsenior._component.BigTopBar
 import com.example.Healsenior._component.Button
 import com.example.Healsenior._navigation.RecordScreenNav
 import com.example.Healsenior.data.User
+import com.example.Healsenior.login.LoginViewModel
 import com.example.Healsenior.recordScreen.Calendar.WorkOutCalendar
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Preview
 @Composable
-fun RecordScreen(uid: String) {
-
+fun RecordScreen(loginViewModel: LoginViewModel) {
+    var uid = loginViewModel.auth.currentUser!!.uid
     var user1: User?= null
 /*
     GetUser(uid){user->
@@ -52,7 +53,7 @@ fun RecordScreen(uid: String) {
         5,
         200,
         10,
-        mapOf("2024.05.01" to "1", "2024.05.19" to "2", "2024.05.25" to "3")
+        mapOf("2024.05.01" to mapOf("1" to 1), "2024.04.19" to mapOf("2" to 2), "2024.05.25" to mapOf("3" to 3))
     )
 
     val now = LocalDate.now()
@@ -145,7 +146,8 @@ fun RecordScreenContent(
                 .height(55.dp),
                 navController,
                 "RecordScreenDetail",
-                "운동 기록 보기"
+                "운동 기록 보기",
+                workoutDayArr.contains(selectedDay.intValue)
             )
         }
     }

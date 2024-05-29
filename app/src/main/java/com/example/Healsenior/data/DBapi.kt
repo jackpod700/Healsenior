@@ -6,7 +6,7 @@ val database = FirebaseFirestore.getInstance()
     fun writeNewUser(
         UID: String
     ) {
-        val recordmap = emptyMap<String, String>()
+        val recordmap = emptyMap<String, Map<String, Int>>()
         val user =
             User(UID,
                 "User"+ Math.random().toInt().toString(),

@@ -11,13 +11,13 @@
       <entry key="PreviewMainScreen">
         <State />
       </entry>
-      <entry key="PreviewPopularPosts">
-        <State />
-      </entry>
-      <entry key="PreviewRankingSection">
+      <entry key="PreviewProductListScreen">
         <State />
       </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="ddDefaultPreview">
         <State />
       </entry>
     </value>

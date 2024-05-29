@@ -1,105 +1,48 @@
 package com.example.Healsenior.page
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.automirrored.filled.TextSnippet
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.PointOfSale
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Text
+import MyPageScreen
+import android.util.Base64
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.Healsenior.data.Post
+import com.google.gson.Gson
+
 
 @Composable
-fun MyPageScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
-    ) {
-        // Header
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0xFF87CEEB))
-                .padding(vertical = 16.dp),
-            contentAlignment = Alignment.CenterStart
-        ) {
-            Text(
-                modifier = Modifier.padding(start = 15.dp),
-                text = "마이페이지",
-                fontSize = 20.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Bold
+fun MyPage() {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = "my_page") {
+        composable("my_page") { MyPageScreen(navController) }
+        composable("member_info") { MemberInfoScreen(navController) }
+        composable("point_history") { PointHistoryScreen(navController) }
+        composable("post_list") { MyPostListScreen(navController) }
+        composable(
+            "post_detail/{postJson}",
+            arguments = listOf(navArgument("postJson") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val postJson = backStackEntry.arguments?.getString("postJson")
+            val postJsonDecoded = String(
+                Base64.decode(
+                    postJson,
+                    Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
+                ), Charsets.UTF_8
             )
+            val post = Gson().fromJson(postJsonDecoded, Post::class.java)
+            PostDetailScreen(post)
         }
-
-        // Profile Section
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                imageVector = Icons.Default.AccountBox,
-                contentDescription = "Profile Picture",
-                modifier = Modifier
-                    .size(60.dp)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(text = "터미네이터02", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                Text(text = "2000.04.29. / 남성", fontSize = 14.sp, color = Color.Gray)
-            }
-        }
-
-        Divider(color = Color.Gray, thickness = 1.dp)
-
-        // Menu Items
-        MenuItem(iconRes = Icons.Default.AccountCircle, text = "회원정보 변경")
-        MenuItem(iconRes = Icons.Default.PointOfSale, text = "포인트 내역")
-        MenuItem(iconRes = Icons.AutoMirrored.Filled.TextSnippet, text = "작성글 보기")
-        MenuItem(iconRes = Icons.AutoMirrored.Filled.Logout, text = "로그아웃")
-    }
-}
-
-@Composable
-fun MenuItem(iconRes: ImageVector, text: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp) // 간격을 줄였습니다.
-            .background(Color.White, RoundedCornerShape(8.dp))
-            .padding(vertical = 16.dp, horizontal = 16.dp), // 패딩을 키웠습니다.
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            imageVector = iconRes,
-            contentDescription = text,
-            modifier = Modifier.size(28.dp) // 아이콘 크기를 키웠습니다.
-        )
-        Spacer(modifier = Modifier.width(12.dp)) // 간격을 줄였습니다.
-        Text(text = text, fontSize = 18.sp) // 글씨 크기를 키웠습니다.
+        composable("product_list_screen") { ProductListScreen(navController) }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    MyPageScreen()
+    MyPage()
 }
+

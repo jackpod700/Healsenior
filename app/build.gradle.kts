@@ -99,6 +99,7 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.navigation.compose)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.gson)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)

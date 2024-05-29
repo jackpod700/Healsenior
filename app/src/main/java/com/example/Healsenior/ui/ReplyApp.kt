@@ -16,6 +16,7 @@
 
 package com.example.Healsenior.ui
 
+import MyPageScreen
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.AnimatedVisibility
@@ -50,7 +51,7 @@ import com.example.Healsenior.login.LoginScreen
 import com.example.Healsenior.login.LoginViewModel
 import com.example.Healsenior.login.checkLoginState
 import com.example.Healsenior.page.MainCommunityScreen
-import com.example.Healsenior.page.MyPageScreen
+import com.example.Healsenior.page.MyPage
 import com.example.Healsenior.recordScreen.RecordScreen
 import com.example.Healsenior.ui.navigation.ModalNavigationDrawerContent
 import com.example.Healsenior.ui.navigation.PermanentNavigationDrawerContent
@@ -278,7 +279,7 @@ private fun ReplyNavHost(
             MainCommunityScreen()
         }
         composable(ReplyRoute.Mypage) {
-            MyPageScreen()
+            MyPage()
         }
     }
 }

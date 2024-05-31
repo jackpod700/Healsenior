@@ -20,7 +20,7 @@ import java.lang.Math.random
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val googleSignInClient: GoogleSignInClient
 
     init {
@@ -59,8 +59,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     Log.d("Login", "signInWithCredential:success")
                     // 로그인 성공 후 필요한 작업 수행
                     saveLoginState(getApplication(), true)
-                    //if(task.result?.additionalUserInfo?.isNewUser == true) {
-                    writeNewUser(auth.currentUser!!.uid)
+                    if(task.result?.additionalUserInfo?.isNewUser == true) {
+                        writeNewUser(auth.currentUser!!.uid)
+                    }
                     restartMainActivity(activity)
                 } else {
                     Log.w("Login", "signInWithCredential:failure", task.exception)

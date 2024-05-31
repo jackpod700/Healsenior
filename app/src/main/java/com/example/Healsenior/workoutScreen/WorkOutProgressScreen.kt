@@ -34,14 +34,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.Healsenior.workoutScreen.workoutComponent.WorkOutScreenSmallTopBar
+import com.example.Healsenior._component.SmallTopBar
+import com.example.Healsenior.data.Workout
 import com.example.Healsenior.workoutScreen.workoutComponent.WorkOutScreenTimeBar
 
 @Preview
 @Composable
 fun WorkOutProgressScreen(
     navController: NavHostController,
-    workOutData: List<WorkOutData>
+    workout: MutableList<Workout>
 ) {
     Column(
         modifier = Modifier
@@ -49,13 +50,13 @@ fun WorkOutProgressScreen(
             .fillMaxSize()
             .background(color = Color(0xFFEAEAEA))
     ) {
-        WorkOutScreenSmallTopBar(navController, "운동 진행")
-        WorkOutProgressScreenContent(workOutData)
+        SmallTopBar(navController, "운동 진행")
+        WorkOutProgressScreenContent(workout)
     }
 }
 
 @Composable
-fun WorkOutProgressScreenContent(workOutData: List<WorkOutData>) {
+fun WorkOutProgressScreenContent(workout: MutableList<Workout>) {
     val isStopped = remember { mutableStateOf(false) }
     val workOutIdx = remember { mutableIntStateOf(0) }
     val btnStr = remember { mutableStateOf("일시정지") }
@@ -72,9 +73,9 @@ fun WorkOutProgressScreenContent(workOutData: List<WorkOutData>) {
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         WorkOutScreenTimeBar(isStopped, hour, minute, second)
-        ShowWorkOutVideoContent(workOutData)
-        ShowWorkOutDesciption(workOutData)
-        ShowWorkOutList(workOutData, workOutIdx.intValue)
+        ShowWorkOutVideoContent(workout, workOutIdx.intValue)
+        ShowWorkOutDesciption(workout, workOutIdx.intValue)
+        ShowWorkOutList(workout, workOutIdx.intValue)
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -127,7 +128,7 @@ fun WorkOutProgressScreenContent(workOutData: List<WorkOutData>) {
                         shape = RoundedCornerShape(10.dp)
                     )
                     .clickable() {
-                        if (workOutIdx.intValue + 1 < workOutData.size)
+                        if (workOutIdx.intValue + 1 < workout.size)
                             workOutIdx.intValue++
                         else
                             btnStr2.value = "운동 종료"
@@ -148,7 +149,7 @@ fun WorkOutProgressScreenContent(workOutData: List<WorkOutData>) {
 }
 
 @Composable
-fun ShowWorkOutVideoContent(workOutData: List<WorkOutData>) {
+fun ShowWorkOutVideoContent(workout: MutableList<Workout>, workOutIdx: Int) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -174,11 +175,21 @@ fun ShowWorkOutVideoContent(workOutData: List<WorkOutData>) {
                 .width(100.dp)
                 .height(100.dp)
         )
+        //영상 재생
     }
 }
 
 @Composable
-fun ShowWorkOutDesciption(workOutData: List<WorkOutData>) {
+fun ShowWorkOutDesciption(workout: MutableList<Workout>, workOutIdx: Int) {
+    var splitIndex = 0
+
+    for (i in 0..<workout[workOutIdx].description.length) {
+        if (workout[workOutIdx].description[i] == ':') {
+            splitIndex = i
+            break
+        }
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -202,18 +213,9 @@ fun ShowWorkOutDesciption(workOutData: List<WorkOutData>) {
                             Color(0xFFFF9900)
                         ),
                     ) {
-                        append("척추 부상")
+                        append(workout[workOutIdx].description.substring(0, splitIndex + 1))
                     }
-                    append(": 척추는 케이블 로우 동작 중 상체를 뒤로" +
-                            "당길 때 중요한 역할을 합니다." +
-                            "text1text1text1text1text1text1" +
-                            "text1text1text1text1text1text1" +
-                            "text1text1text1text1text1text1" +
-                            "text1text1text1text1text1text1" +
-                            "text1text1text1text1text1text1" +
-                            "text1text1text1text1text1text1" +
-                            "text1text1text1text1text1text1" +
-                            "text1text1text1text1text1text1")
+                    append(workout[workOutIdx].description.substring(splitIndex + 1))
                 },
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
@@ -225,15 +227,15 @@ fun ShowWorkOutDesciption(workOutData: List<WorkOutData>) {
 }
 
 @Composable
-fun ShowWorkOutList(workOutData: List<WorkOutData>, workOutIdx: Int) {
-    ShowWorkOutListHeader(workOutData)
-    ShowWorkOutListContent(workOutData, workOutIdx)
+fun ShowWorkOutList(workout: MutableList<Workout>, workOutIdx: Int) {
+    ShowWorkOutListHeader(workout, workOutIdx)
+    ShowWorkOutListContent(workout, workOutIdx)
 }
 
 @Composable
-fun ShowWorkOutListHeader(workOutData: List<WorkOutData>) {
+fun ShowWorkOutListHeader(workout: MutableList<Workout>, workOutIdx: Int) {
     Text(
-        text = "시티드 케이블 로우",
+        text = workout[workOutIdx].name,
         fontWeight = FontWeight.Bold,
         fontSize = 15.sp,
         modifier = Modifier
@@ -243,15 +245,12 @@ fun ShowWorkOutListHeader(workOutData: List<WorkOutData>) {
 }
 
 @Composable
-fun ShowWorkOutListContent(
-    workOutData: List<WorkOutData>,
-    workOutIdx: Int
-) {
+fun ShowWorkOutListContent(workout: MutableList<Workout>, workOutIdx: Int) {
     LazyColumn (
         modifier = Modifier
             .height(150.dp)
     ) {
-        items(workOutData[workOutIdx].setCount) { index ->
+        items(workout[workOutIdx].set) { index ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -297,7 +296,7 @@ fun ShowWorkOutListContent(
                         .weight(1f)
                 )
                 Text(
-                    text = "12회",
+                    text = "${workout[workOutIdx].reps[index]}",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,

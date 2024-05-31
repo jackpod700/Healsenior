@@ -1,50 +1,51 @@
-package com.example.Healsenior.workoutScreen.workoutNavigation
+package com.example.Healsenior._navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableIntState
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.Healsenior.data.Routine
+import com.example.Healsenior.data.RoutineDaily
+import com.example.Healsenior.data.Workout
 import com.example.Healsenior.workoutScreen.RecommendWorkOutScreen
-import com.example.Healsenior.workoutScreen.RoutineData
 import com.example.Healsenior.workoutScreen.RoutineDescriptionScreen
 import com.example.Healsenior.workoutScreen.TodayWorkOutScreen
-import com.example.Healsenior.workoutScreen.WorkOutData
 import com.example.Healsenior.workoutScreen.WorkOutMainScreen
 import com.example.Healsenior.workoutScreen.WorkOutProgressScreen
 
 @Composable
 fun WorkOutScreenNav(
-    dayCount: MutableIntState,
-    workOutData: MutableState<List<WorkOutData>>,
-    routineData: MutableState<RoutineData>
+    routine: Routine,
+    routineDaily: RoutineDaily,
+    workout: MutableList<Workout>,
 ) {
     val navController = rememberNavController()
     val isRoutineEnd = remember { mutableStateOf(true) }
+    val selectedRoutine = remember { mutableIntStateOf(0) }
 
     NavHost(
         navController = navController,
-        startDestination = "WorkOutMainScreen"
+        startDestination = "WorkOutScreenMain"
     ) {
-        composable("WorkOutMainScreen") {
-            WorkOutMainScreen(navController, dayCount.intValue, workOutData.value, routineData.value)
+        composable("WorkOutScreenMain") {
+            WorkOutMainScreen(navController, routine, routineDaily, workout)
         }
         composable("RecommendWorkOutScreen") {
-            RecommendWorkOutScreen(navController)
+            RecommendWorkOutScreen(navController, routine)
         }
         composable("TodayWorkOutScreen") {
             isRoutineEnd.value = false
-            TodayWorkOutScreen(navController, workOutData.value, routineData.value)
+            TodayWorkOutScreen(navController, workout, isRoutineEnd)
         }
         composable("RoutineDescriptionScreen") {
-            RoutineDescriptionScreen(navController)
+            RoutineDescriptionScreen(navController, selectedRoutine)
         }
         composable("WorkOutProgressScreen") {
             isRoutineEnd.value = true
-            WorkOutProgressScreen(navController, workOutData.value)
+            WorkOutProgressScreen(navController, workout)
         }
     }
 }

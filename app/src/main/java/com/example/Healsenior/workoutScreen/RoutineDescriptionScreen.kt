@@ -12,17 +12,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronLeft
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -34,11 +28,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.Healsenior._component.Button
+import com.example.Healsenior._component.SmallTopBar
+import com.example.Healsenior.data.Routine
+import com.example.Healsenior.data.RoutineDaily
+import com.example.Healsenior.data.Workout
 
 @Preview
 @Composable
 fun RoutineDescriptionScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    selectedRoutine: MutableIntState
 ) {
     Column(
         modifier = Modifier
@@ -46,58 +46,105 @@ fun RoutineDescriptionScreen(
             .fillMaxSize()
             .background(color = Color(0xFFEAEAEA))
     ) {
-        RoutineDescriptionScreenHeader(navController)
-        RoutineDescriptionScreenContent(navController)
-    }
-}
-
-@Composable
-fun RoutineDescriptionScreenHeader(
-    navController: NavHostController
-) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(40.dp)
-        .background(color = Color(0xFF95BDFA)),
-    )
-    {
-        Row {
-            IconButton(
-                onClick = {
-                    navController.navigateUp()
-                },
-                modifier = Modifier
-                    .width(40.dp)
-                    .height(40.dp)
-            ) {
-                Icon(
-                    Icons.Default.ChevronLeft,
-                    contentDescription = "",
-                    tint = Color.Black,
-                    modifier = Modifier
-                        .width(30.dp)
-                        .height(30.dp)
-                )
-            }
-        }
-        Row {
-            Text(
-                text = "자세히 보기",
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp)
-            )
-        }
+        SmallTopBar(navController, "자세히 보기")
+        RoutineDescriptionScreenContent(navController, selectedRoutine)
     }
 }
 
 @Composable
 fun RoutineDescriptionScreenContent(
-    navController: NavHostController
+    navController: NavHostController,
+    selectedRoutine: MutableIntState
 ) {
+    var routine1: Routine?= null
+    /*
+        GetRoutine(selectedRoutine.intValue){routine->
+            if (routine != null) {
+                routine1=routine
+                println(routine1)
+            } else {
+                println("No user found or error occurred")
+            }
+        }
+    */
+
+    routine1 = Routine(
+        "1",
+        "근육량 증가 추천 플랜(입문)",
+        "place",
+        "goal",
+        "description"
+    )
+
+    var routinedailylist1:List<RoutineDaily>?=null
+//GetRoutineDailyAll(routine1.rid){routinedailylist->
+//    if (routinedailylist != null) {
+//        routinedailylist1=routinedailylist
+//        println(routinedailylist1)
+//    } else {
+//        println("No user found or error occurred")
+//    }
+//}
+
+    routinedailylist1 = listOf(
+        RoutineDaily(
+            "1",
+            1,
+            listOf("1", "2", "3", "4", "5"),
+            "등, 이두, 코어",
+            82,
+            "상"
+        ),
+        RoutineDaily(
+            "1",
+            2,
+            listOf("1", "2", "3", "4", "5"),
+            "등, 이두, 코어",
+            82,
+            "상"
+        ),
+        RoutineDaily(
+            "1",
+            3,
+            listOf("1", "2", "3", "4", "5"),
+            "등, 이두, 코어",
+            82,
+            "상"
+        ),
+        RoutineDaily(
+            "1",
+            4,
+            listOf("1", "2", "3", "4", "5"),
+            "등, 이두, 코어",
+            82,
+            "상"
+        ),
+        RoutineDaily(
+            "1",
+            5,
+            listOf("1", "2", "3", "4", "5"),
+            "등, 이두, 코어",
+            82,
+            "상"
+        ),
+        RoutineDaily(
+            "1",
+            6,
+            listOf("1", "2", "3", "4", "5"),
+            "등, 이두, 코어",
+            82,
+            "상"
+        ),
+        RoutineDaily(
+            "1",
+            7,
+            listOf("1", "2", "3", "4", "5"),
+            "등, 이두, 코어",
+            82,
+            "상"
+        ),
+    )
+
     Column {
         Column(
             modifier = Modifier
@@ -116,7 +163,7 @@ fun RoutineDescriptionScreenContent(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "근육량 증가 추천 루틴 - 초급",
+                text = routine1.name,
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -144,13 +191,12 @@ fun RoutineDescriptionScreenContent(
                     shape = RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp)
                 )
         ) {
-            ShowRoutineDescription()
+            ShowRoutineDescription(routine1, routinedailylist1)
         }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(70.dp)
-                .padding(start = 40.dp, end = 40.dp, top = 20.dp)
+
                 .border(
                     width = 2.dp,
                     color = Color.Black,
@@ -166,21 +212,21 @@ fun RoutineDescriptionScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = "루틴 선택하기",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                textAlign = TextAlign.Center
+            Button(
+                modifier = Modifier
+                    .height(70.dp)
+                    .padding(start = 40.dp, end = 40.dp, top = 20.dp),
+                navController,
+                "WorkOutScreen",
+                "루틴 선택하기",
+                true
             )
         }
     }
 }
 
 @Composable
-fun ShowRoutineDescription(
-    //descriptionList : List<String>
-) {
+fun ShowRoutineDescription(routine: Routine, routinedailylist: List<RoutineDaily>) {
     Column(
         modifier = Modifier
             .padding(20.dp)
@@ -191,7 +237,7 @@ fun ShowRoutineDescription(
             fontSize = 20.sp
         )
         Text(
-            text = "헬스 초보자/입문자 이용자들을 위한 초급 루틴이에요!...",
+            text = routine.description,
             fontWeight = FontWeight.Bold,
             fontSize = 15.sp,
             color = Color.Gray,
@@ -210,7 +256,82 @@ fun ShowRoutineDescription(
         modifier = Modifier
             .padding(start = 20.dp)
     ) {
-        items(5) { index ->
+        items(routinedailylist.size) { index ->
+            val workout1: MutableList<Workout> = mutableListOf()
+            /*
+                for (r in routineDaily1) {
+                    GetWorkout(r.wid){workout->
+                        if (workout != null) {
+                            workout1.add(workout)
+                            println(workout1)
+                        } else {
+                            println("No user found or error occurred")
+                        }
+                    }
+                }
+            */
+
+            workout1.add(
+                Workout(
+                    "1",
+                    "워밍업 스트레칭",
+                    2,
+                    listOf(1, 1, 1),
+                    1,
+                    "videolink",
+                    "description",
+                    "5종류의 스트레칭"
+                )
+            )
+            workout1.add(
+                Workout(
+                    "2",
+                    "시티드 케이블 로우",
+                    4,
+                    listOf(1, 1, 1),
+                    1,
+                    "videolink",
+                    "description",
+                    "등 - 수평 당기기 운동"
+                )
+            )
+            workout1.add(
+                Workout(
+                    "3",
+                    "렛 풀 다운",
+                    4,
+                    listOf(1, 1, 1),
+                    1,
+                    "videolink",
+                    "description",
+                    "등 - 수직 당기기 운동"
+                )
+            )
+            workout1.add(
+                Workout(
+                    "4",
+                    "원 암 덤벨 로우",
+                    5,
+                    listOf(1, 1, 1),
+                    1,
+                    "videolink",
+                    "description",
+                    "등 - 수직 당기기 운동"
+                )
+            )
+            workout1.add(
+                Workout(
+                    "5",
+                    "바벨로우",
+                    5,
+                    listOf(1, 1, 1),
+                    1,
+                    "videolink",
+                    "description",
+                    "등 - 수직 당기기 운동"
+                )
+            )
+
             Box(
                 modifier = Modifier
                     .padding(top = 5.dp)
@@ -238,58 +359,114 @@ fun ShowRoutineDescription(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "가슴, 삼두, 코어",
+                            text = routinedailylist[index].workoutPart,
                             fontSize = 15.sp,
                             modifier = Modifier
                                 .padding(start = 20.dp)
                         )
                     }
                     Row {
-                        for (i in 1..3) {
-                            Column(
-                                modifier = Modifier.padding(
-                                    start = 25.dp,
-                                    end = 20.dp,
-                                    top = 10.dp
-                                ),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    text = "9",
-                                    fontSize = 25.sp,
-                                    fontWeight = FontWeight.Bold,
-                                )
-                                Text(
-                                    text = "운동 종류",
-                                    fontSize = 15.sp,
-                                    modifier = Modifier.padding(top = 5.dp)
-                                )
-                            }
+                        Column(
+                            modifier = Modifier.padding(
+                                start = 25.dp,
+                                end = 20.dp,
+                                top = 10.dp
+                            ),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "$workout1.size",
+                                fontSize = 25.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            Text(
+                                text = "운동 종류",
+                                fontSize = 15.sp,
+                                modifier = Modifier.padding(top = 5.dp)
+                            )
+                        }
+                        Column(
+                            modifier = Modifier.padding(
+                                start = 25.dp,
+                                end = 20.dp,
+                                top = 10.dp
+                            ),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "${workout1.sumOf { it.set }}",
+                                fontSize = 25.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            Text(
+                                text = "세트 수",
+                                fontSize = 15.sp,
+                                modifier = Modifier.padding(top = 5.dp)
+                            )
+                        }
+                        Column(
+                            modifier = Modifier.padding(
+                                start = 25.dp,
+                                end = 20.dp,
+                                top = 10.dp
+                            ),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "${workout1.sumOf { it.calorie }}",
+                                fontSize = 25.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            Text(
+                                text = "소모칼로리",
+                                fontSize = 15.sp,
+                                modifier = Modifier.padding(top = 5.dp)
+                            )
                         }
                     }
                     Row {
-                        for (i in 1..2) {
-                            Column(
-                                modifier = Modifier.padding(
-                                    start = 25.dp,
-                                    end = 20.dp,
-                                    top = 10.dp
-                                ),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    text = "9",
-                                    fontSize = 25.sp,
-                                    fontWeight = FontWeight.Bold,
-                                )
-                                Text(
-                                    text = "운동 종류",
-                                    fontSize = 15.sp,
-                                    modifier = Modifier.padding(top = 5.dp)
-                                )
-                            }
+                        Column(
+                            modifier = Modifier.padding(
+                                start = 25.dp,
+                                end = 20.dp,
+                                top = 10.dp
+                            ),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "${routinedailylist[index].time / 60}:${routinedailylist[index].time % 60}",
+                                fontSize = 25.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            Text(
+                                text = "소요시간",
+                                fontSize = 15.sp,
+                                modifier = Modifier.padding(top = 5.dp)
+                            )
+                        }
+                        Column(
+                            modifier = Modifier.padding(
+                                start = 25.dp,
+                                end = 20.dp,
+                                top = 10.dp
+                            ),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = routinedailylist[index].difficulty,
+                                fontSize = 25.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            Text(
+                                text = "난이도",
+                                fontSize = 15.sp,
+                                modifier = Modifier.padding(top = 5.dp)
+                            )
                         }
                     }
                 }

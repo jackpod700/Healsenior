@@ -278,30 +278,12 @@ fun ShowWorkOutListContent(workout: MutableList<Workout>, workOutIdx: Int) {
                         .weight(1f)
                 )
                 Text(
-                    text = "45kg",
+                    text = "45kg     /     ${workout[workOutIdx].reps[index]}회",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .padding(start = 20.dp)
-                        .weight(1f)
-                )
-                Text(
-                    text = "/",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(start = 20.dp)
-                        .weight(1f)
-                )
-                Text(
-                    text = "${workout[workOutIdx].reps[index]}",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(start = 20.dp, end = 20.dp)
                         .weight(1f)
                 )
             }

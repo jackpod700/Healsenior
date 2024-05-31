@@ -29,8 +29,8 @@ import com.example.Healsenior.data.Workout
 import com.example.Healsenior.login.LoginViewModel
 
 @Composable
-fun WorkOutScreen(loginViewModel: LoginViewModel) {
-    val uid = loginViewModel.auth.currentUser!!.uid
+fun WorkOutScreen() {
+    val uid = 1
 
     var user1: User?= null
     /*
@@ -172,13 +172,14 @@ fun WorkOutScreen(loginViewModel: LoginViewModel) {
         )
     )
 
-    WorkOutScreenNav(routine1, routineDaily1, workout1)
+    WorkOutScreenNav(user1, routine1, routineDaily1, workout1)
 }
 
 @Preview
 @Composable
 fun WorkOutMainScreen(
     navController: NavHostController,
+    user: User,
     routine: Routine,
     routineDaily: RoutineDaily,
     workout: MutableList<Workout>
@@ -191,13 +192,14 @@ fun WorkOutMainScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         BigTopBar("운동")
-        WorkOutScreenContent(navController, routine, routineDaily, workout)
+        WorkOutScreenContent(navController, user, routine, routineDaily, workout)
     }
 }
 
 @Composable
 fun WorkOutScreenContent(
     navController: NavHostController,
+    user: User,
     routine: Routine,
     routineDaily: RoutineDaily,
     workout: MutableList<Workout>
@@ -231,7 +233,7 @@ fun WorkOutScreenContent(
                     shape = RoundedCornerShape(15.dp)
                 ),
         ) {
-            ShowWorkOutDetail(navController, routine, routineDaily, workout)
+            ShowWorkOutDetail(navController, user, routineDaily, workout)
         }
     }
     Column(

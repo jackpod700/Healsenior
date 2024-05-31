@@ -30,8 +30,8 @@ import java.time.format.DateTimeFormatter
 
 @Preview
 @Composable
-fun RecordScreen(loginViewModel: LoginViewModel) {
-    var uid = loginViewModel.auth.currentUser!!.uid
+fun RecordScreen() {
+    var uid = 1
     var user1: User?= null
 /*
     GetUser(uid){user->

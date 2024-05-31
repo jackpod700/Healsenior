@@ -196,28 +196,16 @@ fun RoutineDescriptionScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-
-                .border(
-                    width = 2.dp,
-                    color = Color.Black,
-                    shape = RoundedCornerShape(10.dp),
-                )
-                .background(
-                    color = Color(0xFF5B9DFF),
-                    shape = RoundedCornerShape(10.dp)
-                )
-                .clickable() {
-                    navController.navigate("WorkOutScreen")
-                },
+                .padding(start = 40.dp, end = 40.dp, top = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Button(
                 modifier = Modifier
-                    .height(70.dp)
-                    .padding(start = 40.dp, end = 40.dp, top = 20.dp),
+                    .fillMaxWidth()
+                    .height(60.dp),
                 navController,
-                "WorkOutScreen",
+                "WorkOutScreenMain",
                 "루틴 선택하기",
                 true
             )
@@ -376,7 +364,7 @@ fun ShowRoutineDescription(routine: Routine, routinedailylist: List<RoutineDaily
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = "$workout1.size",
+                                text = "${workout1.size}",
                                 fontSize = 25.sp,
                                 fontWeight = FontWeight.Bold,
                             )

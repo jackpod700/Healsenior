@@ -408,84 +408,87 @@ fun ShowAllRoutineInSpecificPlace(
         }
         item {
             Text(
-                text = "근육량 증가",
+                text = "스트레칭",
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
             )
             LazyRow {
-                items(routinelist.size) {
-                    Box(
-                        modifier = Modifier
-                            .padding(top = 5.dp, end = 20.dp, bottom = 40.dp)
-                            .width(300.dp)
-                            .height(200.dp)
-                            .border(
-                                width = 2.dp,
-                                color = Color(0xFF95BDFA),
-                                shape = RoundedCornerShape(15.dp),
-                            )
-                            .background(
-                                color = Color.White,
-                                shape = RoundedCornerShape(15.dp)
-                            )
-                    ) {
-                        Column(
+                items(routinelist.size) {index ->
+                    if (routinelist[index].place == itemStr[selectedItem.intValue]
+                        && routinelist[index].goal == "스트레칭") {
+                        Box(
                             modifier = Modifier
-                                .padding(20.dp)
+                                .padding(top = 5.dp, end = 20.dp, bottom = 40.dp)
+                                .width(300.dp)
+                                .height(200.dp)
+                                .border(
+                                    width = 2.dp,
+                                    color = Color(0xFF95BDFA),
+                                    shape = RoundedCornerShape(15.dp),
+                                )
+                                .background(
+                                    color = Color.White,
+                                    shape = RoundedCornerShape(15.dp)
+                                )
                         ) {
                             Column(
                                 modifier = Modifier
-                                    .weight(1f)
+                                    .padding(20.dp)
                             ) {
-                                Text(
-                                    text = "근성장을 위한 초급 플랜",
-                                    fontSize = 15.sp
-                                )
-                                Text(
-                                    text = "근육량 증가 추천 플랜 - 초급",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = "근육에 조금씩...",
-                                    color = Color.Gray,
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                            Row {
-                                Row(
+                                Column(
                                     modifier = Modifier
-                                        .clickable {
-                                            navController.navigate("RoutineDescriptionScreen")
-                                        },
-                                    horizontalArrangement = Arrangement.End
+                                        .weight(1f)
                                 ) {
                                     Text(
-                                        text = "자세히 보기",
+                                        text = "근성장을 위한 초급 플랜",
+                                        fontSize = 15.sp
+                                    )
+                                    Text(
+                                        text = routinelist[index].name,
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = routinelist[index].description,
                                         color = Color.Gray,
                                         fontSize = 13.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        textAlign = TextAlign.Right,
-                                        modifier = Modifier
-                                            .weight(1f)
+                                        fontWeight = FontWeight.Bold
                                     )
-                                    IconButton(
-                                        onClick = {
-                                            navController.navigate("RoutineDescriptionScreen")
-                                        },
+                                }
+                                Row {
+                                    Row(
                                         modifier = Modifier
-                                            .width(20.dp)
-                                            .height(20.dp)
+                                            .clickable {
+                                                navController.navigate("RoutineDescriptionScreen")
+                                            },
+                                        horizontalArrangement = Arrangement.End
                                     ) {
-                                        Icon(
-                                            Icons.Default.ChevronRight,
-                                            contentDescription = "",
-                                            tint = Color.Gray,
+                                        Text(
+                                            text = "자세히 보기",
+                                            color = Color.Gray,
+                                            fontSize = 13.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            textAlign = TextAlign.Right,
+                                            modifier = Modifier
+                                                .weight(1f)
+                                        )
+                                        IconButton(
+                                            onClick = {
+                                                navController.navigate("RoutineDescriptionScreen")
+                                            },
                                             modifier = Modifier
                                                 .width(20.dp)
                                                 .height(20.dp)
-                                        )
+                                        ) {
+                                            Icon(
+                                                Icons.Default.ChevronRight,
+                                                contentDescription = "",
+                                                tint = Color.Gray,
+                                                modifier = Modifier
+                                                    .width(20.dp)
+                                                    .height(20.dp)
+                                            )
+                                        }
                                     }
                                 }
                             }

@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.Healsenior.data.Routine
 import com.example.Healsenior.data.RoutineDaily
+import com.example.Healsenior.data.User
 import com.example.Healsenior.data.Workout
 import com.example.Healsenior.workoutScreen.RecommendWorkOutScreen
 import com.example.Healsenior.workoutScreen.RoutineDescriptionScreen
@@ -18,6 +19,7 @@ import com.example.Healsenior.workoutScreen.WorkOutProgressScreen
 
 @Composable
 fun WorkOutScreenNav(
+    user: User,
     routine: Routine,
     routineDaily: RoutineDaily,
     workout: MutableList<Workout>,
@@ -31,7 +33,7 @@ fun WorkOutScreenNav(
         startDestination = "WorkOutScreenMain"
     ) {
         composable("WorkOutScreenMain") {
-            WorkOutMainScreen(navController, routine, routineDaily, workout)
+            WorkOutMainScreen(navController, user, routine, routineDaily, workout)
         }
         composable("RecommendWorkOutScreen") {
             RecommendWorkOutScreen(navController, routine)

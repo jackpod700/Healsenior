@@ -12,7 +12,7 @@ data class User(
     val workoutHour: Int = 0,
     val calorieSum: Int = 0,
     val setSum: Int = 0,
-    val recordMap: Map<Date, String> = emptyMap()
+    val recordMap: Map<String, Map<String, Int>> = emptyMap()
 )
 
 data class Routine(
@@ -29,7 +29,7 @@ data class RoutineDaily(
     val workoutList: List<String> = emptyList(),
     val workoutPart: String= "",
     val time: Long = 0, //기준 초
-    val difficulty: Int = 0,
+    val difficulty: String = "",
 )
 
 data class Workout(

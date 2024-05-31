@@ -20,21 +20,22 @@ import androidx.navigation.NavHostController
 import com.example.Healsenior._component.Button
 import com.example.Healsenior.data.Routine
 import com.example.Healsenior.data.RoutineDaily
+import com.example.Healsenior.data.User
 import com.example.Healsenior.data.Workout
 
 @Composable
 fun ShowWorkOutDetail(
     navController: NavHostController,
-    routine: Routine,
+    user: User,
     routineDaily: RoutineDaily,
     workout: MutableList<Workout>
 ) {
-    ShowWorkOutDetailHeader(routine, routineDaily)
+    ShowWorkOutDetailHeader(user, routineDaily)
     ShowWorkOutDetailContent(navController, routineDaily, workout)
 }
 
 @Composable
-fun ShowWorkOutDetailHeader(routine: Routine, routineDaily: RoutineDaily) {
+fun ShowWorkOutDetailHeader(user: User, routineDaily: RoutineDaily) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,7 +54,7 @@ fun ShowWorkOutDetailHeader(routine: Routine, routineDaily: RoutineDaily) {
             }
     ){
         Text(
-            text = "Day ${routine.name}",
+            text = "Day ${user.dayCount}",
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             modifier = Modifier

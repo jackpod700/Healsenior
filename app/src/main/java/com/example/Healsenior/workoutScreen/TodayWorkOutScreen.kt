@@ -35,15 +35,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.Healsenior.workoutScreen.workoutComponent.WorkOutScreenButton
-import com.example.Healsenior.workoutScreen.workoutComponent.WorkOutScreenSmallTopBar
+import com.example.Healsenior._component.Button
+import com.example.Healsenior._component.SmallTopBar
+import com.example.Healsenior.data.Workout
 
 @Preview
 @Composable
 fun TodayWorkOutScreen(
     navController: NavHostController,
-    workOutData: List<WorkOutData>,
-    routineData: RoutineData
+    workout: MutableList<Workout>,
+    isRoutineEnd: MutableState<Boolean>,
 ) {
     Column(
         modifier = Modifier
@@ -51,26 +52,26 @@ fun TodayWorkOutScreen(
             .fillMaxSize()
             .background(color = Color(0xFFEAEAEA))
     ) {
-        WorkOutScreenSmallTopBar(navController, "오늘의 운동")
-        TodayWorkOutScreenContent(navController, workOutData, routineData)
+        SmallTopBar(navController, "오늘의 운동")
+        TodayWorkOutScreenContent(navController, workout, isRoutineEnd)
     }
 }
 
 @Composable
 fun TodayWorkOutScreenContent(
     navController: NavHostController,
-    workOutData: List<WorkOutData>,
-    routineData: RoutineData
+    workout: MutableList<Workout>,
+    isRoutineEnd: MutableState<Boolean>,
 ) {
     val isExpanded = remember { mutableStateOf(false) }
 
-    TodayWorkOutListHeader(workOutData, isExpanded)
-    TodayWorkOutListContent(navController, workOutData, isExpanded)
+    TodayWorkOutListHeader(workout, isExpanded)
+    TodayWorkOutListContent(navController, workout, isRoutineEnd, isExpanded)
 }
 
 @Composable
 fun TodayWorkOutListHeader(
-    workOutData: List<WorkOutData>,
+    workout: MutableList<Workout>,
     isExpanded: MutableState<Boolean>
 ) {
     Row(
@@ -80,7 +81,7 @@ fun TodayWorkOutListHeader(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "총 ${workOutData.size}개 | ${workOutData.sumOf { it.setCount }}세트",
+            text = "총 ${workout.size}개 | ${workout.sumOf { it.set }}세트",
             fontWeight = FontWeight.Bold,
             color = Color.Gray,
             modifier = Modifier
@@ -114,14 +115,15 @@ fun TodayWorkOutListHeader(
 @Composable
 fun TodayWorkOutListContent(
     navController: NavHostController,
-    workOutData: List<WorkOutData>,
+    workout: MutableList<Workout>,
+    isRoutineEnd: MutableState<Boolean>,
     isExpanded: MutableState<Boolean>
 ) {
     LazyColumn(
         modifier = Modifier
             .height(550.dp)
     ) {
-        items(workOutData.size) {
+        items(workout.size) { index ->
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -170,29 +172,17 @@ fun TodayWorkOutListContent(
                             .padding(start = 10.dp)
                     ) {
                         Text(
-                            text = "시티드 케이블 로우",
+                            text = workout[index].name,
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp
                         )
                         Text(
-                            text = "45kg x 12회 x 2세트",
-                            color = Color.Gray,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp
-                        )
-                        Text(
-                            text = "55kg x 8회 x 2세트",
+                            text = workout[index].summary,
                             color = Color.Gray,
                             fontWeight = FontWeight.Bold,
                             fontSize = 11.sp
                         )
                     }
-                    Text(
-                        text = "등 - 수평 당기기 운동",
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp
-                    )
                 }
             }
         }
@@ -201,13 +191,27 @@ fun TodayWorkOutListContent(
         modifier = Modifier
             .padding(start = 20.dp, end = 20.dp)
     ) {
-        WorkOutScreenButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(70.dp),
-            navController,
-            "WorkOutProgressScreen",
-            "시작하기"
-        )
+        if (isRoutineEnd.value) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp),
+                navController,
+                "WorkOutProgressScreen",
+                "운동 완료",
+                true
+            )
+        }
+        else {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp),
+                navController,
+                "WorkOutProgressScreen",
+                "시작하기",
+                true
+            )
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.example.Healsenior.workoutScreen.workoutUtil
 
+val itemStr = arrayOf("집", "헬스장", "야외")
+
 fun difficultyToString(difficulty: Int): String {
     return if (difficulty == 1)
         "상"

@@ -17,8 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.Healsenior._component.Button
-import com.example.Healsenior.data.Routine
+import com.example.Healsenior._component.Tag_Button
 import com.example.Healsenior.data.RoutineDaily
 import com.example.Healsenior.data.User
 import com.example.Healsenior.data.Workout
@@ -82,15 +81,15 @@ fun ShowWorkOutDetailContent(
         modifier = Modifier
             .padding(start = 20.dp, end = 20.dp, top = 20.dp)
     ) {
-        Button(
+        Tag_Button(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp),
-            navController,
-            "TodayWorkOutScreen",
             "추천 루틴 시작하기",
             true
-        )
+        ) {
+            navController.navigate("TodayWorkOutScreen")
+        }
     }
 }
 

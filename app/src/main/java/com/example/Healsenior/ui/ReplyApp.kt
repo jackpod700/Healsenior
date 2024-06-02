@@ -275,10 +275,10 @@ private fun ReplyNavHost(
         startDestination = ReplyRoute.Workout,
     ) {
         composable(ReplyRoute.Workout) {
-            WorkOutScreen()
+            WorkOutScreen(loginViewModel)
         }
         composable(ReplyRoute.Record) {
-            RecordScreen()
+            RecordScreen(loginViewModel)
         }
         composable(ReplyRoute.Community) {
             MainCommunityScreen()

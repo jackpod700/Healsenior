@@ -35,8 +35,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.Healsenior._component.Button
+import com.example.Healsenior._component.GetPointDialog
+import com.example.Healsenior._component.Tag_Button
 import com.example.Healsenior._component.SmallTopBar
+import com.example.Healsenior._component.Tag_Dialog
 import com.example.Healsenior.data.Workout
 
 @Preview
@@ -192,26 +194,51 @@ fun TodayWorkOutListContent(
             .padding(start = 20.dp, end = 20.dp)
     ) {
         if (isRoutineEnd.value) {
-            Button(
+            val showDialog = remember{mutableStateOf(false)}
+            val showPointDialog = remember{mutableStateOf(false)}
+
+            Tag_Button(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(70.dp),
-                navController,
-                "WorkOutProgressScreen",
                 "운동 완료",
                 true
-            )
+            ) {
+                showDialog.value = true
+            }
+
+            if (showDialog.value) {
+                Tag_Dialog(
+                    onDismissRequest = {showDialog.value = false},
+                    onConfirmation = {
+                        showDialog.value = false
+                        showPointDialog.value = true
+                    },
+                    mainTextStr = "운동을 완료하시겠습니까?"
+                )
+            }
+
+            if (showPointDialog.value) {
+                GetPointDialog(
+                    onDismissRequest = {
+                        navController.navigateUp()
+                        isRoutineEnd.value = false
+                        showPointDialog.value = false
+                    },
+                    "오늘의 운동 보상으로 +250P가 적립되었어요!"
+                )
+            }
         }
         else {
-            Button(
+            Tag_Button(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(70.dp),
-                navController,
-                "WorkOutProgressScreen",
                 "시작하기",
                 true
-            )
+            ) {
+                navController.navigate("WorkOutProgressScreen")
+            }
         }
     }
 }

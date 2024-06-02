@@ -37,7 +37,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.Healsenior._component.SmallTopBar
 import com.example.Healsenior.data.Routine
-import com.example.Healsenior.workoutScreen.workoutUtil.itemStr
+import com.example.Healsenior.workoutScreen.workoutUtil.goalItemStr
+import com.example.Healsenior.workoutScreen.workoutUtil.placeItemStr
 
 @Preview
 @Composable
@@ -61,7 +62,8 @@ fun RecommendWorkOutScreen(
             "근육량 증가 추천 루틴 - 초급",
             "집",
             "근육량 증가",
-            "근육에 조금씩 자극을 ..."
+            "근육에 조금씩 자극을 ...",
+            "근성장을 위한 초급 플랜"
         )
     )
 
@@ -71,7 +73,8 @@ fun RecommendWorkOutScreen(
             "근육량 증가 추천 루틴 - 중급",
             "집",
             "근육량 증가",
-            "근육에 조금씩 자극을 ..."
+            "근육에 조금씩 자극을 ...",
+            "근성장을 위한 초급 플랜"
         )
     )
 
@@ -81,7 +84,8 @@ fun RecommendWorkOutScreen(
             "스트레칭 추천 루틴 - 초급",
             "야외",
             "스트레칭",
-            "근력 및 유산소 운동을 하기 전과 ..."
+            "근력 및 유산소 운동을 하기 전과 ...",
+            "근성장을 위한 초급 플랜"
         )
     )
 
@@ -91,7 +95,8 @@ fun RecommendWorkOutScreen(
             "스트레칭 추천 루틴 - 초급",
             "집",
             "스트레칭",
-            "근력 및 유산소 운동을 하기 전과 ..."
+            "근력 및 유산소 운동을 하기 전과 ...",
+            "근성장을 위한 초급 플랜"
         )
     )
 
@@ -101,7 +106,8 @@ fun RecommendWorkOutScreen(
             "근육량 증가 추천 루틴 - 고급",
             "헬스장",
             "근육량 증가",
-            "근육에 조금씩 자극을 ..."
+            "근육에 조금씩 자극을 ...",
+            "근성장을 위한 초급 플랜"
         )
     )
 
@@ -111,7 +117,8 @@ fun RecommendWorkOutScreen(
             "스트레칭 추천 루틴 - 초급",
             "헬스장",
             "스트레칭",
-            "근력 및 유산소 운동을 하기 전과 ..."
+            "근력 및 유산소 운동을 하기 전과 ...",
+            "근성장을 위한 초급 플랜"
         )
     )
 
@@ -121,7 +128,8 @@ fun RecommendWorkOutScreen(
             "스트레칭 추천 루틴 - 중급",
             "헬스장",
             "스트레칭",
-            "근력 및 유산소 운동을 하기 전과 ..."
+            "근력 및 유산소 운동을 하기 전과 ...",
+            "근성장을 위한 초급 플랜"
         )
     )
 
@@ -315,16 +323,16 @@ fun ShowAllRoutineInSpecificPlace(
         modifier = Modifier
             .padding(start = 20.dp, end = 20.dp, top = 40.dp)
     ) {
-        item {
+        items(goalItemStr.size) { index->
             Text(
-                text = "근육량 증가",
+                text = goalItemStr[index],
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
             )
             LazyRow {
-                items(routinelist.size) {index ->
-                    if (routinelist[index].place == itemStr[selectedItem.intValue]
-                        && routinelist[index].goal == "근육량 증가") {
+                items(routinelist.size) {index2 ->
+                    if (routinelist[index2].place == placeItemStr[selectedItem.intValue]
+                        && routinelist[index2].goal == goalItemStr[index]) {
                         Box(
                             modifier = Modifier
                                 .padding(top = 5.dp, end = 20.dp, bottom = 40.dp)
@@ -349,107 +357,16 @@ fun ShowAllRoutineInSpecificPlace(
                                         .weight(1f)
                                 ) {
                                     Text(
-                                        text = "근성장을 위한 초급 플랜",
+                                        text = routinelist[index2].summary,
                                         fontSize = 15.sp
                                     )
                                     Text(
-                                        text = routinelist[index].name,
+                                        text = routinelist[index2].name,
                                         fontSize = 20.sp,
                                         fontWeight = FontWeight.Bold
                                     )
                                     Text(
-                                        text = routinelist[index].description,
-                                        color = Color.Gray,
-                                        fontSize = 13.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
-                                Row {
-                                    Row(
-                                        modifier = Modifier
-                                            .clickable {
-                                                navController.navigate("RoutineDescriptionScreen")
-                                            },
-                                        horizontalArrangement = Arrangement.End
-                                    ) {
-                                        Text(
-                                            text = "자세히 보기",
-                                            color = Color.Gray,
-                                            fontSize = 13.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            textAlign = TextAlign.Right,
-                                            modifier = Modifier
-                                                .weight(1f)
-                                        )
-                                        IconButton(
-                                            onClick = {
-                                                navController.navigate("RoutineDescriptionScreen")
-                                            },
-                                            modifier = Modifier
-                                                .width(20.dp)
-                                                .height(20.dp)
-                                        ) {
-                                            Icon(
-                                                Icons.Default.ChevronRight,
-                                                contentDescription = "",
-                                                tint = Color.Gray,
-                                                modifier = Modifier
-                                                    .width(20.dp)
-                                                    .height(20.dp)
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        item {
-            Text(
-                text = "스트레칭",
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
-            )
-            LazyRow {
-                items(routinelist.size) {index ->
-                    if (routinelist[index].place == itemStr[selectedItem.intValue]
-                        && routinelist[index].goal == "스트레칭") {
-                        Box(
-                            modifier = Modifier
-                                .padding(top = 5.dp, end = 20.dp, bottom = 40.dp)
-                                .width(300.dp)
-                                .height(200.dp)
-                                .border(
-                                    width = 2.dp,
-                                    color = Color(0xFF95BDFA),
-                                    shape = RoundedCornerShape(15.dp),
-                                )
-                                .background(
-                                    color = Color.White,
-                                    shape = RoundedCornerShape(15.dp)
-                                )
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(20.dp)
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                ) {
-                                    Text(
-                                        text = "근성장을 위한 초급 플랜",
-                                        fontSize = 15.sp
-                                    )
-                                    Text(
-                                        text = routinelist[index].name,
-                                        fontSize = 20.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Text(
-                                        text = routinelist[index].description,
+                                        text = routinelist[index2].description,
                                         color = Color.Gray,
                                         fontSize = 13.sp,
                                         fontWeight = FontWeight.Bold

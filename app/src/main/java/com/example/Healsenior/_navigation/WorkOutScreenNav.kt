@@ -25,7 +25,7 @@ fun WorkOutScreenNav(
     workout: MutableList<Workout>,
 ) {
     val navController = rememberNavController()
-    val isRoutineEnd = remember { mutableStateOf(true) }
+    val isRoutineEnd = remember { mutableStateOf(false) }
     val selectedRoutine = remember { mutableIntStateOf(0) }
 
     NavHost(
@@ -39,7 +39,6 @@ fun WorkOutScreenNav(
             RecommendWorkOutScreen(navController, routine)
         }
         composable("TodayWorkOutScreen") {
-            isRoutineEnd.value = false
             TodayWorkOutScreen(navController, workout, isRoutineEnd)
         }
         composable("RoutineDescriptionScreen") {

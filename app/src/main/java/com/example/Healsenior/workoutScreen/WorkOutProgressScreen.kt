@@ -51,12 +51,12 @@ fun WorkOutProgressScreen(
             .background(color = Color(0xFFEAEAEA))
     ) {
         SmallTopBar(navController, "운동 진행")
-        WorkOutProgressScreenContent(workout)
+        WorkOutProgressScreenContent(navController, workout)
     }
 }
 
 @Composable
-fun WorkOutProgressScreenContent(workout: MutableList<Workout>) {
+fun WorkOutProgressScreenContent(navController: NavHostController, workout: MutableList<Workout>) {
     val isStopped = remember { mutableStateOf(false) }
     val workOutIdx = remember { mutableIntStateOf(0) }
     val btnStr = remember { mutableStateOf("일시정지") }
@@ -130,8 +130,10 @@ fun WorkOutProgressScreenContent(workout: MutableList<Workout>) {
                     .clickable() {
                         if (workOutIdx.intValue + 1 < workout.size)
                             workOutIdx.intValue++
-                        else
+                        else if (workOutIdx.intValue + 1 == workout.size)
                             btnStr2.value = "운동 종료"
+                        else
+                            navController.navigateUp()
                     },
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -148,6 +150,7 @@ fun WorkOutProgressScreenContent(workout: MutableList<Workout>) {
     }
 }
 
+//Todo 영상 링크 생기면 영상 재생 가능하게 하기
 @Composable
 fun ShowWorkOutVideoContent(workout: MutableList<Workout>, workOutIdx: Int) {
     Column(

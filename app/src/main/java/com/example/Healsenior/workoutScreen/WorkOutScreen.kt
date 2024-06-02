@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.Healsenior._component.BigTopBar
-import com.example.Healsenior._component.Button
+import com.example.Healsenior._component.Tag_Button
 import com.example.Healsenior._navigation.WorkOutScreenNav
 import com.example.Healsenior.data.Routine
 import com.example.Healsenior.data.RoutineDaily
@@ -29,9 +29,8 @@ import com.example.Healsenior.data.Workout
 import com.example.Healsenior.login.LoginViewModel
 
 @Composable
-fun WorkOutScreen() {
-    val uid = 1
-
+fun WorkOutScreen(loginViewModel: LoginViewModel) {
+    var uid = loginViewModel.auth.uid
     var user1: User?= null
     /*
         GetUser(uid){user->
@@ -240,14 +239,14 @@ fun WorkOutScreenContent(
         modifier = Modifier
             .padding(start = 40.dp, end = 40.dp, top = 30.dp)
     ) {
-        Button(
+        Tag_Button(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
-            navController,
-            "RecommendWorkOutScreen",
             "운동 루틴 더보기",
             true
-        )
+        ) {
+            navController.navigate("RecommendWorkOutScreen")
+        }
     }
 }

@@ -31,15 +31,17 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.example.Healsenior.login.LoginScreen
 import com.example.Healsenior.login.LoginViewModel
+import com.example.Healsenior.login.LogoutScreen
 import com.example.Healsenior.ui.theme.ContrastAwareReplyTheme
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 
 class MainActivity : ComponentActivity() {
 
     private val loginViewModel: LoginViewModel by viewModels()
-    private val googleSignInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        loginViewModel.handleSignInResult(result, this)
-    }
+    private val googleSignInLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            loginViewModel.handleSignInResult(result, this)
+        }
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,32 +61,31 @@ class MainActivity : ComponentActivity() {
                 )
 
             }
-    }
-}
-
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-@Preview(showBackground = true)
-@Composable
-fun ReplyAppPreview() {
-    val loginViewModel: LoginViewModel by viewModels()
-    val googleSignInLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            loginViewModel.handleSignInResult(result,this)
         }
-    ContrastAwareReplyTheme {
-        ReplyApp(
-            windowSize = WindowSizeClass.calculateFromSize(DpSize(400.dp, 900.dp)),
-            displayFeatures = emptyList(),
-            loginViewModel = loginViewModel,
-            googleSignInLauncher = googleSignInLauncher,
-        )
-//        LoginScreen (
-//            onGoogleSignInClick = {
-//                val signInIntent = loginViewModel.getGoogleSignInIntent()
-//                googleSignInLauncher.launch(signInIntent)
-//            }
-//        )
+    }
+
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+    @Preview(showBackground = true)
+    @Composable
+    fun ReplyAppPreview() {
+        val loginViewModel: LoginViewModel by viewModels()
+        val googleSignInLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                loginViewModel.handleSignInResult(result, this)
+            }
+        ContrastAwareReplyTheme {
+            LoginScreen(
+                onGoogleSignInClick = {
+                    val signInIntent = loginViewModel.getGoogleSignInIntent()
+                    googleSignInLauncher.launch(signInIntent)
+                }
+            )
+            ReplyApp(
+                windowSize = WindowSizeClass.calculateFromSize(DpSize(400.dp, 900.dp)),
+                displayFeatures = emptyList(),
+                loginViewModel = loginViewModel,
+                googleSignInLauncher = googleSignInLauncher,
+            )
+        }
     }
 }
-}
-

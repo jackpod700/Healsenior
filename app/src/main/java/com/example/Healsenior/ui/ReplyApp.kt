@@ -48,7 +48,9 @@ import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
 import com.example.Healsenior.login.LoginScreen
 import com.example.Healsenior.login.LoginViewModel
+import com.example.Healsenior.login.LogoutScreen
 import com.example.Healsenior.login.checkLoginState
+import com.example.Healsenior.login.logout
 import com.example.Healsenior.page.MainCommunityScreen
 import com.example.Healsenior.page.MyPage
 import com.example.Healsenior.recordScreen.RecordScreen
@@ -140,11 +142,20 @@ fun ReplyApp(
     var isLoggedIn by remember { mutableStateOf(checkLoginState(context)) }
 
     if(isLoggedIn){
+        /*
+        LogoutScreen(
+            onGoogleSignOutClick = {
+                logout(context)
+            }
+        )
+        */
+        
         ReplyNavigationWrapper(
             navigationType = navigationType,
             navigationContentPosition = navigationContentPosition,
             loginViewModel = loginViewModel
         )
+
     }
     else{
         LoginScreen(

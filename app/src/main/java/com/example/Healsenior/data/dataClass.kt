@@ -58,6 +58,7 @@ data class Post(
 
 data class Comment(
     val pid: Int = 0,
+    val cid: Int = 0,
     val author: String = "",
     val content: String = "",
     val date: Date = Date(),

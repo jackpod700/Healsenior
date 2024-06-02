@@ -105,7 +105,7 @@ val database = FirebaseFirestore.getInstance()
 //}
 
     fun GetRoutineDaily(rid: String, day: Int, callback: (RoutineDaily?) -> Unit) {
-        database.collection("RoutineDaily").document(rid).get().addOnSuccessListener {
+        database.collection("RoutineDaily/"+rid+"/Days").document("Day"+day.toString()).get().addOnSuccessListener {
             val routineDaily = it.toObject(RoutineDaily::class.java)
             if (routineDaily != null) {
                 callback(routineDaily)
@@ -129,7 +129,7 @@ val database = FirebaseFirestore.getInstance()
 //}
 
     fun GetRoutineDailyAll(rid: String,callback: (List<RoutineDaily>) -> Unit) {
-        database.collection("RoutineDaily").whereEqualTo("rid",rid).get().addOnSuccessListener {
+        database.collection("RoutineDaily/"+rid+"/Days").get().addOnSuccessListener {
             val routineDailyList = it.toObjects(RoutineDaily::class.java)
             callback(routineDailyList)
         }.addOnFailureListener {
@@ -147,3 +147,65 @@ val database = FirebaseFirestore.getInstance()
 //        println("No user found or error occurred")
 //    }
 //}
+
+    fun writeNewPost(
+        post: Post
+    ) {
+        database.collection("Post").document(post.pid.toString()).set(post)
+        database.collection("Post").document("0").update("count", post.pid+1)
+        database.collection("Comment").document(post.pid.toString()).set("count" to 0)
+    }
+
+    fun GetPostId(callback: (Int) -> Unit) {
+        database.collection("Post").document("0").get().addOnSuccessListener {
+            val postId = it
+            callback(postId.data?.get("count") as Int)
+        }.addOnFailureListener {
+            println("Error getting documents: $it")
+        }
+    }
+
+    fun GetPostAll(callback: (List<Post>) -> Unit) {
+        database.collection("Post").get().addOnSuccessListener {
+            val postList = it.toObjects(Post::class.java)
+            callback(postList)
+        }.addOnFailureListener {
+            println("Error getting documents: $it")
+            callback(emptyList())
+        }
+    }
+
+
+    fun GetCommentId(pid: Int, callback: (Int) -> Unit) {
+        database.collection("Comment").document(pid.toString()).get().addOnSuccessListener {
+            val commentId = it
+            callback(commentId.data?.get("count") as Int)
+        }.addOnFailureListener {
+            println("Error getting documents: $it")
+        }
+    }
+    fun writeNewComment(
+        comment: Comment
+    ) {
+        database.collection("Comment/"+comment.pid.toString()).document(comment.cid.toString()).set(comment)
+    }
+
+    fun GetCommentAll(pid: Int, callback: (List<Comment>) -> Unit) {
+        database.collection("Comment/"+pid.toString()).get().addOnSuccessListener {
+            val commentList = it.toObjects(Comment::class.java)
+            callback(commentList)
+        }.addOnFailureListener {
+            println("Error getting documents: $it")
+            callback(emptyList())
+        }
+    }
+
+    fun GetGoodsAll(callback: (List<Goods>) -> Unit) {
+        database.collection("Goods").get().addOnSuccessListener {
+            val goodsList = it.toObjects(Goods::class.java)
+            callback(goodsList)
+        }.addOnFailureListener {
+            println("Error getting documents: $it")
+            callback(emptyList())
+        }
+    }

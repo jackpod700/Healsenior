@@ -1,15 +1,7 @@
 package com.example.Healsenior.workoutScreen.workoutUtil
 
-val itemStr = arrayOf("집", "헬스장", "야외")
-
-fun difficultyToString(difficulty: Int): String {
-    return if (difficulty == 1)
-        "상"
-    else if (difficulty == 2)
-        "중"
-    else
-        "하"
-}
+val placeItemStr = arrayOf("집", "헬스장", "야외")
+val goalItemStr = arrayOf("근육량 증가", "스트레칭")
 
 fun timeToStr(hour: Int, minute: Int, second: Int): String {
     var timeStr = ""

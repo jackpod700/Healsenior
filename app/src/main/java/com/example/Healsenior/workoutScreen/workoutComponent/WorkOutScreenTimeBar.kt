@@ -18,7 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import com.example.Healsenior.workoutScreen.workoutUtil.timeToStr
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
@@ -31,6 +33,24 @@ fun WorkOutScreenTimeBar(
     second: MutableIntState
 ) {
     //Todo : 타이머 구현하기
+
+    LaunchedEffect (isStopped.value) {
+        while (!isStopped.value) {
+            second.intValue++
+
+            if (second.intValue == 60) {
+                second.intValue = 0
+                minute.intValue++
+            }
+
+            if (minute.intValue == 60) {
+                minute.intValue = 0
+                hour.intValue++
+            }
+
+            delay(1000)
+        }
+    }
 
     Column(
         modifier = Modifier

@@ -2,7 +2,6 @@ package com.example.Healsenior.workoutScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.Healsenior._component.Button
+import com.example.Healsenior._component.Tag_Button
 import com.example.Healsenior._component.SmallTopBar
 import com.example.Healsenior.data.Routine
 import com.example.Healsenior.data.RoutineDaily
@@ -73,7 +72,8 @@ fun RoutineDescriptionScreenContent(
         "근육량 증가 추천 플랜(입문)",
         "place",
         "goal",
-        "description"
+        "description",
+        "근성장을 위한 초급 플랜"
     )
 
     var routinedailylist1:List<RoutineDaily>?=null
@@ -172,7 +172,7 @@ fun RoutineDescriptionScreenContent(
                     .padding(start = 20.dp)
             )
             Text(
-                text = "헬린이를 위한 초급 루틴",
+                text = routine1.summary,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
@@ -200,15 +200,15 @@ fun RoutineDescriptionScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Button(
+            Tag_Button(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
-                navController,
-                "WorkOutScreenMain",
                 "루틴 선택하기",
                 true
-            )
+            ) {
+                navController.navigate("WorkOutScreenMain")
+            }
         }
     }
 }

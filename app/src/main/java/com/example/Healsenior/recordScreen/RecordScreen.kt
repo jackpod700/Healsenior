@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.Healsenior._component.BigTopBar
-import com.example.Healsenior._component.Button
+import com.example.Healsenior._component.Tag_Button
 import com.example.Healsenior._navigation.RecordScreenNav
 import com.example.Healsenior.data.User
 import com.example.Healsenior.login.LoginViewModel
@@ -30,8 +30,8 @@ import java.time.format.DateTimeFormatter
 
 @Preview
 @Composable
-fun RecordScreen() {
-    var uid = 1
+fun RecordScreen(loginViewModel: LoginViewModel) {
+    var uid = loginViewModel.auth.uid
     var user1: User?= null
 /*
     GetUser(uid){user->
@@ -141,14 +141,15 @@ fun RecordScreenContent(
             modifier = Modifier
                 .padding(start = 20.dp, end = 20.dp, top = 60.dp)
         ) {
-            Button(modifier = Modifier
-                .fillMaxWidth()
-                .height(55.dp),
-                navController,
-                "RecordScreenDetail",
+            Tag_Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(55.dp),
                 "운동 기록 보기",
                 workoutDayArr.contains(selectedDay.intValue)
-            )
+            ) {
+               navController.navigate("RecordScreenDetail")
+            }
         }
     }
 }

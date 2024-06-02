@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,15 +17,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 
 @Composable
-fun Button(
+fun Tag_Button(
     modifier: Modifier,
-    navController: NavHostController,
-    navDestStr: String,
     text: String,
-    canClick: Boolean
+    canClick: Boolean,
+    onClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -38,7 +37,7 @@ fun Button(
                 color = Color(0xFF5B9DFF)
             )
             .clickable(canClick) {
-                navController.navigate(navDestStr)
+                onClick()
             }
             .then(modifier),
         horizontalAlignment = Alignment.CenterHorizontally,

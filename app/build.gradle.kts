@@ -142,5 +142,4 @@ dependencies {
     implementation ("com.google.android.gms:play-services-auth:20.4.1")
     implementation ("com.google.firebase:firebase-database:20.0.5")
     implementation ("com.google.code.gson:gson:2.8.9")
-
 }

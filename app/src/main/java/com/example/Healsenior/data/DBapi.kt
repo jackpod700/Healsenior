@@ -180,7 +180,7 @@ val database = FirebaseFirestore.getInstance()
         post.pid = postId
     }
         database.collection("Post").document(post.pid.toString()).set(post)
-        database.collection("Post").document("0").update("count", post.pid+1)
+        database.collection("Post").document("0").update("count", FieldValue.increment(1))
         database.collection("Comment").document(post.pid.toString()).set("count" to 0)
     }
     fun GetPostAll(callback: (List<Post>) -> Unit) {

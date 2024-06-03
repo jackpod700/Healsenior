@@ -45,7 +45,7 @@ data class Workout(
 )
 
 data class Post(
-    val pid: Int = 0,
+    var pid: Int = 0,
     val uid: String = "",
     val author: String = "",
     val title: String = "",
@@ -58,7 +58,7 @@ data class Post(
 
 data class Comment(
     val pid: Int = 0,
-    val cid: Int = 0,
+    var cid: Int = 0,
     val author: String = "",
     val content: String = "",
     val date: Date = Date(),

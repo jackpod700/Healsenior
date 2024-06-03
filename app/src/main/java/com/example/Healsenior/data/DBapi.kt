@@ -148,13 +148,7 @@ val database = FirebaseFirestore.getInstance()
 //    }
 //}
 
-    fun writeNewPost(
-        post: Post
-    ) {
-        database.collection("Post").document(post.pid.toString()).set(post)
-        database.collection("Post").document("0").update("count", post.pid+1)
-        database.collection("Comment").document(post.pid.toString()).set("count" to 0)
-    }
+
 
     fun GetPostId(callback: (Int) -> Unit) {
         database.collection("Post").document("0").get().addOnSuccessListener {
@@ -164,7 +158,14 @@ val database = FirebaseFirestore.getInstance()
             println("Error getting documents: $it")
         }
     }
-
+    fun writeNewPost(post: Post) {
+    GetPostId { postId ->
+        post.pid = postId
+    }
+        database.collection("Post").document(post.pid.toString()).set(post)
+        database.collection("Post").document("0").update("count", post.pid+1)
+        database.collection("Comment").document(post.pid.toString()).set("count" to 0)
+    }
     fun GetPostAll(callback: (List<Post>) -> Unit) {
         database.collection("Post").get().addOnSuccessListener {
             val postList = it.toObjects(Post::class.java)
@@ -187,6 +188,9 @@ val database = FirebaseFirestore.getInstance()
     fun writeNewComment(
         comment: Comment
     ) {
+        GetCommentId(comment.pid) { commentId ->
+            comment.cid = commentId
+        }
         database.collection("Comment/"+comment.pid.toString()).document(comment.cid.toString()).set(comment)
     }
 

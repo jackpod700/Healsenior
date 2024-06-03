@@ -1,4 +1,5 @@
 package com.example.Healsenior.data
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Date
 
@@ -192,6 +193,13 @@ val database = FirebaseFirestore.getInstance()
         }
     }
 
+    fun UpdatePostLike(pid: Int) {
+        database.collection("Post").document(pid.toString()).update("like", FieldValue.increment(1))
+    }
+
+    fun UpdatePostView(pid: Int) {
+        database.collection("Post").document(pid.toString()).update("view", FieldValue.increment(1))
+    }
 
     fun GetCommentId(pid: Int, callback: (Int) -> Unit) {
         database.collection("Comment").document(pid.toString()).get().addOnSuccessListener {

@@ -40,6 +40,10 @@ val database = FirebaseFirestore.getInstance()
 //    }
 //}
 
+    fun UpdateUser(user: User) {
+        database.collection("User").document(user.uid).set(user)
+    }
+
     fun GetUserAll(callback: (List<User>) -> Unit) {
         database.collection("User").get().addOnSuccessListener {
             val userList = it.toObjects(User::class.java)

@@ -8,9 +8,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Store
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+
 
 
 data class PointHistory(
@@ -74,6 +79,13 @@ fun PointHistoryScreen(navController: NavHostController) {
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.align(Alignment.CenterVertically),
                 )
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(
+                    modifier = Modifier.padding(end = 7.dp),
+                    onClick = { navController.navigate("product_list_screen") }) {
+                    Icon(Icons.Default.Store, contentDescription = "Store", tint = Color.Black,
+                        modifier = Modifier.size(35.dp))
+                }
             }
         }
         Text(

@@ -150,15 +150,20 @@ val database = FirebaseFirestore.getInstance()
 
 
 
-    fun GetPostId(callback: (Int) -> Unit) {
-        database.collection("Post").document("0").get().addOnSuccessListener {
-            val postId = it
-            callback(postId.data?.get("count") as Int)
-        }.addOnFailureListener {
-            println("Error getting documents: $it")
+fun GetPostId(callback: (Int) -> Unit) {
+    database.collection("Post").document("0").get().addOnSuccessListener {
+        val postId = (it["count"] as? Long)?.toInt() // Long 타입을 Int로 변환
+        if (postId != null) {
+            callback(postId)
+        } else {
+            // Handle the case where postId is null
         }
+    }.addOnFailureListener {
+        // Handle the failure
     }
-    fun writeNewPost(post: Post) {
+}
+
+fun writeNewPost(post: Post) {
     GetPostId { postId ->
         post.pid = postId
     }

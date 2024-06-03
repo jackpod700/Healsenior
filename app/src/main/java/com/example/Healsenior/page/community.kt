@@ -11,8 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -29,7 +34,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.Healsenior.data.GetPostAll
 import com.example.Healsenior.data.Post
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -99,14 +106,50 @@ val posts = listOf(
     )
 )
 
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainCommunityScreen() {
     val navController = rememberNavController()
+    var posts by remember { mutableStateOf<List<Post>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStackEntry?.destination?.route
+
+    LaunchedEffect(Unit) {
+        GetPostAll { postList ->
+            posts = postList
+            isLoading = false
+        }
+    }
+
+    LaunchedEffect(currentDestination) {
+        if (currentDestination == "regularPosts" || currentDestination == "popularPosts") {
+            isLoading = true
+            GetPostAll { postList ->
+                posts = postList
+                isLoading = false
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
-            CommunityTopBar()
+            if (currentDestination != "writePost") {
+                CommunityTopBar()
+            }
+        },
+        floatingActionButton = {
+            if (currentDestination == "regularPosts" || currentDestination == "popularPosts") {
+                FloatingActionButton(
+                    onClick = { navController.navigate("writePost") },
+                    containerColor = Color(0xFF87CEEB),
+                    contentColor = Color.White
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "작성하기")
+                }
+            }
         }
     ) { innerPadding ->
         Column(
@@ -115,10 +158,17 @@ fun MainCommunityScreen() {
                 .background(Color.White)
                 .fillMaxSize()
         ) {
-            CommunityScreen(navController)
+            if (isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                CommunityScreen(navController, posts)
+            }
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -141,7 +191,7 @@ fun CommunityTopBar() {
 }
 
 @Composable
-fun AppNavGraph(navController: NavHostController, startDestination: String) {
+fun AppNavGraph(navController: NavHostController, startDestination: String, posts: List<Post>) {
     NavHost(navController = navController, startDestination = startDestination) {
         composable("regularPosts") {
             RegularPosts(navController = navController, posts = posts)
@@ -151,6 +201,9 @@ fun AppNavGraph(navController: NavHostController, startDestination: String) {
         }
         composable("rankingPosts") {
             RankingPosts()
+        }
+        composable("writePost") {
+            PostScreen(navController = navController)
         }
         composable("postDetail/{postId}") { backStackEntry ->
             val postId = backStackEntry.arguments?.getString("postId")
@@ -164,31 +217,60 @@ fun AppNavGraph(navController: NavHostController, startDestination: String) {
     }
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun CommunityScreen(navController: NavHostController) {
+fun CommunityScreen(navController: NavHostController, posts: List<Post>) {
     val tabs = listOf("인기글", "게시글", "랭킹")
     var selectedTabIndex by remember { mutableStateOf(1) } // Default to second tab initially
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStackEntry?.destination?.route
+
+    LaunchedEffect(currentDestination) {
+        selectedTabIndex = when (currentDestination) {
+            "popularPosts" -> 0
+            "regularPosts" -> 1
+            "rankingPosts" -> 2
+            else -> 1
+        }
+    }
+
 
     Column {
-        CustomTabRow(selectedTabIndex, tabs) { index ->
-            selectedTabIndex = index
-            when (index) {
-                0 -> navController.navigate("popularPosts")
-                1 -> navController.navigate("regularPosts")
-                2 -> navController.navigate("rankingPosts")
+        if (currentDestination != "writePost") {
+            CustomTabRow(selectedTabIndex, tabs) { index ->
+                selectedTabIndex = index
+                when (index) {
+                    0 -> navController.navigate("popularPosts") {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                    1 -> navController.navigate("regularPosts") {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                    2 -> navController.navigate("rankingPosts") {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
             }
         }
         Box(modifier = Modifier.fillMaxSize()) {
-            when (selectedTabIndex) {
-                0 -> AppNavGraph(navController = navController, startDestination = "popularPosts")
-                1 -> AppNavGraph(navController = navController, startDestination = "regularPosts")
-                2 -> AppNavGraph(navController = navController, startDestination = "rankingPosts")
-            }
+            AppNavGraph(navController = navController, startDestination = "regularPosts", posts = posts)
         }
     }
 }
+
+
 
 @Composable
 fun CustomTabRow(selectedTabIndex: Int, tabs: List<String>, onTabSelected: (Int) -> Unit) {

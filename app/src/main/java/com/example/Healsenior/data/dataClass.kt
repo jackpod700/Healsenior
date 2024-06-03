@@ -67,7 +67,6 @@ data class Comment(
 data class Goods(
     val gid: Int = 0,
     val name: String = "",
-    val description : String = "",
     val price: Int = 0,
     val image: String = "",
 )

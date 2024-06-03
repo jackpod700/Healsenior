@@ -148,7 +148,19 @@ val database = FirebaseFirestore.getInstance()
 //    }
 //}
 
-
+    fun GetWorkout(wid: String, callback: (Workout?) -> Unit) {
+        database.collection("Workout").document(wid).get().addOnSuccessListener {
+            val workout = it.toObject(Workout::class.java)
+            if (workout != null) {
+                callback(workout)
+                return@addOnSuccessListener
+            } else {
+                callback(null)
+            }
+        }.addOnFailureListener {
+            println("Error getting documents: $it")
+        }
+    }
 
     fun GetPostId(callback: (Int) -> Unit) {
         database.collection("Post").document("0").get().addOnSuccessListener {

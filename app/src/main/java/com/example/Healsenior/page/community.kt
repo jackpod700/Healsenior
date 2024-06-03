@@ -225,23 +225,47 @@ fun CommunityScreen(navController: NavHostController, posts: List<Post>) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination?.route
 
+    LaunchedEffect(currentDestination) {
+        selectedTabIndex = when (currentDestination) {
+            "popularPosts" -> 0
+            "regularPosts" -> 1
+            "rankingPosts" -> 2
+            else -> 1
+        }
+    }
+
+
     Column {
         if (currentDestination != "writePost") {
             CustomTabRow(selectedTabIndex, tabs) { index ->
                 selectedTabIndex = index
                 when (index) {
-                    0 -> navController.navigate("popularPosts")
-                    1 -> navController.navigate("regularPosts")
-                    2 -> navController.navigate("rankingPosts")
+                    0 -> navController.navigate("popularPosts") {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                    1 -> navController.navigate("regularPosts") {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                    2 -> navController.navigate("rankingPosts") {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
             }
         }
         Box(modifier = Modifier.fillMaxSize()) {
-            when (selectedTabIndex) {
-                0 -> AppNavGraph(navController = navController, startDestination = "popularPosts", posts = posts)
-                1 -> AppNavGraph(navController = navController, startDestination = "regularPosts", posts = posts)
-                2 -> AppNavGraph(navController = navController, startDestination = "rankingPosts", posts = posts)
-            }
+            AppNavGraph(navController = navController, startDestination = "regularPosts", posts = posts)
         }
     }
 }

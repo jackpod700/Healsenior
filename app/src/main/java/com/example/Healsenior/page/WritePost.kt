@@ -24,6 +24,7 @@ import java.util.Date
 fun PostScreen(navController: NavController) {
     var title by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
+    var isSubmitting by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -50,19 +51,28 @@ fun PostScreen(navController: NavController) {
             )
             OutlinedButton(
                 onClick = {
-                    val newPost = Post(
-                        pid = 0, // 이 값은 서버에서 할당될 것입니다.
-                        uid = "사용자ID", // 실제 사용자 ID로 변경
-                        author = "작성자 이름", // 실제 작성자 이름으로 변경
-                        title = title,
-                        content = content,
-                        like = 0,
-                        comments = 0,
-                        view = 0,
-                        date = Date()
-                    )
-                    writeNewPost(newPost)
-                    navController.popBackStack() // 작성 후 이전 화면으로 돌아갑니다.
+                    if (title.isNotEmpty() && content.isNotEmpty()) {
+                        isSubmitting = true
+                        val newPost = Post(
+                            pid = 0, // 이 값은 서버에서 할당될 것입니다.
+                            uid = "사용자ID", // 실제 사용자 ID로 변경
+                            author = "작성자 이름", // 실제 작성자 이름으로 변경
+                            title = title,
+                            content = content,
+                            like = 0,
+                            comments = 0,
+                            view = 0,
+                            date = Date()
+                        )
+                        writeNewPost(newPost) { success ->
+                            isSubmitting = false
+                            if (success) {
+                                navController.popBackStack() // 작성 후 이전 화면으로 돌아갑니다.
+                            } else {
+                                // Handle the error
+                            }
+                        }
+                    }
                 },
                 shape = RoundedCornerShape(50),
                 colors = ButtonDefaults.outlinedButtonColors(
@@ -70,7 +80,14 @@ fun PostScreen(navController: NavController) {
                 ),
                 modifier = Modifier
             ) {
-                Text(text = "등록", color = Color.White, fontSize = 16.sp)
+                if (isSubmitting) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier.size(16.dp)
+                    )
+                } else {
+                    Text(text = "등록", color = Color.White, fontSize = 16.sp)
+                }
             }
         }
 

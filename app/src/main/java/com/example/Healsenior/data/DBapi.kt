@@ -1,4 +1,5 @@
 package com.example.Healsenior.data
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Date
 
@@ -39,6 +40,10 @@ val database = FirebaseFirestore.getInstance()
 //        println("No user found or error occurred")
 //    }
 //}
+
+    fun UpdateUser(user: User) {
+        database.collection("User").document(user.uid).set(user)
+    }
 
     fun GetUserAll(callback: (List<User>) -> Unit) {
         database.collection("User").get().addOnSuccessListener {
@@ -148,7 +153,19 @@ val database = FirebaseFirestore.getInstance()
 //    }
 //}
 
-
+    fun GetWorkout(wid: String, callback: (Workout?) -> Unit) {
+        database.collection("Workout").document(wid).get().addOnSuccessListener {
+            val workout = it.toObject(Workout::class.java)
+            if (workout != null) {
+                callback(workout)
+                return@addOnSuccessListener
+            } else {
+                callback(null)
+            }
+        }.addOnFailureListener {
+            println("Error getting documents: $it")
+        }
+    }
 
 fun GetPostId(callback: (Int) -> Unit) {
     database.collection("Post").document("0").get().addOnSuccessListener {
@@ -168,7 +185,7 @@ fun writeNewPost(post: Post) {
         post.pid = postId
     }
         database.collection("Post").document(post.pid.toString()).set(post)
-        database.collection("Post").document("0").update("count", post.pid+1)
+        database.collection("Post").document("0").update("count", FieldValue.increment(1))
         database.collection("Comment").document(post.pid.toString()).set("count" to 0)
     }
     fun GetPostAll(callback: (List<Post>) -> Unit) {
@@ -181,6 +198,13 @@ fun writeNewPost(post: Post) {
         }
     }
 
+    fun UpdatePostLike(pid: Int) {
+        database.collection("Post").document(pid.toString()).update("like", FieldValue.increment(1))
+    }
+
+    fun UpdatePostView(pid: Int) {
+        database.collection("Post").document(pid.toString()).update("view", FieldValue.increment(1))
+    }
 
     fun GetCommentId(pid: Int, callback: (Int) -> Unit) {
         database.collection("Comment").document(pid.toString()).get().addOnSuccessListener {

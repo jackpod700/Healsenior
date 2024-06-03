@@ -22,6 +22,7 @@ import androidx.navigation.NavHostController
 import com.example.Healsenior._component.BigTopBar
 import com.example.Healsenior._component.Tag_Button
 import com.example.Healsenior._navigation.WorkOutScreenNav
+import com.example.Healsenior.data.GetUser
 import com.example.Healsenior.data.Routine
 import com.example.Healsenior.data.RoutineDaily
 import com.example.Healsenior.data.User
@@ -32,15 +33,17 @@ import com.example.Healsenior.login.LoginViewModel
 fun WorkOutScreen(loginViewModel: LoginViewModel) {
     var uid = loginViewModel.auth.uid
     var user1: User?= null
-    /*
-        GetUser(uid){user->
-            if (user != null) {
-                user1=user
-            } else {
-                println("No user found or error occurred")
-            }
+
+    GetUser(uid!!){user->
+        if (user != null) {
+            user1=user
+            println("user: "+user)
+            println("user1: "+user1)
+        } else {
+            println("No user found or error occurred")
         }
-    */
+    }
+
 
     user1 = User(
         "1",
@@ -171,7 +174,7 @@ fun WorkOutScreen(loginViewModel: LoginViewModel) {
         )
     )
 
-    WorkOutScreenNav(user1, routine1, routineDaily1, workout1)
+    WorkOutScreenNav(user1!!, routine1, routineDaily1, workout1)
 }
 
 @Preview

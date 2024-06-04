@@ -1,7 +1,6 @@
 package com.example.Healsenior._navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
@@ -26,7 +25,7 @@ fun WorkOutScreenNav(
 ) {
     val navController = rememberNavController()
     val isRoutineEnd = remember { mutableStateOf(false) }
-    val selectedRoutine = remember { mutableIntStateOf(0) }
+    val selectedRoutine = remember { mutableStateOf(user.rid) }
 
     NavHost(
         navController = navController,

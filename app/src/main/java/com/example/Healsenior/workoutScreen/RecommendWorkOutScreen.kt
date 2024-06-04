@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.Healsenior._component.SmallTopBar
+import com.example.Healsenior.data.GetRoutineAll
 import com.example.Healsenior.data.Routine
 import com.example.Healsenior.workoutScreen.workoutUtil.goalItemStr
 import com.example.Healsenior.workoutScreen.workoutUtil.placeItemStr
@@ -46,92 +47,12 @@ fun RecommendWorkOutScreen(
     navController: NavHostController,
     routine: Routine,
 ) {
-    val routinelist1:MutableList<Routine> = mutableListOf()
-//GetRoutineAll{Routinelist->
-//    if (Routinelist != null) {
-//        routinelist1=Routinelist
-//        println(routinelist1)
-//    } else {
-//        println("No user found or error occurred")
-//    }
-//}
+    var routinelist1: List<Routine> = listOf()
 
-    routinelist1.add(
-        Routine(
-            "1",
-            "근육량 증가 추천 루틴 - 초급",
-            "집",
-            "근육량 증가",
-            "근육에 조금씩 자극을 ...",
-            "근성장을 위한 초급 플랜"
-        )
-    )
-
-    routinelist1.add(
-        Routine(
-            "2",
-            "근육량 증가 추천 루틴 - 중급",
-            "집",
-            "근육량 증가",
-            "근육에 조금씩 자극을 ...",
-            "근성장을 위한 초급 플랜"
-        )
-    )
-
-    routinelist1.add(
-        Routine(
-            "3",
-            "스트레칭 추천 루틴 - 초급",
-            "야외",
-            "스트레칭",
-            "근력 및 유산소 운동을 하기 전과 ...",
-            "근성장을 위한 초급 플랜"
-        )
-    )
-
-    routinelist1.add(
-        Routine(
-            "4",
-            "스트레칭 추천 루틴 - 초급",
-            "집",
-            "스트레칭",
-            "근력 및 유산소 운동을 하기 전과 ...",
-            "근성장을 위한 초급 플랜"
-        )
-    )
-
-    routinelist1.add(
-        Routine(
-            "5",
-            "근육량 증가 추천 루틴 - 고급",
-            "헬스장",
-            "근육량 증가",
-            "근육에 조금씩 자극을 ...",
-            "근성장을 위한 초급 플랜"
-        )
-    )
-
-    routinelist1.add(
-        Routine(
-            "6",
-            "스트레칭 추천 루틴 - 초급",
-            "헬스장",
-            "스트레칭",
-            "근력 및 유산소 운동을 하기 전과 ...",
-            "근성장을 위한 초급 플랜"
-        )
-    )
-
-    routinelist1.add(
-        Routine(
-            "7",
-            "스트레칭 추천 루틴 - 중급",
-            "헬스장",
-            "스트레칭",
-            "근력 및 유산소 운동을 하기 전과 ...",
-            "근성장을 위한 초급 플랜"
-        )
-    )
+    GetRoutineAll { Routinelist ->
+        routinelist1 = Routinelist
+        println(routinelist1)
+    }
 
     Column(
         modifier = Modifier
@@ -148,7 +69,7 @@ fun RecommendWorkOutScreen(
 fun RecommendWorkOutScreenContent(
     navController: NavHostController,
     routine: Routine,
-    routinelist: MutableList<Routine>
+    routinelist: List<Routine>
 ) {
     val selectedItem = remember{ mutableIntStateOf(0) }
 
@@ -317,7 +238,7 @@ fun PlaceNavigation(selectedItem: MutableIntState) {
 fun ShowAllRoutineInSpecificPlace(
     navController: NavHostController,
     selectedItem: MutableIntState,
-    routinelist: MutableList<Routine>
+    routinelist: List<Routine>
 ) {
     LazyColumn(
         modifier = Modifier

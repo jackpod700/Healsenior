@@ -22,6 +22,7 @@ import androidx.navigation.NavHostController
 import com.example.Healsenior._component.BigTopBar
 import com.example.Healsenior._component.Tag_Button
 import com.example.Healsenior._navigation.RecordScreenNav
+import com.example.Healsenior.data.GetUser
 import com.example.Healsenior.data.User
 import com.example.Healsenior.login.LoginViewModel
 import com.example.Healsenior.recordScreen.Calendar.WorkOutCalendar
@@ -31,39 +32,25 @@ import java.time.format.DateTimeFormatter
 @Preview
 @Composable
 fun RecordScreen(loginViewModel: LoginViewModel) {
-    var uid = loginViewModel.auth.uid
-    var user1: User?= null
-/*
-    GetUser(uid){user->
+    val uid = loginViewModel.auth.uid
+    var user1: User? = null
+
+    GetUser(uid!!) { user ->
         if (user != null) {
-            user1=user
+            user1 = user
         } else {
             println("No user found or error occurred")
         }
     }
-    */
-
-    user1 = User(
-        "1",
-        "nick1",
-        "1",
-        1,
-        12,
-        300,
-        5,
-        200,
-        10,
-        mapOf("2024.05.01" to mapOf("1" to 1), "2024.04.19" to mapOf("2" to 2), "2024.05.25" to mapOf("3" to 3))
-    )
 
     val now = LocalDate.now()
     val yearStr = now.format(DateTimeFormatter.ofPattern("yyyy"))
     val monthStr = now.format(DateTimeFormatter.ofPattern("MM"))
-    val year = remember{ mutableIntStateOf(yearStr.toInt()) }
-    val month = remember{ mutableIntStateOf(monthStr.toInt()) }
+    val year = remember { mutableIntStateOf(yearStr.toInt()) }
+    val month = remember { mutableIntStateOf(monthStr.toInt()) }
 
 
-    val key = user1.recordMap.keys
+    val key = user1!!.recordMap.keys
     val workoutDayArr = mutableSetOf<Int>()
 
     for (dateStr in key) {
@@ -75,15 +62,17 @@ fun RecordScreen(loginViewModel: LoginViewModel) {
             workoutDayArr.add(d)
     }
 
-    val selectedDay = remember{ mutableIntStateOf(
-        if (workoutDayArr.isNotEmpty())
-            workoutDayArr.last()
-        else
-            0
-    )}
+    val selectedDay = remember {
+        mutableIntStateOf(
+            if (workoutDayArr.isNotEmpty())
+                workoutDayArr.last()
+            else
+                0
+        )
+    }
 
     if (user1 != null)
-        RecordScreenNav(user1, workoutDayArr, year, month, selectedDay)
+        RecordScreenNav(user1!!, workoutDayArr, year, month, selectedDay)
 }
 
 @Preview

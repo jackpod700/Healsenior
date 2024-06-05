@@ -225,6 +225,16 @@ fun GetPostAll(callback: (List<Post>) -> Unit) {
     }
 }
 
+fun GetPostByUid(uid: String, callback: (List<Post>) -> Unit) {
+    database.collection("Post").whereEqualTo("uid", uid).get().addOnSuccessListener {
+        val postList = it.toObjects(Post::class.java)
+        callback(postList)
+    }.addOnFailureListener {
+        println("Error getting documents: $it")
+        callback(emptyList())
+    }
+}
+
 fun UpdatePostLike(pid: Int) {
     database.collection("Post").document(pid.toString()).update("like", FieldValue.increment(1))
 }

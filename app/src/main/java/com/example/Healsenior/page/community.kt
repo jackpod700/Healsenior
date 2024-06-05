@@ -136,8 +136,10 @@ fun MainCommunityScreen() {
 
     Scaffold(
         topBar = {
-            if (currentDestination != "writePost") {
-                CommunityTopBar()
+            if (currentDestination != null) {
+                if (currentDestination != "writePost" && !currentDestination.startsWith("postDetail")) {
+                    CommunityTopBar()
+                }
             }
         },
         floatingActionButton = {
@@ -154,7 +156,7 @@ fun MainCommunityScreen() {
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(innerPadding)
+                .padding(innerPadding).padding(bottom = 0.dp)
                 .background(Color.White)
                 .fillMaxSize()
         ) {
@@ -236,30 +238,32 @@ fun CommunityScreen(navController: NavHostController, posts: List<Post>) {
 
 
     Column {
-        if (currentDestination != "writePost") {
-            CustomTabRow(selectedTabIndex, tabs) { index ->
-                selectedTabIndex = index
-                when (index) {
-                    0 -> navController.navigate("popularPosts") {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
+        if (currentDestination != null) {
+            if (currentDestination != "writePost" && !currentDestination.startsWith("postDetail")) {
+                CustomTabRow(selectedTabIndex, tabs) { index ->
+                    selectedTabIndex = index
+                    when (index) {
+                        0 -> navController.navigate("popularPosts") {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                    1 -> navController.navigate("regularPosts") {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
+                        1 -> navController.navigate("regularPosts") {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                    2 -> navController.navigate("rankingPosts") {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
+                        2 -> navController.navigate("rankingPosts") {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
                 }
             }

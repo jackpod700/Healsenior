@@ -32,13 +32,13 @@ data class Product(
 )
 
 val products = listOf(
-    Product("CU 교환권 5천원권", "5,000 P", 5000, R.drawable.avatar_0),
-    Product("네이버페이 포인트 5천원권", "5,000 P", 5000, R.drawable.avatar_1),
-    Product("파리바게트 교환권 5천원권", "5,000 P", 5000, R.drawable.avatar_2),
-    Product("gs25 모바일 상품권 5천원권", "5,000 P", 5000, R.drawable.avatar_3),
-    Product("메가커피, 아이스 아메리카노", "2,000 P", 2000, R.drawable.avatar_4),
-    Product("이디아, 아이스 아메리카노", "4,200 P", 4200, R.drawable.avatar_5),
-    Product("스타벅스, 카페 아메리카노 Tall", "4,200 P", 4200, R.drawable.avatar_6)
+    Product("CU 교환권 5천원권", "5,000 P", 5000, R.drawable.cu_5000),
+    Product("네이버페이 포인트 5천원권", "5,000 P", 5000, R.drawable.naver_5000),
+    Product("파리바게트 교환권 5천원권", "5,000 P", 5000, R.drawable.paris_5000),
+    Product("gs25 모바일 상품권 5천원권", "5,000 P", 5000, R.drawable.gs25_5000),
+    Product("메가커피, 아이스 아메리카노", "2,000 P", 2000, R.drawable.mega_coffe),
+    Product("이디아, 아이스 아메리카노", "4,200 P", 4200, R.drawable.edyia_ice),
+    Product("스타벅스, 카페 아메리카노 Tall", "4,200 P", 4200, R.drawable.product1)
 )
 
 @Composable

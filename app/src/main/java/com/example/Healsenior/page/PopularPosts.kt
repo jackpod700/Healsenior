@@ -17,6 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.Healsenior.data.Post
+import com.example.Healsenior.data.UpdatePostLike
+import com.example.Healsenior.data.UpdatePostView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,11 +30,20 @@ fun PopularPosts(navController: NavHostController, posts: List<Post>) {
                 .padding(16.dp)
         ) {
             items(posts.sortedByDescending { it.like + it.comments + it.view }) { post ->
-                PostCard(post) {
-                    navController.navigate("postDetail/${post.title}")
-                }
+                PostCard(
+                    post = post,
+                    onClick = {
+                        UpdatePostView(post.pid)
+                        navController.navigate("postDetail/${post.title}")
+                    },
+                    onLikeClick = {
+                        UpdatePostLike(post.pid)
+                        post.like++  // 좋아요 수 업데이트
+                    }
+                )
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }
 }
+

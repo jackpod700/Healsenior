@@ -10,6 +10,10 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,7 +24,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.Healsenior.data.Post
 
 @Composable
-fun PostCard(post: Post, onClick: () -> Unit) {
+fun PostCard(post: Post, onClick: () -> Unit, onLikeClick: () -> Unit) {
+    var likes by remember { mutableStateOf(post.like) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -41,8 +46,16 @@ fun PostCard(post: Post, onClick: () -> Unit) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Filled.Favorite, contentDescription = "Likes", tint = Color.Red)
-                Text("${post.like} 좋아요", modifier = Modifier.padding(start = 4.dp))
+                Icon(
+                    Icons.Filled.Favorite,
+                    contentDescription = "Likes",
+                    tint = Color.Red,
+                    modifier = Modifier.clickable {
+                        onLikeClick()
+                        likes++  // 좋아요 상태 업데이트
+                    }
+                )
+                Text("$likes 좋아요", modifier = Modifier.padding(start = 4.dp))
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(Icons.AutoMirrored.Filled.Comment, contentDescription = "Comments", tint = Color.Gray)
                 Text("${post.comments} 댓글", modifier = Modifier.padding(start = 4.dp))
@@ -53,3 +66,4 @@ fun PostCard(post: Post, onClick: () -> Unit) {
         }
     }
 }
+

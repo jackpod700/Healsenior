@@ -15,6 +15,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.Healsenior.data.UpdatePostLike
+import com.example.Healsenior.data.UpdatePostView
 import com.google.gson.Gson
 
 
@@ -59,11 +61,18 @@ fun MyPostListScreen(navController: NavHostController) {
                 .padding(16.dp)
         ) {
             items(posts) { post ->
-                PostCard(post = post, onClick = {
-                    val postJson = Gson().toJson(post)
-                    val postJsonEncoded = Base64.encodeToString(postJson.toByteArray(Charsets.UTF_8), Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP)
-                    navController.navigate("post_detail/$postJsonEncoded")
-                })
+                PostCard(
+                    post = post,
+                    onClick = {
+                        UpdatePostView(post.pid)
+                        val postJson = Gson().toJson(post)
+                        val postJsonEncoded = Base64.encodeToString(postJson.toByteArray(Charsets.UTF_8), Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP)
+                        navController.navigate("post_detail/$postJsonEncoded")
+                    },
+                    onLikeClick = {
+                        UpdatePostLike(post.pid)
+                    }
+                )
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }

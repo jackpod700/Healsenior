@@ -1,7 +1,10 @@
 package com.example.Healsenior.data
 
+import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.firestore
 import java.util.Date
 
 val database = FirebaseFirestore.getInstance()
@@ -243,33 +246,99 @@ fun UpdatePostView(pid: Int) {
     database.collection("Post").document(pid.toString()).update("view", FieldValue.increment(1))
 }
 
+//fun GetCommentId(pid: Int, callback: (Int) -> Unit) {
+//    database.collection("Comment").document(pid.toString()).get().addOnSuccessListener {
+//        val commentId = it
+//        callback(commentId.data?.get("count") as Int)
+//    }.addOnFailureListener {
+//        println("Error getting documents: $it")
+//    }
+//}
+
 fun GetCommentId(pid: Int, callback: (Int) -> Unit) {
-    database.collection("Comment").document(pid.toString()).get().addOnSuccessListener {
-        val commentId = it
-        callback(commentId.data?.get("count") as Int)
-    }.addOnFailureListener {
-        println("Error getting documents: $it")
-    }
+    val db = Firebase.firestore
+    db.collection("posts").document(pid.toString()).collection("comments")
+        .get()
+        .addOnSuccessListener { documents ->
+            val maxCommentId = documents.maxOfOrNull { it["cid"] as? Long ?: 0L } ?: 0L
+            callback(maxCommentId.toInt() + 1)
+        }
+        .addOnFailureListener { exception ->
+            println("Error getting documents: $exception")
+            callback(0) // 실패 시 0 반환
+        }
 }
 
+//fun writeNewComment(
+//    comment: Comment
+//) {
+//    GetCommentId(comment.pid) { commentId ->
+//        comment.cid = commentId
+//    }
+//    database.collection("Comment/" + comment.pid.toString()).document(comment.cid.toString())
+//        .set(comment)
+//}
 fun writeNewComment(
-    comment: Comment
+    comment: Comment,
+    onSuccess: () -> Unit,
+    onFailure: (Exception) -> Unit
 ) {
-    GetCommentId(comment.pid) { commentId ->
-        comment.cid = commentId
-    }
-    database.collection("Comment/" + comment.pid.toString()).document(comment.cid.toString())
-        .set(comment)
+    val db = Firebase.firestore
+    val commentsRef = db.collection("Comment").whereEqualTo("pid", comment.pid)
+
+    commentsRef.get()
+        .addOnSuccessListener { documents ->
+            println("댓글 문서들 가져옴: ${documents.size()}") // 로그 추가
+            // 가장 높은 cid 찾기
+            val maxCid = documents.mapNotNull { it.getLong("cid") }.maxOrNull() ?: 0
+            comment.cid = (maxCid + 1).toInt()
+            println("새 cid: ${comment.cid}") // 로그 추가
+
+            val commentRef = db.collection("Comment").document(comment.cid.toString())
+
+            db.runTransaction { transaction ->
+                val postRef = db.collection("Post").document(comment.pid.toString())
+                val postSnapshot = transaction.get(postRef)
+                if (!postSnapshot.exists()) {
+                    throw FirebaseFirestoreException("Post document does not exist", FirebaseFirestoreException.Code.ABORTED)
+                }
+
+                // 댓글 추가
+                transaction.set(commentRef, comment)
+
+                // 댓글 수 증가
+                val newCommentCount = postSnapshot.getLong("comments")?.plus(1) ?: 1
+                transaction.update(postRef, "comments", newCommentCount)
+
+                null // 트랜잭션이 값을 반환하지 않도록 설정
+            }.addOnSuccessListener {
+                println("트랜잭션 성공") // 로그 추가
+                onSuccess()
+            }.addOnFailureListener { exception ->
+                println("트랜잭션 실패: $exception") // 로그 추가
+                onFailure(exception)
+            }
+        }
+        .addOnFailureListener { exception ->
+            println("댓글 문서들 가져오기 실패: $exception") // 로그 추가
+            onFailure(exception)
+        }
 }
+
 
 fun GetCommentAll(pid: Int, callback: (List<Comment>) -> Unit) {
-    database.collection("Comment/" + pid.toString()).get().addOnSuccessListener {
-        val commentList = it.toObjects(Comment::class.java)
-        callback(commentList)
-    }.addOnFailureListener {
-        println("Error getting documents: $it")
-        callback(emptyList())
-    }
+    val db = Firebase.firestore
+    db.collection("Comment")
+        .whereEqualTo("pid", pid)
+        .get()
+        .addOnSuccessListener { documents ->
+            val commentList = documents.toObjects(Comment::class.java)
+            callback(commentList)
+        }
+        .addOnFailureListener { exception ->
+            println("Error getting documents: $exception")
+            callback(emptyList())
+        }
 }
 
 fun GetGoodsAll(callback: (List<Goods>) -> Unit) {

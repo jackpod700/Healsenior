@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,15 +34,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun RecordScreen(loginViewModel: LoginViewModel) {
     val uid = loginViewModel.auth.uid
-    var user1: User? = null
-
-    GetUser(uid!!) { user ->
-        if (user != null) {
-            user1 = user
-        } else {
-            println("No user found or error occurred")
-        }
-    }
+    val user1 = remember { mutableStateOf<User?>(null) }
 
     val now = LocalDate.now()
     val yearStr = now.format(DateTimeFormatter.ofPattern("yyyy"))
@@ -49,30 +42,36 @@ fun RecordScreen(loginViewModel: LoginViewModel) {
     val year = remember { mutableIntStateOf(yearStr.toInt()) }
     val month = remember { mutableIntStateOf(monthStr.toInt()) }
 
-
-    val key = user1!!.recordMap.keys
     val workoutDayArr = mutableSetOf<Int>()
+    val selectedDay = remember { mutableIntStateOf(0)}
 
-    for (dateStr in key) {
-        val y = dateStr.substring(0, 4).toInt()
-        val m = dateStr.substring(5, 7).toInt()
-        val d = dateStr.substring(8, 10).toInt()
+    val isCallBackEnd = remember { mutableStateOf(false) }
 
-        if (y == year.intValue && m == month.intValue)
-            workoutDayArr.add(d)
-    }
+    GetUser(uid!!) { user ->
+        if (user != null) {
+            user1.value = user
+            val key = user1.value!!.recordMap.keys
 
-    val selectedDay = remember {
-        mutableIntStateOf(
+            for (dateStr in key) {
+                val y = dateStr.substring(0, 4).toInt()
+                val m = dateStr.substring(5, 7).toInt()
+                val d = dateStr.substring(8, 10).toInt()
+
+                if (y == year.intValue && m == month.intValue)
+                    workoutDayArr.add(d)
+            }
+
             if (workoutDayArr.isNotEmpty())
-                workoutDayArr.last()
+                selectedDay.intValue = workoutDayArr.last()
             else
-                0
-        )
+                selectedDay.intValue = 0
+
+            isCallBackEnd.value = true
+        }
     }
 
-    if (user1 != null)
-        RecordScreenNav(user1!!, workoutDayArr, year, month, selectedDay)
+    if (isCallBackEnd.value)
+        RecordScreenNav(user1.value!!, workoutDayArr, year, month, selectedDay)
 }
 
 @Preview

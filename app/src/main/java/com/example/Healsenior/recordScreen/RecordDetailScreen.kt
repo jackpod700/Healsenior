@@ -37,50 +37,47 @@ fun RecordDetailScreen(
     val rid = value.first().key
     val day = value.first().value
 
-    var routine1: Routine? = null
+    var routine1 = remember { mutableStateOf<Routine?>(null) }
+    var routineDaily1 = remember { mutableStateOf<RoutineDaily?>(null) }
+    val workout1 = remember { mutableListOf<Workout>() }
+
+    val isCallbackEnd1 = remember { mutableStateOf(false) }
+    val isCallbackEnd2 = remember { mutableStateOf(false) }
+    val isCallbackEnd3 = remember { mutableStateOf(false) }
 
     GetRoutine(rid) { routine ->
         if (routine != null) {
-            routine1 = routine
-            println(routine1)
-        } else {
-            println("No user found or error occurred")
+            routine1.value = routine
+            isCallbackEnd1.value = true
         }
     }
-
-    var routineDaily1: RoutineDaily? = null
 
     GetRoutineDaily(rid, day) { routineDaily ->
         if (routineDaily != null) {
-            routineDaily1 = routineDaily
-            println(routineDaily1)
-        } else {
-            println("No user found or error occurred")
+            routineDaily1.value = routineDaily
+            isCallbackEnd2.value = true
         }
     }
 
-    val workout1: MutableList<Workout> = mutableListOf()
-
-    for (wid in routineDaily1!!.workoutList) {
+    for (wid in routineDaily1.value!!.workoutList) {
         GetWorkout(wid) { workout ->
             if (workout != null) {
                 workout1.add(workout)
-                println(workout1)
-            } else {
-                println("No user found or error occurred")
+                isCallbackEnd3.value = true
             }
         }
     }
 
-
-    Column(
-        modifier = Modifier
-            .statusBarsPadding()
-            .fillMaxSize()
-            .background(color = Color(0xFFEAEAEA))
-    ) {
-        SmallTopBar(navController, "운동 기록 보기")
-        RecordDetailScreenContent(key, routine1!!, routineDaily1!!, workout1)
+    if (isCallbackEnd1.value && isCallbackEnd2.value && isCallbackEnd3.value) {
+        Column(
+            modifier = Modifier
+                .statusBarsPadding()
+                .fillMaxSize()
+                .background(color = Color(0xFFEAEAEA))
+        ) {
+            SmallTopBar(navController, "운동 기록 보기")
+            RecordDetailScreenContent(key, routine1.value!!, routineDaily1.value!!, workout1)
+        }
     }
 }
 

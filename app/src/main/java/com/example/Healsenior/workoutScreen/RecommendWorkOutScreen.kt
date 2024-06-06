@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,21 +48,25 @@ fun RecommendWorkOutScreen(
     navController: NavHostController,
     routine: Routine,
 ) {
-    var routinelist1: List<Routine> = listOf()
+    var routinelist1 = remember{ mutableListOf<Routine>() }
+    val isCallBackEnd = remember { mutableStateOf(false) }
 
-    GetRoutineAll { Routinelist ->
-        routinelist1 = Routinelist
-        println(routinelist1)
+    GetRoutineAll { routinelist ->
+        routinelist1.clear()
+        routinelist1 += routinelist
+        isCallBackEnd.value = true
     }
 
-    Column(
-        modifier = Modifier
-            .statusBarsPadding()
-            .fillMaxSize()
-            .background(color = Color(0xFFEAEAEA))
-    ) {
-        SmallTopBar(navController, "루틴 추천")
-        RecommendWorkOutScreenContent(navController, routine, routinelist1)
+    if (isCallBackEnd.value) {
+        Column(
+            modifier = Modifier
+                .statusBarsPadding()
+                .fillMaxSize()
+                .background(color = Color(0xFFEAEAEA))
+        ) {
+            SmallTopBar(navController, "루틴 추천")
+            RecommendWorkOutScreenContent(navController, routine, routinelist1)
+        }
     }
 }
 
@@ -69,7 +74,7 @@ fun RecommendWorkOutScreen(
 fun RecommendWorkOutScreenContent(
     navController: NavHostController,
     routine: Routine,
-    routinelist: List<Routine>
+    routinelist: MutableList<Routine>
 ) {
     val selectedItem = remember{ mutableIntStateOf(0) }
 
@@ -238,7 +243,7 @@ fun PlaceNavigation(selectedItem: MutableIntState) {
 fun ShowAllRoutineInSpecificPlace(
     navController: NavHostController,
     selectedItem: MutableIntState,
-    routinelist: List<Routine>
+    routinelist: MutableList<Routine>
 ) {
     LazyColumn(
         modifier = Modifier

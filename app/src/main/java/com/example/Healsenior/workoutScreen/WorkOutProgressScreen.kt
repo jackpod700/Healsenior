@@ -130,8 +130,9 @@ fun WorkOutProgressScreenContent(navController: NavHostController, workout: Muta
                     .clickable() {
                         if (workOutIdx.intValue + 1 < workout.size)
                             workOutIdx.intValue++
-                        else if (workOutIdx.intValue + 1 == workout.size)
+                        else if (workOutIdx.intValue + 1 == workout.size && btnStr2.value != "운동 종료") {
                             btnStr2.value = "운동 종료"
+                        }
                         else
                             navController.navigateUp()
                     },

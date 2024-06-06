@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,50 +38,66 @@ import com.example.Healsenior.login.LoginViewModel
 
 @Composable
 fun WorkOutScreen(loginViewModel: LoginViewModel) {
-    var uid = loginViewModel.auth.uid
-    var user1: User? = null
-    var routine1: Routine? = null
-    var routineDaily1: RoutineDaily? = null
-    val workout1: MutableList<Workout> = mutableListOf()
+    val uid = loginViewModel.auth.uid
+    val user1 = remember { mutableStateOf<User?>(null) }
+    val routine1 = remember { mutableStateOf<Routine?>(null) }
+    val routineDaily1 = remember { mutableStateOf<RoutineDaily?>(null) }
+    var workout1 = remember { mutableListOf<Workout>() }
+
+    val isCallbackEnd1 = remember { mutableStateOf(false) }
+    val isCallbackEnd2 = remember { mutableStateOf(false) }
+    val isCallbackEnd3 = remember { mutableStateOf(false) }
+    val isCallbackEnd4 = remember { mutableStateOf(false) }
 
     GetUser(uid!!) { user ->
-        if (user != null){
-            user1 = user
-        } else {
-            println("No user found or error occurred")
-        }
-
-    }
-
-    GetRoutine(user1!!.rid) { routine ->
-        if (routine != null) {
-            routine1 = routine
-        } else {
-            println("No user found or error occurred")
+        if (user != null) {
+            user1.value = user
+            isCallbackEnd1.value = true
         }
     }
 
-    GetRoutineDaily(user1!!.rid, user1!!.dayCount) { routineDaily ->
-        if (routineDaily != null) {
-            routineDaily1 = routineDaily
-            println(routineDaily1)
-        } else {
-            println("No user found or error occurred")
-        }
-    }
-
-    for (wid in routineDaily1!!.workoutList) {
-        GetWorkout(wid) { workout ->
-            if (workout != null) {
-                workout1.add(workout)
-                println(workout1)
-            } else {
-                println("No user found or error occurred")
+    if (isCallbackEnd1.value) {
+        GetRoutine(user1.value!!.rid) { routine ->
+            if (routine != null) {
+                routine1.value = routine
+                isCallbackEnd2.value = true
             }
         }
     }
 
-    WorkOutScreenNav(user1!!, routine1!!, routineDaily1!!, workout1)
+    if (isCallbackEnd1.value) {
+        GetRoutineDaily(user1.value!!.rid, user1.value!!.dayCount) { routineDaily ->
+            if (routineDaily != null) {
+                routineDaily1.value = routineDaily
+                isCallbackEnd3.value = true
+            }
+        }
+    }
+
+    if (isCallbackEnd3.value) {
+        val li = mutableListOf<Workout>()
+        var cnt = 0
+
+        for (index in 0..<routineDaily1.value!!.workoutList.size) {
+            val wid = routineDaily1.value!!.workoutList[index]
+
+            GetWorkout(wid) { workout ->
+                if (workout != null) {
+                    li.add(workout)
+                    cnt++
+
+                    if (cnt == routineDaily1.value!!.workoutList.size) {
+                        workout1.clear()
+                        workout1 += li
+                        isCallbackEnd4.value = true
+                    }
+                }
+            }
+        }
+    }
+
+    if (isCallbackEnd1.value && isCallbackEnd2.value && isCallbackEnd3.value && isCallbackEnd4.value)
+        WorkOutScreenNav(user1.value!!, routine1.value!!, routineDaily1.value!!, workout1)
 }
 
 @Preview

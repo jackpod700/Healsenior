@@ -2,6 +2,7 @@ package com.example.Healsenior.page
 
 
 import MyPageScreen
+import PostDetailScreen
 import android.util.Base64
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button

@@ -39,12 +39,19 @@ import com.example.Healsenior._component.GetPointDialog
 import com.example.Healsenior._component.Tag_Button
 import com.example.Healsenior._component.SmallTopBar
 import com.example.Healsenior._component.Tag_Dialog
+import com.example.Healsenior.data.UpdateUser
+import com.example.Healsenior.data.User
 import com.example.Healsenior.data.Workout
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Timer
+import kotlin.concurrent.schedule
 
 @Preview
 @Composable
 fun TodayWorkOutScreen(
     navController: NavHostController,
+    user: User,
     workout: MutableList<Workout>,
     isRoutineEnd: MutableState<Boolean>,
 ) {
@@ -55,20 +62,21 @@ fun TodayWorkOutScreen(
             .background(color = Color(0xFFEAEAEA))
     ) {
         SmallTopBar(navController, "오늘의 운동")
-        TodayWorkOutScreenContent(navController, workout, isRoutineEnd)
+        TodayWorkOutScreenContent(navController, user, workout, isRoutineEnd)
     }
 }
 
 @Composable
 fun TodayWorkOutScreenContent(
     navController: NavHostController,
+    user: User,
     workout: MutableList<Workout>,
     isRoutineEnd: MutableState<Boolean>,
 ) {
     val isExpanded = remember { mutableStateOf(false) }
 
     TodayWorkOutListHeader(workout, isExpanded)
-    TodayWorkOutListContent(navController, workout, isRoutineEnd, isExpanded)
+    TodayWorkOutListContent(navController, user, workout, isRoutineEnd, isExpanded)
 }
 
 @Composable
@@ -117,6 +125,7 @@ fun TodayWorkOutListHeader(
 @Composable
 fun TodayWorkOutListContent(
     navController: NavHostController,
+    user: User,
     workout: MutableList<Workout>,
     isRoutineEnd: MutableState<Boolean>,
     isExpanded: MutableState<Boolean>
@@ -221,9 +230,30 @@ fun TodayWorkOutListContent(
             if (showPointDialog.value) {
                 GetPointDialog(
                     onDismissRequest = {
-                        navController.navigateUp()
+                        val now = LocalDate.now()
+                        val yearStr = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+
+                        val update_record_map = user.recordMap + mapOf(yearStr to mapOf(user.rid to user.dayCount))
+                        val update_user = User(
+                            user.uid,
+                            user.name,
+                            user.rid,
+                            user.dayCount + 1,
+                            user.rank,
+                            user.point + 250,
+                            user.workoutHour,
+                            user.calorieSum,
+                            user.setSum,
+                            update_record_map
+                        )
+
+                        Timer().schedule(500) {
+                            UpdateUser(update_user)
+                        }
+
                         isRoutineEnd.value = false
                         showPointDialog.value = false
+                        navController.navigateUp()
                     },
                     "오늘의 운동 보상으로 +250P가 적립되었어요!"
                 )

@@ -1,7 +1,7 @@
 package com.example.Healsenior.workoutScreen.workoutUtil
 
 val placeItemStr = arrayOf("집", "헬스장", "야외")
-val goalItemStr = arrayOf("근육량 증가", "스트레칭")
+val goalItemStr = arrayOf("근육 증가 추천 루틴- 초급", "전신 운동 추천 루틴", "생활기능 향상 운동 추천 루틴")
 
 fun timeToStr(hour: Int, minute: Int, second: Int): String {
     var timeStr = ""

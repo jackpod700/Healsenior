@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,7 +26,10 @@ import androidx.navigation.NavHostController
 import com.example.Healsenior._component.BigTopBar
 import com.example.Healsenior._component.Tag_Button
 import com.example.Healsenior._navigation.WorkOutScreenNav
+import com.example.Healsenior.data.GetRoutine
+import com.example.Healsenior.data.GetRoutineDaily
 import com.example.Healsenior.data.GetUser
+import com.example.Healsenior.data.GetWorkout
 import com.example.Healsenior.data.Routine
 import com.example.Healsenior.data.RoutineDaily
 import com.example.Healsenior.data.User
@@ -31,150 +38,66 @@ import com.example.Healsenior.login.LoginViewModel
 
 @Composable
 fun WorkOutScreen(loginViewModel: LoginViewModel) {
-    var uid = loginViewModel.auth.uid
-    var user1: User?= null
+    val uid = loginViewModel.auth.uid
+    val user1 = remember { mutableStateOf<User?>(null) }
+    val routine1 = remember { mutableStateOf<Routine?>(null) }
+    val routineDaily1 = remember { mutableStateOf<RoutineDaily?>(null) }
+    var workout1 = remember { mutableListOf<Workout>() }
 
-    GetUser(uid!!){user->
+    val isCallbackEnd1 = remember { mutableStateOf(false) }
+    val isCallbackEnd2 = remember { mutableStateOf(false) }
+    val isCallbackEnd3 = remember { mutableStateOf(false) }
+    val isCallbackEnd4 = remember { mutableStateOf(false) }
+
+    GetUser(uid!!) { user ->
         if (user != null) {
-            user1=user
-            println("user: "+user)
-            println("user1: "+user1)
-        } else {
-            println("No user found or error occurred")
+            user1.value = user
+            isCallbackEnd1.value = true
         }
     }
 
-
-    user1 = User(
-        "1",
-        "nick1",
-        "1",
-        2,
-        12,
-        300,
-        5,
-        200,
-        10,
-        mapOf("2024.05.01" to mapOf("1" to 1), "2024.04.19" to mapOf("2" to 2), "2024.05.25" to mapOf("3" to 3))
-    )
-
-    var routine1: Routine?= null
-    /*
-        GetRoutine(user1.rid){routine->
+    if (isCallbackEnd1.value) {
+        GetRoutine(user1.value!!.rid) { routine ->
             if (routine != null) {
-                routine1=routine
-                println(routine1)
-            } else {
-                println("No user found or error occurred")
+                routine1.value = routine
+                isCallbackEnd2.value = true
             }
         }
-    */
+    }
 
-    routine1 = Routine(
-        "1",
-        "근육량 증가 추천 플랜(입문)",
-        "place",
-        "goal",
-        "description"
-    )
-
-    val routineDaily1: RoutineDaily?
-    /*
-        GetRoutineDaily(rid, user1.dayCount){routineDaily->
+    if (isCallbackEnd1.value) {
+        GetRoutineDaily(user1.value!!.rid, user1.value!!.dayCount) { routineDaily ->
             if (routineDaily != null) {
-                routineDaily1=routineDaily
-                println(routineDaily1)
-            } else {
-                println("No user found or error occurred")
+                routineDaily1.value = routineDaily
+                isCallbackEnd3.value = true
             }
         }
-    */
+    }
 
-    routineDaily1 = RoutineDaily(
-        "1",
-        2,
-        listOf("1", "2", "3", "4", "5"),
-        "등, 이두, 코어",
-        82,
-        "상"
-    )
+    if (isCallbackEnd3.value) {
+        val li = mutableListOf<Workout>()
+        var cnt = 0
 
-    val workout1: MutableList<Workout> = mutableListOf()
-    /*
-        for (r in routineDaily1) {
-            GetWorkout(r.wid){workout->
+        for (index in 0..<routineDaily1.value!!.workoutList.size) {
+            val wid = routineDaily1.value!!.workoutList[index]
+
+            GetWorkout(wid) { workout ->
                 if (workout != null) {
-                    workout1.add(workout)
-                    println(workout1)
-                } else {
-                    println("No user found or error occurred")
+                    li.add(workout)
+                    cnt++
+
+                    if (cnt == routineDaily1.value!!.workoutList.size) {
+                        workout1.clear()
+                        workout1 += li
+                        isCallbackEnd4.value = true
+                    }
                 }
             }
         }
-    */
+    }
 
-    workout1.add(
-        Workout(
-            "1",
-            "워밍업 스트레칭",
-            2,
-            listOf(1, 1, 1),
-            1,
-            "videolink",
-            "척추 부상: 척추는 케이블 로우 ...",
-            "5종류의 스트레칭"
-        )
-    )
-    workout1.add(
-        Workout(
-            "2",
-            "시티드 케이블 로우",
-            4,
-            listOf(1, 1, 1),
-            1,
-            "videolink",
-            "척추 부상: 척추는 케이블 로우 ...",
-            "등 - 수평 당기기 운동"
-        )
-    )
-    workout1.add(
-        Workout(
-            "3",
-            "렛 풀 다운",
-            4,
-            listOf(1, 1, 1),
-            1,
-            "videolink",
-            "척추 부상: 척추는 케이블 로우 ...",
-            "등 - 수직 당기기 운동"
-        )
-    )
-    workout1.add(
-        Workout(
-            "4",
-            "원 암 덤벨 로우",
-            5,
-            listOf(1, 1, 1),
-            1,
-            "videolink",
-            "척추 부상: 척추는 케이블 로우 ...",
-            "등 - 수직 당기기 운동"
-        )
-    )
-    workout1.add(
-        Workout(
-            "5",
-            "바벨로우",
-            5,
-            listOf(1, 1, 1),
-            1,
-            "videolink",
-            "척추 부상: 척추는 케이블 로우 ...",
-            "등 - 수직 당기기 운동"
-        )
-    )
-
-    WorkOutScreenNav(user1!!, routine1, routineDaily1, workout1)
+    if (isCallbackEnd1.value && isCallbackEnd2.value && isCallbackEnd3.value && isCallbackEnd4.value)
+        WorkOutScreenNav(user1.value!!, routine1.value!!, routineDaily1.value!!, workout1)
 }
 
 @Preview

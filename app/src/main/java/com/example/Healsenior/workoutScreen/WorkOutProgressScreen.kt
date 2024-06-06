@@ -136,8 +136,9 @@ fun WorkOutProgressScreenContent(navController: NavHostController, workout: Muta
                     .clickable {
                         if (workOutIdx.intValue + 1 < workout.size)
                             workOutIdx.intValue++
-                        else if (workOutIdx.intValue + 1 == workout.size)
+                        else if (workOutIdx.intValue + 1 == workout.size && btnStr2.value != "운동 종료") {
                             btnStr2.value = "운동 종료"
+                        }
                         else
                             navController.navigateUp()
                     },
@@ -186,13 +187,9 @@ fun ShowWorkOutVideoContent(workout: MutableList<Workout>, workOutIdx: MutableIn
                 }
         }
 
-        val mediaItem = MediaItem.fromUri("android.resource://com.example.Healsenior/${
-            if (workOutIdx.intValue == 0)
-                R.raw.air_running
-            else
-                R.raw.pull_up_out
-        
-        }")
+        val mediaItem = MediaItem.fromUri(
+            "android.resource://com.example.Healsenior/res/raw/${workout[workOutIdx.intValue].videoName}.mp4"
+        )
         exoplayer.setMediaItem(mediaItem)
         exoplayer.prepare()
         exoplayer.play()

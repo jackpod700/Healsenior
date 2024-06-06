@@ -184,8 +184,20 @@ private fun ReplyNavigationWrapper(
     val selectedDestination =
         navBackStackEntry?.destination?.route ?: ReplyRoute.Workout
 
+
+    ReplyAppContent(
+        navigationType = navigationType,
+        navigationContentPosition = navigationContentPosition,
+        navController = navController,
+        selectedDestination = selectedDestination,
+        navigateToTopLevelDestination = navigationActions::navigateTo,
+        loginViewModel = loginViewModel
+    )
+
+    /*
     if (navigationType == ReplyNavigationType.PERMANENT_NAVIGATION_DRAWER) {
         // TODO check on custom width of PermanentNavigationDrawer: b/232495216
+        /*
         PermanentNavigationDrawer(drawerContent = {
             PermanentNavigationDrawerContent(
                 selectedDestination = selectedDestination,
@@ -193,16 +205,19 @@ private fun ReplyNavigationWrapper(
                 navigateToTopLevelDestination = navigationActions::navigateTo,
             )
         }) {
-            ReplyAppContent(
-                navigationType = navigationType,
-                navigationContentPosition = navigationContentPosition,
-                navController = navController,
-                selectedDestination = selectedDestination,
-                navigateToTopLevelDestination = navigationActions::navigateTo,
-                loginViewModel = loginViewModel
-            )
+
         }
+        */
+        ReplyAppContent(
+            navigationType = navigationType,
+            navigationContentPosition = navigationContentPosition,
+            navController = navController,
+            selectedDestination = selectedDestination,
+            navigateToTopLevelDestination = navigationActions::navigateTo,
+            loginViewModel = loginViewModel
+        )
     } else {
+        /*
         ModalNavigationDrawer(
             drawerContent = {
                 ModalNavigationDrawerContent(
@@ -218,20 +233,23 @@ private fun ReplyNavigationWrapper(
             },
             drawerState = drawerState
         ) {
-            ReplyAppContent(
-                navigationType = navigationType,
-                navigationContentPosition = navigationContentPosition,
-                navController = navController,
-                selectedDestination = selectedDestination,
-                navigateToTopLevelDestination = navigationActions::navigateTo,
-                loginViewModel = loginViewModel,
-            ) {
-                scope.launch {
-                    drawerState.open()
-                }
+
+        }
+        */
+        ReplyAppContent(
+            navigationType = navigationType,
+            navigationContentPosition = navigationContentPosition,
+            navController = navController,
+            selectedDestination = selectedDestination,
+            navigateToTopLevelDestination = navigationActions::navigateTo,
+            loginViewModel = loginViewModel,
+        ) {
+            scope.launch {
+                drawerState.open()
             }
         }
     }
+    */
 }
 
 @Composable
@@ -246,6 +264,7 @@ fun ReplyAppContent(
     onDrawerClicked: () -> Unit = {},
 ) {
     Row(modifier = modifier.fillMaxSize()) {
+        /*
         AnimatedVisibility(visible = navigationType == ReplyNavigationType.NAVIGATION_RAIL) {
             ReplyNavigationRail(
                 selectedDestination = selectedDestination,
@@ -254,6 +273,7 @@ fun ReplyAppContent(
                 onDrawerClicked = onDrawerClicked,
             )
         }
+        */
         Column(
             modifier = Modifier
                 .fillMaxSize()

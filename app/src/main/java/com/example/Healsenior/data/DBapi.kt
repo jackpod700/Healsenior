@@ -216,7 +216,7 @@ fun writeNewPost(post: Post, onComplete: (Boolean) -> Unit) {
 }
 
 fun GetPostAll(callback: (List<Post>) -> Unit) {
-    database.collection("Post").get().addOnSuccessListener {
+    database.collection("Post").whereNotEqualTo("pid",0).get().addOnSuccessListener {
         val postList = it.toObjects(Post::class.java)
         callback(postList)
     }.addOnFailureListener {

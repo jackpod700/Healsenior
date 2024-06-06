@@ -11,10 +11,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,90 +22,35 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.Healsenior._component.BigTopBar
 import com.example.Healsenior._component.Tag_Button
-import com.example.Healsenior._navigation.WorkOutScreenNav
 import com.example.Healsenior.data.GetRoutine
-import com.example.Healsenior.data.GetRoutineDaily
 import com.example.Healsenior.data.GetUser
-import com.example.Healsenior.data.GetWorkout
 import com.example.Healsenior.data.Routine
 import com.example.Healsenior.data.RoutineDaily
 import com.example.Healsenior.data.User
 import com.example.Healsenior.data.Workout
-import com.example.Healsenior.login.LoginViewModel
-
-@Composable
-fun WorkOutScreen(loginViewModel: LoginViewModel) {
-    val uid = loginViewModel.auth.uid
-    val user1 = remember { mutableStateOf<User?>(null) }
-    val routine1 = remember { mutableStateOf<Routine?>(null) }
-    val routineDaily1 = remember { mutableStateOf<RoutineDaily?>(null) }
-    var workout1 = remember { mutableListOf<Workout>() }
-
-    val isCallbackEnd1 = remember { mutableStateOf(false) }
-    val isCallbackEnd2 = remember { mutableStateOf(false) }
-    val isCallbackEnd3 = remember { mutableStateOf(false) }
-    val isCallbackEnd4 = remember { mutableStateOf(false) }
-
-    GetUser(uid!!) { user ->
-        if (user != null) {
-            user1.value = user
-            isCallbackEnd1.value = true
-        }
-    }
-
-    if (isCallbackEnd1.value) {
-        GetRoutine(user1.value!!.rid) { routine ->
-            if (routine != null) {
-                routine1.value = routine
-                isCallbackEnd2.value = true
-            }
-        }
-    }
-
-    if (isCallbackEnd1.value) {
-        GetRoutineDaily(user1.value!!.rid, user1.value!!.dayCount) { routineDaily ->
-            if (routineDaily != null) {
-                routineDaily1.value = routineDaily
-                isCallbackEnd3.value = true
-            }
-        }
-    }
-
-    if (isCallbackEnd3.value) {
-        val li = mutableListOf<Workout>()
-        var cnt = 0
-
-        for (index in 0..<routineDaily1.value!!.workoutList.size) {
-            val wid = routineDaily1.value!!.workoutList[index]
-
-            GetWorkout(wid) { workout ->
-                if (workout != null) {
-                    li.add(workout)
-                    cnt++
-
-                    if (cnt == routineDaily1.value!!.workoutList.size) {
-                        workout1.clear()
-                        workout1 += li
-                        isCallbackEnd4.value = true
-                    }
-                }
-            }
-        }
-    }
-
-    if (isCallbackEnd1.value && isCallbackEnd2.value && isCallbackEnd3.value && isCallbackEnd4.value)
-        WorkOutScreenNav(user1.value!!, routine1.value!!, routineDaily1.value!!, workout1)
-}
 
 @Preview
 @Composable
 fun WorkOutMainScreen(
     navController: NavHostController,
-    user: User,
-    routine: Routine,
-    routineDaily: RoutineDaily,
-    workout: MutableList<Workout>
+    uid: String?,
+    user: MutableState<User?>,
+    routine: MutableState<Routine?>,
+    routineDaily: MutableState<RoutineDaily?>,
+    workout: MutableList<Workout>,
 ) {
+    GetUser(uid!!) { getUser ->
+        if (getUser != null)
+            user.value = getUser
+    }
+
+    if (user.value != null) {
+        GetRoutine(user.value!!.rid) { getRoutine ->
+            if (getRoutine != null)
+                routine.value = getRoutine
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -117,7 +59,16 @@ fun WorkOutMainScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         BigTopBar("운동")
-        WorkOutScreenContent(navController, user, routine, routineDaily, workout)
+
+        if (user.value != null && routine.value != null) {
+            WorkOutScreenContent(
+                navController,
+                user.value!!,
+                routine.value!!,
+                routineDaily,
+                workout
+            )
+        }
     }
 }
 
@@ -126,7 +77,7 @@ fun WorkOutScreenContent(
     navController: NavHostController,
     user: User,
     routine: Routine,
-    routineDaily: RoutineDaily,
+    routineDaily: MutableState<RoutineDaily?>,
     workout: MutableList<Workout>
 ) {
     Column(

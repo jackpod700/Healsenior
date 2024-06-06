@@ -42,7 +42,7 @@ fun RecordScreen(loginViewModel: LoginViewModel) {
     val year = remember { mutableIntStateOf(yearStr.toInt()) }
     val month = remember { mutableIntStateOf(monthStr.toInt()) }
 
-    val workoutDayArr = mutableSetOf<Int>()
+    val workoutDayArr = remember{ mutableSetOf<Int>() }
     val selectedDay = remember { mutableIntStateOf(0)}
 
     val isCallBackEnd = remember { mutableStateOf(false) }

@@ -24,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,26 +48,16 @@ import com.example.Healsenior.workoutScreen.workoutUtil.placeItemStr
 fun RecommendWorkOutScreen(
     navController: NavHostController,
     routine: Routine,
+    selectedRoutine: MutableState<String>,
 ) {
-    var routinelist1 = remember{ mutableListOf<Routine>() }
-    val isCallBackEnd = remember { mutableStateOf(false) }
-
-    GetRoutineAll { routinelist ->
-        routinelist1.clear()
-        routinelist1 += routinelist
-        isCallBackEnd.value = true
-    }
-
-    if (isCallBackEnd.value) {
-        Column(
-            modifier = Modifier
-                .statusBarsPadding()
-                .fillMaxSize()
-                .background(color = Color(0xFFEAEAEA))
-        ) {
-            SmallTopBar(navController, "루틴 추천")
-            RecommendWorkOutScreenContent(navController, routine, routinelist1)
-        }
+    Column(
+        modifier = Modifier
+            .statusBarsPadding()
+            .fillMaxSize()
+            .background(color = Color(0xFFEAEAEA))
+    ) {
+        SmallTopBar(navController, "루틴 추천")
+        RecommendWorkOutScreenContent(navController, routine, selectedRoutine)
     }
 }
 
@@ -74,14 +65,14 @@ fun RecommendWorkOutScreen(
 fun RecommendWorkOutScreenContent(
     navController: NavHostController,
     routine: Routine,
-    routinelist: MutableList<Routine>
+    selectedRoutine: MutableState<String>
 ) {
     val selectedItem = remember{ mutableIntStateOf(0) }
 
     Column {
         ShowCurrentRoutineBox(routine)
         PlaceNavigation(selectedItem)
-        ShowAllRoutineInSpecificPlace(navController, selectedItem, routinelist)
+        ShowAllRoutineInSpecificPlace(navController, selectedItem, selectedRoutine)
     }
 }
 
@@ -143,98 +134,38 @@ fun PlaceNavigation(selectedItem: MutableIntState) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .weight(1f)
-                .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
-                .showContent(selectedItem.intValue == 0) {
-                    Modifier
-                        .background(
-                            color = Color.White,
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                }
-                .showContent(selectedItem.intValue != 0) {
-                    Modifier
-                        .background(
-                            color = Color(0xFFD9D9D9),
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                }
-                .clickable {
-                    selectedItem.intValue = 0
-                },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "집",
-                fontWeight = FontWeight.Bold
-            )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .weight(1f)
-                .padding(top = 8.dp, bottom = 8.dp)
-                .showContent(selectedItem.intValue == 1) {
-                    Modifier
-                        .background(
-                            color = Color.White,
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                }
-                .showContent(selectedItem.intValue != 1) {
-                    Modifier
-                        .background(
-                            color = Color(0xFFD9D9D9),
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                }
-                .clickable {
-                    selectedItem.intValue = 1
-                },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "헬스장",
-                fontWeight = FontWeight.Bold
-            )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .weight(1f)
-                .padding(end = 8.dp, top = 8.dp, bottom = 8.dp)
-                .showContent(selectedItem.intValue == 2) {
-                    Modifier
-                        .background(
-                            color = Color.White,
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                }
-                .showContent(selectedItem.intValue != 2) {
-                    Modifier
-                        .background(
-                            color = Color(0xFFD9D9D9),
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                }
-                .clickable {
-                    selectedItem.intValue = 2
-                },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "야외",
-                fontWeight = FontWeight.Bold
-            )
+        for (index in 0..2) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
+                    .showContent(selectedItem.intValue == index) {
+                        Modifier
+                            .background(
+                                color = Color.White,
+                                shape = RoundedCornerShape(10.dp)
+                            )
+                    }
+                    .showContent(selectedItem.intValue != index) {
+                        Modifier
+                            .background(
+                                color = Color(0xFFD9D9D9),
+                                shape = RoundedCornerShape(10.dp)
+                            )
+                    }
+                    .clickable {
+                        selectedItem.intValue = index
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = placeItemStr[index],
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
@@ -243,22 +174,41 @@ fun PlaceNavigation(selectedItem: MutableIntState) {
 fun ShowAllRoutineInSpecificPlace(
     navController: NavHostController,
     selectedItem: MutableIntState,
-    routinelist: MutableList<Routine>
+    selectedRoutine: MutableState<String>
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .padding(start = 20.dp, end = 20.dp, top = 40.dp)
-    ) {
-        items(goalItemStr.size) { index->
-            Text(
-                text = goalItemStr[index],
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
-            )
-            LazyRow {
-                items(routinelist.size) {index2 ->
-                    if (routinelist[index2].place == placeItemStr[selectedItem.intValue]
-                        && routinelist[index2].goal == goalItemStr[index]) {
+    val routinelist = remember{ mutableListOf<Routine>() }
+    val isCallBackEnd = remember { mutableStateOf(false) }
+
+    GetRoutineAll { getRoutinelist ->
+        routinelist.clear()
+        routinelist += getRoutinelist
+        isCallBackEnd.value = true
+    }
+
+    if (isCallBackEnd.value) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(start = 20.dp, end = 20.dp, top = 40.dp)
+        ) {
+            items(goalItemStr.size) { index ->
+                val itemList = mutableListOf<Routine>()
+
+                routinelist.forEach {
+                    if (it.place == placeItemStr[selectedItem.intValue]
+                        && it.goal == goalItemStr[index]
+                    )
+                        itemList.add(it)
+                }
+
+                if (itemList.size != 0) {
+                    Text(
+                        text = goalItemStr[index],
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                }
+                LazyRow {
+                    items(itemList.size) {
                         Box(
                             modifier = Modifier
                                 .padding(top = 5.dp, end = 20.dp, bottom = 40.dp)
@@ -283,16 +233,16 @@ fun ShowAllRoutineInSpecificPlace(
                                         .weight(1f)
                                 ) {
                                     Text(
-                                        text = routinelist[index2].summary,
+                                        text = itemList[it].summary,
                                         fontSize = 15.sp
                                     )
                                     Text(
-                                        text = routinelist[index2].name,
+                                        text = itemList[it].name,
                                         fontSize = 20.sp,
                                         fontWeight = FontWeight.Bold
                                     )
                                     Text(
-                                        text = routinelist[index2].description,
+                                        text = itemList[it].description,
                                         color = Color.Gray,
                                         fontSize = 13.sp,
                                         fontWeight = FontWeight.Bold
@@ -302,6 +252,7 @@ fun ShowAllRoutineInSpecificPlace(
                                     Row(
                                         modifier = Modifier
                                             .clickable {
+                                                selectedRoutine.value = itemList[it].rid
                                                 navController.navigate("RoutineDescriptionScreen")
                                             },
                                         horizontalArrangement = Arrangement.End
@@ -317,6 +268,7 @@ fun ShowAllRoutineInSpecificPlace(
                                         )
                                         IconButton(
                                             onClick = {
+                                                selectedRoutine.value = itemList[it].rid
                                                 navController.navigate("RoutineDescriptionScreen")
                                             },
                                             modifier = Modifier

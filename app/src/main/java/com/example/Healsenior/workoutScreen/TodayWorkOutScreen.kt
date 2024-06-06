@@ -44,8 +44,6 @@ import com.example.Healsenior.data.User
 import com.example.Healsenior.data.Workout
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Timer
-import kotlin.concurrent.schedule
 
 @Preview
 @Composable
@@ -233,8 +231,9 @@ fun TodayWorkOutListContent(
                         val now = LocalDate.now()
                         val yearStr = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
 
-                        val update_record_map = user.recordMap + mapOf(yearStr to mapOf(user.rid to user.dayCount))
-                        val update_user = User(
+                        val updateRecordMap =
+                            user.recordMap + mapOf(yearStr to mapOf(user.rid to user.dayCount))
+                        val updateUser = User(
                             user.uid,
                             user.name,
                             user.rid,
@@ -244,16 +243,13 @@ fun TodayWorkOutListContent(
                             user.workoutHour,
                             user.calorieSum,
                             user.setSum,
-                            update_record_map
+                            updateRecordMap
                         )
 
-                        Timer().schedule(500) {
-                            UpdateUser(update_user)
-                        }
-
+                        UpdateUser(updateUser)
                         isRoutineEnd.value = false
                         showPointDialog.value = false
-                        navController.navigateUp()
+                        navController.navigate("WorkOutScreenMain")
                     },
                     "오늘의 운동 보상으로 +250P가 적립되었어요!"
                 )

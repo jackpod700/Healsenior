@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,13 +28,10 @@ import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun WorkOutScreenTimeBar(
-    isStopped: MutableState<Boolean>,
-    hour: MutableIntState,
-    minute: MutableIntState,
-    second: MutableIntState
-) {
-    //Todo : 타이머 구현하기
+fun WorkOutScreenTimeBar(isStopped: MutableState<Boolean>) {
+    val hour = remember { mutableIntStateOf(0) }
+    val minute = remember { mutableIntStateOf(0) }
+    val second = remember { mutableIntStateOf(0) }
 
     LaunchedEffect (isStopped.value) {
         while (!isStopped.value) {

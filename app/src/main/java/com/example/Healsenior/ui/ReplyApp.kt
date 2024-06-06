@@ -25,8 +25,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -46,19 +44,15 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
+import com.example.Healsenior._navigation.WorkOutScreenNav
 import com.example.Healsenior.login.LoginScreen
 import com.example.Healsenior.login.LoginViewModel
-import com.example.Healsenior.login.LogoutScreen
 import com.example.Healsenior.login.checkLoginState
-import com.example.Healsenior.login.logout
 import com.example.Healsenior.page.MainCommunityScreen
 import com.example.Healsenior.page.MyPage
 import com.example.Healsenior.recordScreen.RecordScreen
-import com.example.Healsenior.ui.navigation.ModalNavigationDrawerContent
-import com.example.Healsenior.ui.navigation.PermanentNavigationDrawerContent
 import com.example.Healsenior.ui.navigation.ReplyBottomNavigationBar
 import com.example.Healsenior.ui.navigation.ReplyNavigationActions
-import com.example.Healsenior.ui.navigation.ReplyNavigationRail
 import com.example.Healsenior.ui.navigation.ReplyRoute
 import com.example.Healsenior.ui.navigation.ReplyTopLevelDestination
 import com.example.Healsenior.ui.utils.DevicePosture
@@ -66,8 +60,6 @@ import com.example.Healsenior.ui.utils.ReplyNavigationContentPosition
 import com.example.Healsenior.ui.utils.ReplyNavigationType
 import com.example.Healsenior.ui.utils.isBookPosture
 import com.example.Healsenior.ui.utils.isSeparating
-import com.example.Healsenior.workoutScreen.WorkOutScreen
-import kotlinx.coroutines.launch
 
 
 @Composable
@@ -306,7 +298,7 @@ private fun ReplyNavHost(
         startDestination = ReplyRoute.Workout,
     ) {
         composable(ReplyRoute.Workout) {
-            WorkOutScreen(loginViewModel)
+            WorkOutScreenNav(loginViewModel)
         }
         composable(ReplyRoute.Record) {
             RecordScreen(loginViewModel)

@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -39,34 +41,47 @@ fun RecordDetailScreen(
 
     var routine1 = remember { mutableStateOf<Routine?>(null) }
     var routineDaily1 = remember { mutableStateOf<RoutineDaily?>(null) }
-    val workout1 = remember { mutableListOf<Workout>() }
+    var workout1 = remember { mutableListOf<Workout>() }
 
     val isCallbackEnd1 = remember { mutableStateOf(false) }
     val isCallbackEnd2 = remember { mutableStateOf(false) }
     val isCallbackEnd3 = remember { mutableStateOf(false) }
 
-    GetRoutine(rid) { routine ->
-        if (routine != null) {
-            routine1.value = routine
-            isCallbackEnd1.value = true
-        }
-    }
-
-    GetRoutineDaily(rid, day) { routineDaily ->
-        if (routineDaily != null) {
-            routineDaily1.value = routineDaily
-            isCallbackEnd2.value = true
-        }
-    }
-
-    for (wid in routineDaily1.value!!.workoutList) {
-        GetWorkout(wid) { workout ->
-            if (workout != null) {
-                workout1.add(workout)
-                isCallbackEnd3.value = true
+        GetRoutine(rid) { routine ->
+            if (routine != null) {
+                routine1.value = routine
+                isCallbackEnd1.value = true
             }
         }
-    }
+
+        GetRoutineDaily(rid, day) { routineDaily ->
+            if (routineDaily != null) {
+                routineDaily1.value = routineDaily
+                isCallbackEnd2.value = true
+            }
+        }
+
+        if (isCallbackEnd2.value) {
+            val li = mutableListOf<Workout>()
+            var cnt = 0
+
+            for (index in 0..<routineDaily1.value!!.workoutList.size) {
+                val wid = routineDaily1.value!!.workoutList[index]
+
+                GetWorkout(wid) { workout ->
+                    if (workout != null) {
+                        li.add(workout)
+                        cnt++
+
+                        if (cnt == routineDaily1.value!!.workoutList.size) {
+                            workout1.clear()
+                            workout1 += li
+                            isCallbackEnd3.value = true
+                        }
+                    }
+                }
+            }
+        }
 
     if (isCallbackEnd1.value && isCallbackEnd2.value && isCallbackEnd3.value) {
         Column(

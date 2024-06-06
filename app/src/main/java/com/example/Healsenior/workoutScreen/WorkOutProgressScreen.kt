@@ -18,11 +18,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
@@ -39,10 +41,10 @@ import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.navigation.NavHostController
-import com.example.Healsenior.R
 import com.example.Healsenior._component.SmallTopBar
 import com.example.Healsenior.data.Workout
 import com.example.Healsenior.workoutScreen.workoutComponent.WorkOutScreenTimeBar
+import com.example.Healsenior.workoutScreen.workoutUtil.videoNameMap
 
 @Preview
 @Composable
@@ -65,12 +67,6 @@ fun WorkOutProgressScreen(
 fun WorkOutProgressScreenContent(navController: NavHostController, workout: MutableList<Workout>) {
     val isStopped = remember { mutableStateOf(false) }
     val workOutIdx = remember { mutableIntStateOf(0) }
-    val btnStr = remember { mutableStateOf("일시정지") }
-    val btnStr2 = remember { mutableStateOf("다음 운동") }
-
-    val hour = remember { mutableIntStateOf(0) }
-    val minute = remember { mutableIntStateOf(0) }
-    val second = remember { mutableIntStateOf(0) }
 
     Column(
         modifier = Modifier
@@ -78,87 +74,16 @@ fun WorkOutProgressScreenContent(navController: NavHostController, workout: Muta
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        WorkOutScreenTimeBar(isStopped, hour, minute, second)
-        ShowWorkOutVideoContent(workout, workOutIdx)
+        WorkOutScreenTimeBar(isStopped)
+        ShowWorkOutVideoContent(workout, workOutIdx.intValue)
         ShowWorkOutDesciption(workout, workOutIdx.intValue)
         ShowWorkOutList(workout, workOutIdx.intValue)
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(
-                modifier = Modifier
-                    .height(70.dp)
-                    .weight(1f)
-                    .padding(start = 20.dp, end = 40.dp, bottom = 20.dp)
-                    .border(
-                        width = 2.dp,
-                        color = Color.Black,
-                        shape = RoundedCornerShape(10.dp),
-                    )
-                    .background(
-                        color = Color(0xFF5B9DFF),
-                        shape = RoundedCornerShape(10.dp)
-                    )
-                    .clickable {
-                        isStopped.value = !isStopped.value
-
-                        if (isStopped.value)
-                            btnStr.value = "계속하기"
-                        else
-                            btnStr.value = "일시정지"
-                    },
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = btnStr.value,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
-            }
-            Column(
-                modifier = Modifier
-                    .height(70.dp)
-                    .weight(1f)
-                    .padding(start = 40.dp, end = 20.dp, bottom = 20.dp)
-                    .border(
-                        width = 2.dp,
-                        color = Color.Black,
-                        shape = RoundedCornerShape(10.dp),
-                    )
-                    .background(
-                        color = Color(0xFF5B9DFF),
-                        shape = RoundedCornerShape(10.dp)
-                    )
-                    .clickable {
-                        if (workOutIdx.intValue + 1 < workout.size)
-                            workOutIdx.intValue++
-                        else if (workOutIdx.intValue + 1 == workout.size && btnStr2.value != "운동 종료") {
-                            btnStr2.value = "운동 종료"
-                        }
-                        else
-                            navController.navigateUp()
-                    },
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = btnStr2.value,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
+        ShowButton(navController, isStopped, workout, workOutIdx)
     }
 }
 
 @Composable
-fun ShowWorkOutVideoContent(workout: MutableList<Workout>, workOutIdx: MutableIntState) {
+fun ShowWorkOutVideoContent(workout: MutableList<Workout>, workOutIdx: Int) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -188,7 +113,9 @@ fun ShowWorkOutVideoContent(workout: MutableList<Workout>, workOutIdx: MutableIn
         }
 
         val mediaItem = MediaItem.fromUri(
-            "android.resource://com.example.Healsenior/res/raw/${workout[workOutIdx.intValue].videoName}.mp4"
+            "android.resource://com.example.Healsenior/${
+                videoNameMap[workout[workOutIdx].videoName]
+            }"
         )
         exoplayer.setMediaItem(mediaItem)
         exoplayer.prepare()
@@ -204,7 +131,9 @@ fun ShowWorkOutVideoContent(workout: MutableList<Workout>, workOutIdx: MutableIn
                     )
                 }
             },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(shape = RoundedCornerShape(15.dp))
         )
 
         DisposableEffect(Unit) {
@@ -323,6 +252,92 @@ fun ShowWorkOutListContent(workout: MutableList<Workout>, workOutIdx: Int) {
                         .weight(1f)
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun ShowButton(
+    navController: NavHostController,
+    isStopped: MutableState<Boolean>,
+    workout: MutableList<Workout>,
+    workOutIdx: MutableIntState
+) {
+    val btnStr = remember { mutableStateOf("일시정지") }
+    val btnStr2 = remember { mutableStateOf("다음 운동") }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(
+            modifier = Modifier
+                .height(70.dp)
+                .weight(1f)
+                .padding(start = 20.dp, end = 40.dp, bottom = 20.dp)
+                .border(
+                    width = 2.dp,
+                    color = Color.Black,
+                    shape = RoundedCornerShape(10.dp),
+                )
+                .background(
+                    color = Color(0xFF5B9DFF),
+                    shape = RoundedCornerShape(10.dp)
+                )
+                .clickable {
+                    isStopped.value = !isStopped.value
+
+                    if (isStopped.value)
+                        btnStr.value = "계속하기"
+                    else
+                        btnStr.value = "일시정지"
+                },
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = btnStr.value,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
+        }
+        Column(
+            modifier = Modifier
+                .height(70.dp)
+                .weight(1f)
+                .padding(start = 40.dp, end = 20.dp, bottom = 20.dp)
+                .border(
+                    width = 2.dp,
+                    color = Color.Black,
+                    shape = RoundedCornerShape(10.dp),
+                )
+                .background(
+                    color = Color(0xFF5B9DFF),
+                    shape = RoundedCornerShape(10.dp)
+                )
+                .clickable {
+                    if (workOutIdx.intValue + 1 < workout.size) {
+                        workOutIdx.intValue++
+                        isStopped.value = false
+                        btnStr.value = "일시정지"
+
+                        if (workOutIdx.intValue == workout.size - 1)
+                            btnStr2.value = "운동 종료"
+                    } else
+                        navController.navigateUp()
+                },
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = btnStr2.value,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

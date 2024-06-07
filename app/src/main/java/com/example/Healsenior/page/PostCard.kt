@@ -23,9 +23,20 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.Healsenior.data.Post
 
+
+import java.text.SimpleDateFormat
+import java.util.*
+
+fun formatDateToKorean(date: Date): String {
+    val formatter = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREAN)
+    return formatter.format(date)
+}
+
 @Composable
 fun PostCard(post: Post, onClick: () -> Unit, onLikeClick: () -> Unit) {
     var likes by remember { mutableStateOf(post.like) }
+    val formattedDate = formatDateToKorean(post.date)
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -39,7 +50,7 @@ fun PostCard(post: Post, onClick: () -> Unit, onLikeClick: () -> Unit) {
                 .fillMaxWidth()
         ) {
             Text(post.title, style = MaterialTheme.typography.titleLarge)
-            Text("${post.author} - ${post.date}", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+            Text("${post.author} - $formattedDate", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
             Spacer(modifier = Modifier.height(4.dp))
             Text(post.content, style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(8.dp))

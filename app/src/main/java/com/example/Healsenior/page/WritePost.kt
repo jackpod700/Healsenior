@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,17 +15,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.Healsenior.data.Post
 import com.example.Healsenior.data.writeNewPost
+import com.example.Healsenior.login.LoginViewModel
 import java.util.Date
 
 @Composable
-fun PostScreen(navController: NavController) {
+fun PostScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel()) {
     var title by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
     var isSubmitting by remember { mutableStateOf(false) }
+    val currentUser = loginViewModel.currentUser.observeAsState().value
 
     Column(
         modifier = Modifier
@@ -34,7 +38,7 @@ fun PostScreen(navController: NavController) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF87CEEB))
+                .background(Color(0xFF95BDFA))
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -51,12 +55,12 @@ fun PostScreen(navController: NavController) {
             )
             OutlinedButton(
                 onClick = {
-                    if (title.isNotEmpty() && content.isNotEmpty()) {
+                    if (title.isNotEmpty() && content.isNotEmpty() && currentUser != null) {
                         isSubmitting = true
                         val newPost = Post(
                             pid = 0, // 이 값은 서버에서 할당될 것입니다.
-                            uid = "사용자ID", // 실제 사용자 ID로 변경
-                            author = "작성자 이름", // 실제 작성자 이름으로 변경
+                            uid = currentUser.uid,
+                            author = currentUser.name,
                             title = title,
                             content = content,
                             like = 0,
@@ -116,7 +120,7 @@ fun PostScreen(navController: NavController) {
                     }
                 }
             )
-            Divider(color = Color.Gray, thickness = 1.dp)
+            HorizontalDivider(thickness = 1.dp, color = Color.Gray)
 
             BasicTextField(
                 value = content,
@@ -138,7 +142,7 @@ fun PostScreen(navController: NavController) {
                     }
                 }
             )
-            Divider(color = Color.Gray, thickness = 1.dp)
+            HorizontalDivider(thickness = 1.dp, color = Color.Gray)
         }
     }
 }

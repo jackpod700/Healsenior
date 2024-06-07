@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,10 +18,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.Healsenior.data.Comment
 import com.example.Healsenior.data.GetCommentAll
 import com.example.Healsenior.data.Post
 import com.example.Healsenior.data.writeNewComment
+import com.example.Healsenior.login.LoginViewModel
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.imePadding
@@ -32,9 +35,10 @@ import java.util.*
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun PostDetailScreen(post: Post) {
+fun PostDetailScreen(post: Post, loginViewModel: LoginViewModel = viewModel()) {
     var currentPost by remember { mutableStateOf(post) }
     val comments = remember { mutableStateListOf<Comment>() }
+    val currentUser = loginViewModel.currentUser.observeAsState().value
 
     // 화면이 처음 구성될 때 댓글을 가져옵니다.
     LaunchedEffect(currentPost.pid) {
@@ -67,23 +71,28 @@ fun PostDetailScreen(post: Post) {
                     onClick = {
                         println("버튼 클릭됨") // 로그 추가
                         if (commentTextState.value.text.isNotBlank()) {
-                            val newComment = Comment(currentPost.pid, 0, "나", commentTextState.value.text, Date())
+                            val newComment = currentUser?.name?.let {
+                                Comment(currentPost.pid, 0,
+                                    it, commentTextState.value.text, Date())
+                            }
                             println("새 댓글: $newComment") // 로그 추가
-                            writeNewComment(newComment,
-                                onSuccess = {
-                                    println("댓글 추가 성공") // 로그 추가
-                                    comments.add(newComment)
-                                    commentTextState.value = TextFieldValue() // 댓글 입력란 초기화
-                                    keyboardController?.hide() // 키보드 숨기기
-                                    // 댓글 수 갱신을 위해 Post 객체 다시 가져오기
-                                    getPost(currentPost.pid) { updatedPost ->
-                                        currentPost = updatedPost
+                            if (newComment != null) {
+                                writeNewComment(newComment,
+                                    onSuccess = {
+                                        println("댓글 추가 성공") // 로그 추가
+                                        comments.add(newComment)
+                                        commentTextState.value = TextFieldValue() // 댓글 입력란 초기화
+                                        keyboardController?.hide() // 키보드 숨기기
+                                        // 댓글 수 갱신을 위해 Post 객체 다시 가져오기
+                                        getPost(currentPost.pid) { updatedPost ->
+                                            currentPost = updatedPost
+                                        }
+                                    },
+                                    onFailure = { exception ->
+                                        println("댓글 추가 실패: $exception") // 로그 추가
                                     }
-                                },
-                                onFailure = { exception ->
-                                    println("댓글 추가 실패: $exception") // 로그 추가
-                                }
-                            )
+                                )
+                            }
                         } else {
                             println("댓글 내용이 비어 있음") // 로그 추가
                         }

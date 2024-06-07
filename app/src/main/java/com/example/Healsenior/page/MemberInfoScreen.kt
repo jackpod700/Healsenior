@@ -48,7 +48,7 @@ fun MemberInfoScreen(navController: NavController) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF87CEEB))
+                .background(Color(0xFF95BDFA))
                 .padding(vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -57,13 +57,13 @@ fun MemberInfoScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 IconButton(modifier = Modifier.padding(start = 7.dp), onClick = { navController.popBackStack() }) {
-                    Text("<", fontSize = 30.sp, color = Color.Black)
+                    Text("<", fontSize = 30.sp, color = Color.White)
                 }
                 Spacer(modifier = Modifier.width(73.dp))
                 Text(
                     text = "회원정보 변경",
-                    fontSize = 20.sp,
-                    color = Color.Black,
+                    fontSize = 25.sp,
+                    color = Color.White,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.align(Alignment.CenterVertically)
                 )

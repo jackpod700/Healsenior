@@ -1,7 +1,3 @@
-package com.example.Healsenior.page
-
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,81 +8,141 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.Healsenior.data.Comment
+import com.example.Healsenior.data.GetCommentAll
 import com.example.Healsenior.data.Post
+import com.example.Healsenior.data.writeNewComment
+import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.insets.navigationBarsWithImePadding
+import com.google.accompanist.insets.imePadding
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
-data class Comment(
-    val author: String,
-    val date: String,
-    val content: String
-)
-
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PostDetailScreen(post: Post) {
-    Column(
+    var currentPost by remember { mutableStateOf(post) }
+    val comments = remember { mutableStateListOf<Comment>() }
+
+    // 화면이 처음 구성될 때 댓글을 가져옵니다.
+    LaunchedEffect(currentPost.pid) {
+        GetCommentAll(currentPost.pid) { fetchedComments ->
+            comments.clear()
+            comments.addAll(fetchedComments)
+        }
+    }
+
+    val commentTextState = remember { mutableStateOf(TextFieldValue()) }
+    val coroutineScope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // 게시글 정보
-        PostDetail(post)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 댓글 목록
-        Text(
-            text = "댓글",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
-
-        val comments = remember { mutableStateListOf(
-            Comment("곰탱이", "2023.11.05 / 17:37", "저도 동감입니다...ㅋㅋ 나이 먹으니까 더 힘드네요...사실 PT 받기는 너무 부담이 되어서...그렇다고 혼자도 안하니 ㅠㅠㅎㅎㅎ"),
-            Comment("꼰대사장", "2023.11.05 / 18:21", "자영업자인데 일 끝나고 헬스장 가기도 부담되는데 집에서 나름 편하게(?) 할 수 있어서 좋네요. 사실 헬스장 결제해놓고 안가는게 부지기수...파이팅해요!")
-        ) }
-
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(comments) { comment ->
-                CommentCard(comment)
-                Spacer(modifier = Modifier.height(8.dp))
+            .fillMaxSize(),
+        bottomBar = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(16.dp),
+            ) {
+                OutlinedTextField(
+                    value = commentTextState.value,
+                    onValueChange = { commentTextState.value = it },
+                    modifier = Modifier.weight(1f),
+                    placeholder = { Text(text = "댓글을 입력하세요...") }
+                )
+                IconButton(
+                    onClick = {
+                        println("버튼 클릭됨") // 로그 추가
+                        if (commentTextState.value.text.isNotBlank()) {
+                            val newComment = Comment(currentPost.pid, 0, "나", commentTextState.value.text, Date())
+                            println("새 댓글: $newComment") // 로그 추가
+                            writeNewComment(newComment,
+                                onSuccess = {
+                                    println("댓글 추가 성공") // 로그 추가
+                                    comments.add(newComment)
+                                    commentTextState.value = TextFieldValue() // 댓글 입력란 초기화
+                                    keyboardController?.hide() // 키보드 숨기기
+                                    // 댓글 수 갱신을 위해 Post 객체 다시 가져오기
+                                    getPost(currentPost.pid) { updatedPost ->
+                                        currentPost = updatedPost
+                                    }
+                                },
+                                onFailure = { exception ->
+                                    println("댓글 추가 실패: $exception") // 로그 추가
+                                }
+                            )
+                        } else {
+                            println("댓글 내용이 비어 있음") // 로그 추가
+                        }
+                    }
+                ) {
+                    Icon(imageVector = Icons.Default.Send, contentDescription = "Send Comment")
+                }
             }
         }
-
-        // 댓글 입력란
-        val commentTextState = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(vertical = 8.dp)
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .imeNestedScroll()
+                .padding(horizontal = 16.dp)
         ) {
-            OutlinedTextField(
-                value = commentTextState.value,
-                onValueChange = { commentTextState.value = it },
-                modifier = Modifier.weight(1f),
-                placeholder = { Text(text = "댓글을 입력하세요...") }
+            // 게시글 정보
+            PostDetail(currentPost)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 댓글 목록
+            Text(
+                text = "댓글",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 8.dp)
             )
-            IconButton(
-                onClick = {
-                    if (commentTextState.value.text.isNotBlank()) {
-                        comments.add(Comment("나", "지금", commentTextState.value.text))
-                        commentTextState.value = TextFieldValue() // 댓글 입력란 초기화
-                    }
-                }
+
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize()
             ) {
-                Icon(imageVector = Icons.Default.Send, contentDescription = "Send Comment")
+                items(comments) { comment ->
+                    CommentCard(comment)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
             }
         }
     }
 }
+
+fun getPost(pid: Int, callback: (Post) -> Unit) {
+    val db = Firebase.firestore
+    db.collection("Post").document(pid.toString())
+        .get()
+        .addOnSuccessListener { document ->
+            val post = document.toObject(Post::class.java)
+            if (post != null) {
+                callback(post)
+            }
+        }
+        .addOnFailureListener { exception ->
+            println("Error getting post: $exception")
+        }
+}
+
 
 @Composable
 fun PostDetail(post: Post) {
@@ -146,7 +202,7 @@ fun CommentCard(comment: Comment) {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = comment.date,
+                text = SimpleDateFormat("yyyy.MM.dd / HH:mm", Locale.getDefault()).format(comment.date),
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray
             )
@@ -158,19 +214,3 @@ fun CommentCard(comment: Comment) {
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewPostDetailScreen() {
-    val post = Post(
-        title = "게시글 제목",
-        author = "작성자",
-        date = parseDate("2023.11.05"),
-        content = "여기는 게시글의 본문 내용입니다. 많은 정보와 함께 다양한 사람들의 이야기를 담고 있습니다...",
-        like = 12,
-        comments = 2,
-        view = 37
-    )
-    PostDetailScreen(post)
-}
-

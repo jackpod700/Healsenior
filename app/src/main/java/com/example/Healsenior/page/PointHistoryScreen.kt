@@ -83,7 +83,7 @@ fun PointHistoryScreen(navController: NavHostController) {
                 IconButton(
                     modifier = Modifier.padding(end = 7.dp),
                     onClick = { navController.navigate("product_list_screen") }) {
-                    Icon(Icons.Default.Store, contentDescription = "Store", tint = Color.Black,
+                    Icon(Icons.Default.Store, contentDescription = "Store", tint = Color.White,
                         modifier = Modifier.size(35.dp))
                 }
             }

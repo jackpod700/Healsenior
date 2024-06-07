@@ -130,6 +130,7 @@ fun GetRoutineDaily(rid: String, day: Int, callback: (RoutineDaily?) -> Unit) {
         println("Error getting documents: $it")
     }
 }
+
 //GetRoutineDaily 사용예시
 //var routinedaily1:RoutineDaily?=null
 //GetRoutineDaily("gym1",1){routineDaily->

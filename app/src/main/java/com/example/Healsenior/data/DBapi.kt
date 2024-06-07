@@ -1,5 +1,6 @@
 package com.example.Healsenior.data
 
+import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -190,32 +191,41 @@ fun GetPostId(callback: (Int) -> Unit) {
 
 fun writeNewPost(post: Post, onComplete: (Boolean) -> Unit) {
     val db = FirebaseFirestore.getInstance()
-    val postCounterRef = db.collection("Post").document("0")
 
-    db.runTransaction { transaction ->
-        val snapshot = transaction.get(postCounterRef)
-        val currentCount = snapshot.getLong("count") ?: throw Exception("Count not found")
-        val newPostId = currentCount + 1
+    // "Post" 컬렉션의 모든 문서를 조회하여 가장 높은 pid를 찾습니다.
+    db.collection("Post")
+        .get()
+        .addOnSuccessListener { documents ->
+            var maxPid = 0L
+            for (document in documents) {
+                val currentPid = document.getLong("pid") ?: 0L
+                if (currentPid > maxPid) {
+                    maxPid = currentPid
+                }
+            }
 
-        // Set the new PID in the post
-        post.pid = newPostId.toInt()
+            // 새 포스트의 pid를 maxPid + 1로 설정합니다.
+            post.pid = (maxPid + 1).toInt()
 
-        // Update the counter document
-        transaction.update(postCounterRef, "count", newPostId)
-
-        // Add the new post to the "Post" collection
-        val newPostRef = db.collection("Post").document(post.pid.toString())
-        transaction.set(newPostRef, post)
-
-        // Initialize the comment count for the new post
-        val commentRef = db.collection("Comment").document(post.pid.toString())
-        transaction.set(commentRef, mapOf("count" to 0))
-    }.addOnSuccessListener {
-        onComplete(true)
-    }.addOnFailureListener { e ->
-        e.printStackTrace()
-        onComplete(false)
-    }
+            // "Post" 컬렉션에 새로운 포스트를 추가합니다.
+            db.collection("Post")
+                .document(post.pid.toString())
+                .set(post)
+                .addOnSuccessListener {
+                    Log.d("Firestore", "Post 작성 성공")
+                    onComplete(true)
+                }
+                .addOnFailureListener { e ->
+                    e.printStackTrace()
+                    Log.e("Firestore", "Post 작성 실패: ${e.message}")
+                    onComplete(false)
+                }
+        }
+        .addOnFailureListener { e ->
+            e.printStackTrace()
+            Log.e("Firestore", "가장 높은 pid 조회 실패: ${e.message}")
+            onComplete(false)
+        }
 }
 
 fun GetPostAll(callback: (List<Post>) -> Unit) {
@@ -284,18 +294,17 @@ fun writeNewComment(
     onFailure: (Exception) -> Unit
 ) {
     val db = Firebase.firestore
-    val commentsRef = db.collection("Comment").whereEqualTo("pid", comment.pid)
 
-    commentsRef.get()
+    // 모든 댓글 컬렉션을 검색하여 가장 높은 cid를 찾습니다.
+    db.collection("Comment")
+        .get()
         .addOnSuccessListener { documents ->
-            println("댓글 문서들 가져옴: ${documents.size()}") // 로그 추가
-            // 가장 높은 cid 찾기
             val maxCid = documents.mapNotNull { it.getLong("cid") }.maxOrNull() ?: 0
             comment.cid = (maxCid + 1).toInt()
-            println("새 cid: ${comment.cid}") // 로그 추가
 
             val commentRef = db.collection("Comment").document(comment.cid.toString())
 
+            // 트랜잭션을 사용하여 댓글을 추가하고 댓글 수를 업데이트합니다.
             db.runTransaction { transaction ->
                 val postRef = db.collection("Post").document(comment.pid.toString())
                 val postSnapshot = transaction.get(postRef)
@@ -312,15 +321,15 @@ fun writeNewComment(
 
                 null // 트랜잭션이 값을 반환하지 않도록 설정
             }.addOnSuccessListener {
-                println("트랜잭션 성공") // 로그 추가
+                println("트랜잭션 성공")
                 onSuccess()
             }.addOnFailureListener { exception ->
-                println("트랜잭션 실패: $exception") // 로그 추가
+                println("트랜잭션 실패: $exception")
                 onFailure(exception)
             }
         }
         .addOnFailureListener { exception ->
-            println("댓글 문서들 가져오기 실패: $exception") // 로그 추가
+            println("댓글 문서들 가져오기 실패: $exception")
             onFailure(exception)
         }
 }

@@ -157,7 +157,8 @@ fun MainCommunityScreen() {
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(innerPadding).padding(bottom = 0.dp)
+                .padding(innerPadding)
+                .padding(bottom = 0.dp)
                 .background(Color.White)
                 .fillMaxSize()
         ) {
@@ -181,15 +182,15 @@ fun CommunityTopBar() {
 
     Column {
         TopAppBar(
-            title = { Text(tabs[selectedTabIndex], color = Color.Black) },
+            title = { Text(text = "커뮤니티", fontSize = 28.sp) },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFF87CEEB), // Sky blue background color
+                containerColor = Color(0xFF95BDFA), // Sky blue background color
                 titleContentColor = Color.White,
                 navigationIconContentColor = Color.White,
                 actionIconContentColor = Color.White
             )
         )
-        HorizontalDivider(thickness = 1.dp, color = Color.Black)
+//        HorizontalDivider(thickness = 1.dp, color = Color.Black)
     }
 }
 
@@ -297,7 +298,7 @@ fun CustomTabRow(selectedTabIndex: Int, tabs: List<String>, onTabSelected: (Int)
                 )
             }
         }
-        HorizontalDivider(thickness = 1.dp, color = Color.Black)
+//        HorizontalDivider(thickness = 1.dp, color = Color.Black)
     }
 }
 

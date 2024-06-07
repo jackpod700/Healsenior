@@ -58,7 +58,7 @@ fun PointHistoryScreen(navController: NavHostController) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF87CEEB))
+                .background(Color(0xFF95BDFA))
                 .padding(vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -69,13 +69,13 @@ fun PointHistoryScreen(navController: NavHostController) {
                 IconButton(
                     modifier = Modifier.padding(start = 7.dp),
                     onClick = { navController.popBackStack() }) {
-                    Text("<", fontSize = 30.sp, color = Color.Black)
+                    Text("<", fontSize = 30.sp, color = Color.White)
                 }
                 Spacer(modifier = Modifier.width(85.dp))
                 Text(
                     text = "포인트 내역",
                     fontSize = 20.sp,
-                    color = Color.Black,
+                    color = Color.White,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.align(Alignment.CenterVertically),
                 )

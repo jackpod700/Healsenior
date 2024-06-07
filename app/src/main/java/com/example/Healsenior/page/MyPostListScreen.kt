@@ -8,20 +8,40 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.Healsenior.data.GetPostByUid
+import com.example.Healsenior.data.Post
 import com.example.Healsenior.data.UpdatePostLike
 import com.example.Healsenior.data.UpdatePostView
+import com.example.Healsenior.login.LoginViewModel
 import com.google.gson.Gson
 
 
 @Composable
-fun MyPostListScreen(navController: NavHostController) {
+fun MyPostListScreen(navController: NavHostController, loginViewModel: LoginViewModel = viewModel()) {
+    var posts by remember { mutableStateOf<List<Post>>(emptyList()) }
+    val currentUid = loginViewModel.getCurrentUserUid()
+
+    // 데이터 로드
+    LaunchedEffect(currentUid) {
+        if (currentUid != null) {
+            GetPostByUid(currentUid) { postList ->
+                posts = postList
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -32,7 +52,7 @@ fun MyPostListScreen(navController: NavHostController) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF87CEEB))
+                .background(Color(0xFF95BDFA))
                 .padding(vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -43,13 +63,13 @@ fun MyPostListScreen(navController: NavHostController) {
                 IconButton(
                     modifier = Modifier.padding(start = 7.dp),
                     onClick = { navController.popBackStack() }) {
-                    Text("<", fontSize = 30.sp, color = Color.Black)
+                    Text("<", fontSize = 30.sp, color = Color.White)
                 }
                 Spacer(modifier = Modifier.width(85.dp))
                 Text(
                     text = "작성글 보기",
-                    fontSize = 20.sp,
-                    color = Color.Black,
+                    fontSize = 25.sp,
+                    color = Color.White,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.align(Alignment.CenterVertically),
                 )
@@ -78,3 +98,4 @@ fun MyPostListScreen(navController: NavHostController) {
         }
     }
 }
+

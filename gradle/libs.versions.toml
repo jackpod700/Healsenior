@@ -70,6 +70,7 @@ firebaseFirestore = "25.0.0"
 media3Exoplayer = "1.3.1"
 media3Ui = "1.3.1"
 accompanistInsets = "0.31.5-beta"
+runtimeLivedata = "1.6.7"
 
 [libraries]
 accompanist-adaptive = { module = "com.google.accompanist:accompanist-adaptive", version.ref = "accompanist" }
@@ -167,6 +168,7 @@ firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore
 androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3Exoplayer" }
 androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3Ui" }
 accompanist-insets = { group = "com.google.accompanist", name = "accompanist-insets", version.ref = "accompanistInsets" }
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

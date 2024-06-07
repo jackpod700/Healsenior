@@ -27,7 +27,6 @@ import com.example.Healsenior.data.User
 @Preview
 @Composable
 fun WorkOutCalendar(
-    user: User,
     workoutDayArr: MutableSet<Int>,
     year: MutableIntState,
     month: MutableIntState,
@@ -40,7 +39,6 @@ fun WorkOutCalendar(
         verticalArrangement = Arrangement.Top
     ) {
         CalendarHeader(year, month)
-        CalendarContent(user, workoutDayArr, year, month, selectedDay)
-        CalendarFooter()
+        CalendarContent(workoutDayArr, year, month, selectedDay)
     }
 }

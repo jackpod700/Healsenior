@@ -104,6 +104,7 @@ dependencies {
     implementation(libs.exoplayer.ui)
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.media3.common)
     implementation(libs.accompanist.insets)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)

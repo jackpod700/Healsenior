@@ -34,7 +34,7 @@ fun CalendarHeader(year: MutableIntState, month: MutableIntState) {
     ) {
         Row {
             Text(
-                text = year.intValue.toString() + "월 " + month.intValue.toString() + "일",
+                text = year.intValue.toString() + "년 " + month.intValue.toString() + "월",
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
                 color = Color.DarkGray,

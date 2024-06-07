@@ -1,5 +1,7 @@
 package com.example.Healsenior._navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,7 +34,13 @@ fun WorkOutScreenNav(loginViewModel: LoginViewModel) {
 
     NavHost(
         navController = navController,
-        startDestination = "WorkOutScreenMain"
+        startDestination = "WorkOutScreenMain",
+        enterTransition = {
+            EnterTransition.None
+        },
+        exitTransition = {
+            ExitTransition.None
+        }
     ) {
         composable("WorkOutScreenMain") {
             isRoutineEnd.value = false

@@ -1,5 +1,6 @@
 package com.example.Healsenior.recordScreen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,7 +8,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -23,90 +23,86 @@ import com.example.Healsenior.data.RoutineDaily
 import com.example.Healsenior.data.User
 import com.example.Healsenior.data.Workout
 import com.example.Healsenior.recordScreen.Calendar.dateToString
+import kotlinx.coroutines.delay
 
 @Preview
 @Composable
 fun RecordDetailScreen(
     navController: NavHostController,
     user: User,
-    workoutDayArr: MutableSet<Int>,
     year: MutableIntState,
     month: MutableIntState,
     selectedDay: MutableIntState
 ) {
-    val key = dateToString(year.intValue, month.intValue, selectedDay.intValue, ".")
-    val value = user.recordMap[key]!!.entries
-    val rid = value.first().key
-    val day = value.first().value
+    val dateStr = dateToString(year.intValue, month.intValue, selectedDay.intValue, ".")
 
-    var routine1 = remember { mutableStateOf<Routine?>(null) }
-    var routineDaily1 = remember { mutableStateOf<RoutineDaily?>(null) }
-    var workout1 = remember { mutableListOf<Workout>() }
-
-    val isCallbackEnd1 = remember { mutableStateOf(false) }
-    val isCallbackEnd2 = remember { mutableStateOf(false) }
-    val isCallbackEnd3 = remember { mutableStateOf(false) }
-
-        GetRoutine(rid) { routine ->
-            if (routine != null) {
-                routine1.value = routine
-                isCallbackEnd1.value = true
-            }
-        }
-
-        GetRoutineDaily(rid, day) { routineDaily ->
-            if (routineDaily != null) {
-                routineDaily1.value = routineDaily
-                isCallbackEnd2.value = true
-            }
-        }
-
-        if (isCallbackEnd2.value) {
-            val li = mutableListOf<Workout>()
-            var cnt = 0
-
-            for (index in 0..<routineDaily1.value!!.workoutList.size) {
-                val wid = routineDaily1.value!!.workoutList[index]
-
-                GetWorkout(wid) { workout ->
-                    if (workout != null) {
-                        li.add(workout)
-                        cnt++
-
-                        if (cnt == routineDaily1.value!!.workoutList.size) {
-                            workout1.clear()
-                            workout1 += li
-                            isCallbackEnd3.value = true
-                        }
-                    }
-                }
-            }
-        }
-
-    if (isCallbackEnd1.value && isCallbackEnd2.value && isCallbackEnd3.value) {
-        Column(
-            modifier = Modifier
-                .statusBarsPadding()
-                .fillMaxSize()
-                .background(color = Color(0xFFEAEAEA))
-        ) {
-            SmallTopBar(navController, "운동 기록 보기")
-            RecordDetailScreenContent(key, routine1.value!!, routineDaily1.value!!, workout1)
-        }
+    Column(
+        modifier = Modifier
+            .statusBarsPadding()
+            .fillMaxSize()
+            .background(color = Color(0xFFEAEAEA))
+    ) {
+        SmallTopBar(navController, "운동 기록 보기")
+        RecordDetailScreenContent(user, dateStr)
     }
 }
 
+@SuppressLint("MutableCollectionMutableState")
 @Composable
-fun RecordDetailScreenContent(
-    date: String,
-    routine: Routine,
-    routineDaily: RoutineDaily,
-    workout: MutableList<Workout>
-) {
+fun RecordDetailScreenContent(user: User, dateStr: String) {
     val isZoomed = remember { mutableStateOf(false) }
 
-    Column {
-        ShowDetailRecordHeader(date, routineDaily, workout, isZoomed)
-        ShowDetailRecordContent(routine, routineDaily, workout)
+    val value = user.recordMap[dateStr]!!.entries
+    val rid = value.first().key
+    val day = value.first().value
+
+    val routine = remember { mutableStateOf<Routine?>(null) }
+    val routineDaily = remember { mutableStateOf<RoutineDaily?>(null) }
+    val workout = remember { mutableListOf<Workout>() }
+
+    val isRoutineDailyDataGet = remember { mutableStateOf(false) }
+    val isCallbackEnd = remember { mutableStateOf(false) }
+
+    GetRoutine(rid) { getRoutine ->
+        if (getRoutine != null)
+            routine.value = getRoutine
+    }
+
+    GetRoutineDaily(rid, day) { getRoutineDaily ->
+        if (getRoutineDaily != null) {
+            routineDaily.value = getRoutineDaily
+            isRoutineDailyDataGet.value = true
+        }
+    }
+
+    if (isRoutineDailyDataGet.value) {
+        LaunchedEffect(Unit) {
+            val li = mutableListOf<Workout>()
+            var cnt = 0
+
+            for (wid in routineDaily.value!!.workoutList) {
+                GetWorkout(wid) { getWorkout ->
+                    if (getWorkout != null) {
+                        li.add(getWorkout)
+                        cnt++
+
+                        if (cnt == routineDaily.value!!.workoutList.size) {
+                            workout.clear()
+                            workout += li
+                            isCallbackEnd.value = true
+                        }
+                    }
+                }
+
+                delay(20)
+            }
+        }
+    }
+
+    if (isCallbackEnd.value) {
+        Column {
+            ShowDetailRecordHeader(dateStr, workout, isZoomed)
+            ShowDetailRecordContent(routine.value!!, routineDaily.value!!, workout)
+        }
     }
 }

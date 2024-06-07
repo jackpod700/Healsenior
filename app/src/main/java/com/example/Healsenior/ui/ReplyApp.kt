@@ -44,13 +44,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
+import com.example.Healsenior._navigation.RecordScreenNav
 import com.example.Healsenior._navigation.WorkOutScreenNav
 import com.example.Healsenior.login.LoginScreen
 import com.example.Healsenior.login.LoginViewModel
 import com.example.Healsenior.login.checkLoginState
 import com.example.Healsenior.page.MainCommunityScreen
 import com.example.Healsenior.page.MyPage
-import com.example.Healsenior.recordScreen.RecordScreen
 import com.example.Healsenior.ui.navigation.ReplyBottomNavigationBar
 import com.example.Healsenior.ui.navigation.ReplyNavigationActions
 import com.example.Healsenior.ui.navigation.ReplyRoute
@@ -301,7 +301,7 @@ private fun ReplyNavHost(
             WorkOutScreenNav(loginViewModel)
         }
         composable(ReplyRoute.Record) {
-            RecordScreen(loginViewModel)
+            RecordScreenNav(loginViewModel)
         }
         composable(ReplyRoute.Community) {
             MainCommunityScreen()

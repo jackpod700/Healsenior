@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +27,7 @@ import com.example.Healsenior.data.GetWorkout
 import com.example.Healsenior.data.RoutineDaily
 import com.example.Healsenior.data.User
 import com.example.Healsenior.data.Workout
+import kotlinx.coroutines.delay
 
 @Composable
 fun ShowWorkOutDetail(
@@ -111,23 +113,26 @@ fun ShowWorkOutInformation(
     workout: MutableList<Workout>
 ) {
     val isCallbackEnd = remember { mutableStateOf(false) }
-    val li = mutableListOf<Workout>()
-    var cnt = 0
 
-    for (index in 0..<routineDaily.workoutList.size) {
-        val wid = routineDaily.workoutList[index]
+    LaunchedEffect(Unit) {
+        val li = mutableListOf<Workout>()
+        var cnt = 0
 
-        GetWorkout(wid) { getWorkout ->
-            if (getWorkout != null) {
-                li.add(getWorkout)
-                cnt++
+        for (wid in routineDaily.workoutList) {
+            GetWorkout(wid) { getWorkout ->
+                if (getWorkout != null) {
+                    li.add(getWorkout)
+                    cnt++
 
-                if (cnt == routineDaily.workoutList.size) {
-                    workout.clear()
-                    workout += li
-                    isCallbackEnd.value = true
+                    if (cnt == routineDaily.workoutList.size) {
+                        workout.clear()
+                        workout += li
+                        isCallbackEnd.value = true
+                    }
                 }
             }
+
+            delay(20)
         }
     }
 

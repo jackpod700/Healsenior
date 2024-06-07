@@ -25,7 +25,6 @@ import com.example.Healsenior.data.Workout
 @Composable
 fun ShowDetailRecordHeader(
     date: String,
-    routineDaily: RoutineDaily,
     workout: MutableList<Workout>,
     isZoomed: MutableState<Boolean>
 ) {
@@ -36,7 +35,7 @@ fun ShowDetailRecordHeader(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "총 ${routineDaily.workoutList.size}개 | ${workout.sumOf { it.set }}세트 / $date",
+            text = "총 ${workout.size}개 | ${workout.sumOf { it.set }}세트 / $date",
             fontWeight = FontWeight.Bold,
             color = Color.Gray,
             modifier = Modifier

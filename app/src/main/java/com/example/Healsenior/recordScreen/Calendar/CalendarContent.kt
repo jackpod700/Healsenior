@@ -25,7 +25,6 @@ import com.example.Healsenior.data.User
 
 @Composable
 fun CalendarContent(
-    user: User,
     workoutDayArr: MutableSet<Int>,
     year: MutableIntState,
     month: MutableIntState,
@@ -36,7 +35,7 @@ fun CalendarContent(
             .fillMaxWidth()
     ) {
         ShowWeekBand()
-        ShowCalendarBody(user, workoutDayArr, year, month, selectedDay)
+        ShowCalendarBody(workoutDayArr, year, month, selectedDay)
     }
 }
 
@@ -63,7 +62,6 @@ fun ShowWeekBand() {
 
 @Composable
 fun ShowCalendarBody(
-    user: User,
     workoutDayArr: MutableSet<Int>,
     year: MutableIntState,
     month: MutableIntState,
@@ -113,7 +111,11 @@ fun ShowEmptyCircleBox() {
 }
 
 @Composable
-fun ShowCircleBox(workoutDayArr: MutableSet<Int>, day: Int, selectedDay: MutableIntState) {
+fun ShowCircleBox(
+    workoutDayArr: MutableSet<Int>,
+    day: Int,
+    selectedDay: MutableIntState
+) {
     val isSelect = (day == selectedDay.intValue)
     val isWorkOutDone = workoutDayArr.contains(day)
     val interactionSource = remember { MutableInteractionSource() }

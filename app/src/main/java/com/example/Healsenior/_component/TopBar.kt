@@ -1,4 +1,4 @@
-package com.example.Healsenior._component
+ package com.example.Healsenior._component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

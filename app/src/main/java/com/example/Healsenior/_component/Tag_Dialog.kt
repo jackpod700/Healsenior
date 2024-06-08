@@ -58,7 +58,7 @@ fun Tag_Dialog(
                     fontSize = 20.sp,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(top = 40.dp)
+                        .padding(top = 60.dp)
                 )
                 Row(
                     modifier = Modifier
@@ -69,7 +69,7 @@ fun Tag_Dialog(
                     TextButton(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(30.dp)
+                            .padding(20.dp)
                             .border(
                                 width = 2.dp,
                                 color = Color(0xFF95BDFA),
@@ -84,14 +84,14 @@ fun Tag_Dialog(
                         Text(
                             text = "취소",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp,
+                            fontSize = 20.sp,
                             color = Color.Gray
                         )
                     }
                     TextButton(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(30.dp)
+                            .padding(20.dp)
                             .border(
                                 width = 2.dp,
                                 color = Color(0xFF95BDFA),
@@ -106,7 +106,7 @@ fun Tag_Dialog(
                         Text(
                             text = "확인",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp,
+                            fontSize = 20.sp,
                             color = Color(0xFF95BDFA)
                         )
                     }

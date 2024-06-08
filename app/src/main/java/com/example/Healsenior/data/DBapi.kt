@@ -17,9 +17,10 @@ fun writeNewUser(
         User(
             UID,
             "User" + Math.random().toInt().toString(),
-            "",
+            "RoutineHome1",
+            1,
             0,
-            0, 0,
+            0,
             0,
             0,
             0,

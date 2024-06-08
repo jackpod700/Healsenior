@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -42,6 +43,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.NavigationRail
@@ -57,9 +59,11 @@ import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
+import androidx.compose.ui.unit.sp
 import com.example.Healsenior.R
 import com.example.Healsenior.ui.utils.ReplyNavigationContentPosition
 
@@ -139,14 +143,59 @@ fun ReplyBottomNavigationBar(
                 selected = selectedDestination == replyDestination.route,
                 onClick = { navigateToTopLevelDestination(replyDestination) },
                 icon = {
-                    Icon(
-                        imageVector = replyDestination.selectedIcon,
-                        contentDescription = stringResource(id = replyDestination.iconTextId)
-                    )
+                        Icon(
+                            imageVector = replyDestination.selectedIcon,
+                            contentDescription = stringResource(id = replyDestination.iconTextId)
+                        )
                 }
             )
         }
     }
+
+/*
+    var cnt = 0
+
+    NavigationBar(
+        modifier = Modifier.fillMaxWidth(),
+        containerColor = Color(0xFFEAEAEA)
+    ) {
+        TOP_LEVEL_DESTINATIONS.forEach { replyDestination ->
+            NavigationBarItem(
+                selected = selectedDestination == replyDestination.route,
+                onClick = { navigateToTopLevelDestination(replyDestination) },
+                icon = {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = replyDestination.selectedIcon,
+                            contentDescription = stringResource(id = replyDestination.iconTextId),
+                            modifier = Modifier
+                                .width(40.dp)
+                                .height(40.dp)
+                        )
+                        Text(
+                            text = iconText[cnt++],
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                },
+                colors = NavigationBarItemColors(
+                    selectedIconColor = Color(0xFF95BDFA),
+                    selectedTextColor = Color(0xFF95BDFA),
+                    selectedIndicatorColor = Color(0xFFEAEAEA),
+                    unselectedIconColor = Color.Black,
+                    unselectedTextColor = Color.Black,
+                    disabledIconColor = Color(0xFFEAEAEA),
+                    disabledTextColor = Color(0xFFEAEAEA)
+                )
+            )
+        }
+    }
+
+    */
 }
 
 @Composable

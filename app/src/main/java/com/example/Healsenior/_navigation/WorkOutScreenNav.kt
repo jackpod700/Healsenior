@@ -3,6 +3,7 @@ package com.example.Healsenior._navigation
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
@@ -20,7 +21,7 @@ import com.example.Healsenior.workoutScreen.WorkOutMainScreen
 import com.example.Healsenior.workoutScreen.WorkOutProgressScreen
 
 @Composable
-fun WorkOutScreenNav(loginViewModel: LoginViewModel) {
+fun WorkOutScreenNav(loginViewModel: LoginViewModel, isVisible: MutableState<Boolean>) {
     val uid = loginViewModel.auth.uid
     val user = remember { mutableStateOf<User?>(null) }
     val routine = remember { mutableStateOf<Routine?>(null) }
@@ -43,13 +44,16 @@ fun WorkOutScreenNav(loginViewModel: LoginViewModel) {
         }
     ) {
         composable("WorkOutScreenMain") {
+            isVisible.value = true
             isRoutineEnd.value = false
             WorkOutMainScreen(navController, uid, user, routine, routineDaily, workout)
         }
         composable("RecommendWorkOutScreen") {
+            isVisible.value = false
             RecommendWorkOutScreen(navController, routine.value!!, selectedRoutine)
         }
         composable("TodayWorkOutScreen") {
+            isVisible.value = false
             TodayWorkOutScreen(navController, user.value!!, workout, isRoutineEnd)
         }
         composable("RoutineDescriptionScreen") {

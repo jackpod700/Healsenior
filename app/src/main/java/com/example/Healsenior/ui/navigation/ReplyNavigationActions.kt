@@ -26,6 +26,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.example.Healsenior.R
 
+val iconText = listOf("운동", "기록", "커뮤니티", "마이페이지")
+
 object ReplyRoute {
     const val Workout = "Workout"
     const val Record = "Record"

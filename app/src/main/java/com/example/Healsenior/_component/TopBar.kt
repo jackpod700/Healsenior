@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,10 +29,11 @@ import androidx.navigation.NavHostController
 fun BigTopBar(
     text : String
 ) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .height(60.dp)
-        .background(color = Color(0xFF95BDFA)),
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(70.dp)
+            .background(color = Color(0xFF95BDFA)),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     )
@@ -46,26 +48,6 @@ fun BigTopBar(
                     .padding(start = 20.dp)
             )
         }
-        Row {
-            IconButton(
-                onClick = {
-                    //알림창 이동
-                },
-                modifier = Modifier
-                    .width(60.dp)
-                    .height(60.dp)
-                    .padding(end = 10.dp)
-            ) {
-                Icon(
-                    Icons.Outlined.Notifications,
-                    contentDescription = "",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .width(40.dp)
-                        .height(40.dp)
-                )
-            }
-        }
     }
 }
 
@@ -74,13 +56,17 @@ fun SmallTopBar(
     navController: NavHostController,
     text: String
 ) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(40.dp)
-        .background(color = Color(0xFF95BDFA)),
-    )
-    {
-        Row {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp)
+            .background(color = Color(0xFF95BDFA)),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxHeight(),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             IconButton(
                 onClick = {
                     navController.popBackStack()
@@ -99,16 +85,19 @@ fun SmallTopBar(
                 )
             }
         }
-        Row {
+        Row(
+            modifier = Modifier.fillMaxHeight(),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
                 text = text,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                color = Color.White,
                 textAlign = TextAlign.Center,
+                color = Color.White,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 10.dp)
             )
         }
     }

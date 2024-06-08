@@ -3,6 +3,7 @@ package com.example.Healsenior._navigation
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,7 +18,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun RecordScreenNav(loginViewModel: LoginViewModel) {
+fun RecordScreenNav(loginViewModel: LoginViewModel, isVisible: MutableState<Boolean>) {
     val uid = loginViewModel.auth.uid
     val user = remember { mutableStateOf<User?>(null) }
 
@@ -43,9 +44,11 @@ fun RecordScreenNav(loginViewModel: LoginViewModel) {
         }
     ) {
         composable("RecordScreenMain") {
+            isVisible.value = true
             RecordMainScreen(navController, uid!!, user, workoutDayArr, year, month, selectedDay)
         }
         composable("RecordScreenDetail") {
+            isVisible.value = false
             RecordDetailScreen(navController, user.value!!, year, month, selectedDay)
         }
     }

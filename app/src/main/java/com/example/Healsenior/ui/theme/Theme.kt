@@ -310,7 +310,7 @@ fun ContrastAwareReplyTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = replyColorScheme.primary.toArgb()
+            window.statusBarColor = 0xFF95BDFA.toInt()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }

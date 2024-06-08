@@ -39,6 +39,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.SimpleExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.navigation.NavHostController
 import com.example.Healsenior._component.SmallTopBar
@@ -70,12 +71,12 @@ fun WorkOutProgressScreenContent(navController: NavHostController, workout: Muta
 
     Column(
         modifier = Modifier
-            .padding(top = 20.dp, start = 40.dp, end = 40.dp),
+            .padding(top = 10.dp, start = 30.dp, end = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         WorkOutScreenTimeBar(isStopped)
-        ShowWorkOutVideoContent(workout, workOutIdx.intValue)
+        ShowWorkOutVideoContent(workout, workOutIdx.intValue, isStopped)
         ShowWorkOutDesciption(workout, workOutIdx.intValue)
         ShowWorkOutList(workout, workOutIdx.intValue)
         ShowButton(navController, isStopped, workout, workOutIdx)
@@ -83,12 +84,16 @@ fun WorkOutProgressScreenContent(navController: NavHostController, workout: Muta
 }
 
 @Composable
-fun ShowWorkOutVideoContent(workout: MutableList<Workout>, workOutIdx: Int) {
+fun ShowWorkOutVideoContent(
+    workout: MutableList<Workout>,
+    workOutIdx: Int,
+    isStopped: MutableState<Boolean>
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .height(250.dp)
-            .padding(top = 20.dp)
+            .padding(top = 10.dp)
             .border(
                 width = 2.dp,
                 color = Color(0xFF95BDFA),
@@ -118,18 +123,23 @@ fun ShowWorkOutVideoContent(workout: MutableList<Workout>, workOutIdx: Int) {
             }"
         )
         exoplayer.setMediaItem(mediaItem)
-        exoplayer.prepare()
-        exoplayer.play()
+
+        if (isStopped.value)
+            exoplayer.pause()
+        else
+            exoplayer.play()
 
         AndroidView(
             factory = {
-                PlayerView(it).apply {
-                    player = exoplayer
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                }
+                PlayerView(it)
+                    .apply {
+                        player = exoplayer
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        useController = false
+                    }
             },
             modifier = Modifier
                 .fillMaxSize()
@@ -213,7 +223,7 @@ fun ShowWorkOutListHeader(workout: MutableList<Workout>, workOutIdx: Int) {
 fun ShowWorkOutListContent(workout: MutableList<Workout>, workOutIdx: Int) {
     LazyColumn (
         modifier = Modifier
-            .height(150.dp)
+            .height(200.dp)
     ) {
         items(workout[workOutIdx].set) { index ->
             Row(
@@ -267,6 +277,7 @@ fun ShowButton(
     val btnStr2 = remember { mutableStateOf("다음 운동") }
 
     Row(
+        modifier = Modifier.padding(top = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

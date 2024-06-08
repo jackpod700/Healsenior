@@ -19,6 +19,8 @@ package com.example.Healsenior.ui
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +32,7 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -266,6 +269,8 @@ fun ReplyAppContent(
             )
         }
         */
+        val isVisible = remember{ mutableStateOf(true) }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -274,13 +279,17 @@ fun ReplyAppContent(
             ReplyNavHost(
                 navController = navController,
                 modifier = Modifier.weight(1f),
-                loginViewModel = loginViewModel
+                loginViewModel = loginViewModel,
+                isVisible = isVisible
             )
-            AnimatedVisibility(visible = navigationType == ReplyNavigationType.BOTTOM_NAVIGATION) {
-                ReplyBottomNavigationBar(
-                    selectedDestination = selectedDestination,
-                    navigateToTopLevelDestination = navigateToTopLevelDestination
-                )
+
+            if (isVisible.value) {
+                AnimatedVisibility(visible = navigationType == ReplyNavigationType.BOTTOM_NAVIGATION) {
+                    ReplyBottomNavigationBar(
+                        selectedDestination = selectedDestination,
+                        navigateToTopLevelDestination = navigateToTopLevelDestination
+                    )
+                }
             }
         }
     }
@@ -290,18 +299,25 @@ fun ReplyAppContent(
 private fun ReplyNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel,
+    isVisible: MutableState<Boolean>
 ) {
     NavHost(
         modifier = modifier,
         navController = navController,
         startDestination = ReplyRoute.Workout,
+        enterTransition = {
+            EnterTransition.None
+        },
+        exitTransition = {
+            ExitTransition.None
+        }
     ) {
         composable(ReplyRoute.Workout) {
-            WorkOutScreenNav(loginViewModel)
+            WorkOutScreenNav(loginViewModel, isVisible)
         }
         composable(ReplyRoute.Record) {
-            RecordScreenNav(loginViewModel)
+            RecordScreenNav(loginViewModel, isVisible)
         }
         composable(ReplyRoute.Community) {
             MainCommunityScreen()

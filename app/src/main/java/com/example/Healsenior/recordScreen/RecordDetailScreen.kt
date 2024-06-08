@@ -94,7 +94,7 @@ fun RecordDetailScreenContent(user: User, dateStr: String) {
                     }
                 }
 
-                delay(20)
+                delay(50)
             }
         }
     }

@@ -14,11 +14,8 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ZoomIn
-import androidx.compose.material.icons.filled.ZoomOut
 import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -36,9 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.Healsenior._component.GetPointDialog
-import com.example.Healsenior._component.Tag_Button
 import com.example.Healsenior._component.SmallTopBar
+import com.example.Healsenior._component.Tag_Button
 import com.example.Healsenior._component.Tag_Dialog
+import com.example.Healsenior.data.GetRoutineDailyAll
+import com.example.Healsenior.data.RoutineDaily
 import com.example.Healsenior.data.UpdateUser
 import com.example.Healsenior.data.User
 import com.example.Healsenior.data.Workout
@@ -84,7 +83,8 @@ fun TodayWorkOutListHeader(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(40.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -95,27 +95,6 @@ fun TodayWorkOutListHeader(
             modifier = Modifier
                 .padding(start = 10.dp)
         )
-        IconButton(
-            onClick = {
-                isExpanded.value = !isExpanded.value
-            },
-            modifier = Modifier
-                .width(40.dp)
-                .height(40.dp)
-                .padding(end = 10.dp)
-        ) {
-            Icon(
-                if (isExpanded.value)
-                    Icons.Default.ZoomOut
-                else
-                    Icons.Default.ZoomIn,
-                contentDescription = "",
-                tint = Color.Black,
-                modifier = Modifier
-                    .width(30.dp)
-                    .height(30.dp)
-            )
-        }
     }
 }
 
@@ -130,7 +109,7 @@ fun TodayWorkOutListContent(
 ) {
     LazyColumn(
         modifier = Modifier
-            .height(550.dp)
+            .height(600.dp)
     ) {
         items(workout.size) { index ->
             Box(
@@ -201,8 +180,8 @@ fun TodayWorkOutListContent(
             .padding(start = 20.dp, end = 20.dp)
     ) {
         if (isRoutineEnd.value) {
-            val showDialog = remember{mutableStateOf(false)}
-            val showPointDialog = remember{mutableStateOf(false)}
+            val showDialog = remember { mutableStateOf(false) }
+            val showPointDialog = remember { mutableStateOf(false) }
 
             Tag_Button(
                 modifier = Modifier
@@ -216,7 +195,7 @@ fun TodayWorkOutListContent(
 
             if (showDialog.value) {
                 Tag_Dialog(
-                    onDismissRequest = {showDialog.value = false},
+                    onDismissRequest = { showDialog.value = false },
                     onConfirmation = {
                         showDialog.value = false
                         showPointDialog.value = true
@@ -226,33 +205,49 @@ fun TodayWorkOutListContent(
             }
 
             if (showPointDialog.value) {
-                GetPointDialog(
-                    onDismissRequest = {
-                        val now = LocalDate.now()
-                        val yearStr = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                val routinedailylist = remember { mutableListOf<RoutineDaily>() }
+                val isCallbackEnd = remember { mutableStateOf(false) }
 
-                        val updateRecordMap =
-                            user.recordMap + mapOf(yearStr to mapOf(user.rid to user.dayCount))
-                        val updateUser = User(
-                            user.uid,
-                            user.name,
-                            user.rid,
-                            user.dayCount + 1,
-                            user.rank,
-                            user.point + 250,
-                            user.workoutHour,
-                            user.calorieSum,
-                            user.setSum,
-                            updateRecordMap
-                        )
+                GetRoutineDailyAll(user.rid) { getRoutinedailylist ->
+                    routinedailylist.clear()
+                    routinedailylist += getRoutinedailylist
+                    isCallbackEnd.value = true
+                }
 
-                        UpdateUser(updateUser)
-                        isRoutineEnd.value = false
-                        showPointDialog.value = false
-                        navController.navigate("WorkOutScreenMain")
-                    },
-                    "오늘의 운동 보상으로 +250P가 적립되었어요!"
-                )
+                if (isCallbackEnd.value) {
+                    GetPointDialog(
+                        onDismissRequest = {
+                            val now = LocalDate.now()
+                            val yearStr = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                            val updateDayCnt =
+                                if (user.dayCount == routinedailylist.size)
+                                    1
+                                else
+                                    user.dayCount + 1
+
+                            val updateRecordMap =
+                                user.recordMap + mapOf(yearStr to mapOf(user.rid to user.dayCount))
+                            val updateUser = User(
+                                user.uid,
+                                user.name,
+                                user.rid,
+                                updateDayCnt,
+                                user.rank,
+                                user.point + 250,
+                                user.workoutHour,
+                                user.calorieSum,
+                                user.setSum,
+                                updateRecordMap
+                            )
+
+                            UpdateUser(updateUser)
+                            isRoutineEnd.value = false
+                            showPointDialog.value = false
+                            navController.navigate("WorkOutScreenMain")
+                        },
+                        "오늘의 운동 보상으로 +250P가 적립되었어요!"
+                    )
+                }
             }
         }
         else {

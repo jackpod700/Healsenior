@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +39,7 @@ import com.example.Healsenior.data.RoutineDaily
 import com.example.Healsenior.data.UpdateUser
 import com.example.Healsenior.data.User
 import com.example.Healsenior.data.Workout
+import kotlinx.coroutines.delay
 
 @Preview
 @Composable
@@ -104,7 +106,7 @@ fun RoutineDescriptionScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(450.dp)
+                .height(500.dp)
                 .padding(top = 50.dp)
                 .background(
                     color = Color.White,
@@ -152,6 +154,9 @@ fun ShowRoutineDescription(routine: Routine) {
     val routinedailylist = remember { mutableListOf<RoutineDaily>() }
     val isCallbackEnd = remember { mutableStateOf(false) }
 
+    val workoutlist = remember { mutableListOf<List<Workout>>() }
+    val isCallbackEnd2 = remember { mutableStateOf(false) }
+
     GetRoutineDailyAll(routine.rid) { getRoutinedailylist ->
         routinedailylist.clear()
         routinedailylist += getRoutinedailylist
@@ -159,6 +164,30 @@ fun ShowRoutineDescription(routine: Routine) {
     }
 
     if (isCallbackEnd.value) {
+        LaunchedEffect(Unit) {
+            for (routinelistIdx in 0..<routinedailylist.size) {
+                val workout = mutableListOf<Workout>()
+
+                for (workoutIdx in 0..<routinedailylist[routinelistIdx].workoutList.size) {
+                    val wid = routinedailylist[routinelistIdx].workoutList[workoutIdx]
+
+                    GetWorkout(wid) { getWorkout ->
+                        if (getWorkout != null)
+                            workout.add(getWorkout)
+                    }
+
+                    delay(20)
+                }
+
+                workoutlist += workout
+
+                if (routinelistIdx == routinedailylist.size - 1)
+                    isCallbackEnd2.value = true
+            }
+        }
+    }
+
+    if (isCallbackEnd2.value) {
         Column(
             modifier = Modifier
                 .padding(20.dp)
@@ -189,24 +218,7 @@ fun ShowRoutineDescription(routine: Routine) {
                 .padding(start = 20.dp)
         ) {
             items(routinedailylist.size) { index ->
-                val workout = remember { mutableListOf<Workout>() }
-                val isCallbackEnd2 = remember { mutableStateOf(false) }
-
-                for (workoutIdx in 0..<routinedailylist[index].workoutList.size) {
-                    val wid = routinedailylist[index].workoutList[workoutIdx]
-
-                    GetWorkout(wid) { getWorkout ->
-                        if (getWorkout != null) {
-                            workout.add(getWorkout)
-
-                            if (workoutIdx == routinedailylist[index].workoutList.size - 1)
-                                isCallbackEnd2.value = true
-                        }
-                    }
-                }
-
-                if (isCallbackEnd2.value)
-                    ShowRoutineDescriptionDetail(routinedailylist, workout, index)
+                ShowRoutineDescriptionDetail(routinedailylist, workoutlist[index], index)
             }
         }
     }
@@ -215,7 +227,7 @@ fun ShowRoutineDescription(routine: Routine) {
 @Composable
 fun ShowRoutineDescriptionDetail(
     routinedailylist: MutableList<RoutineDaily>,
-    workout: MutableList<Workout>,
+    workout: List<Workout>,
     index: Int
 ) {
     Box(

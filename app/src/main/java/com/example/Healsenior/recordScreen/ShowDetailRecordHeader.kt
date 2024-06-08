@@ -30,7 +30,8 @@ fun ShowDetailRecordHeader(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(40.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -41,35 +42,5 @@ fun ShowDetailRecordHeader(
             modifier = Modifier
                 .padding(start = 10.dp)
         )
-        IconButton(
-            onClick = {
-                isZoomed.value = !isZoomed.value
-            },
-            modifier = Modifier
-                .width(40.dp)
-                .height(40.dp)
-                .padding(end = 10.dp)
-        ) {
-            if (isZoomed.value) {
-                Icon(
-                    Icons.Default.ZoomOut,
-                    contentDescription = "",
-                    tint = Color.Black,
-                    modifier = Modifier
-                        .width(30.dp)
-                        .height(30.dp)
-                )
-            }
-            else {
-                Icon(
-                    Icons.Default.ZoomIn,
-                    contentDescription = "",
-                    tint = Color.Black,
-                    modifier = Modifier
-                        .width(30.dp)
-                        .height(30.dp)
-                )
-            }
-        }
     }
 }
